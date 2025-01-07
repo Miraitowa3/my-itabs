@@ -14,14 +14,14 @@
             </div>
         </div>
     </div>
-    <div id="app-main" class="app-main absolute flex h-full w-full flex-col" @wheel="handleWheel">
+    <div id="app-main" class="app-main absolute flex h-full w-full flex-col" @wheel="debouncedHandleWheel">
         <div class="app-header"></div>
         <div class="app-date-box bg-orange-300">time</div>
         <div class="app-search bg-slate-400">search</div>
         <div class="app-icon-grid-wrap flex-1" style="flex: 1 1 0%">
             <div class="app-icon-grid d-hidden h-full">
                 <ul class="app-icon-wrap" ref="appIconWrap">
-                    <li class="app-icon-item" v-for="(item, index) in siderList" :key="item.title" :style="{ backgroundColor: item['icon'] }">{{ item.title }}</li>
+                    <li class="app-icon-item" v-for="(item, index) in siderList" :key="item.title" :style="{ opacity: currentTab === index ? 1 : 0 }">{{ item.title }}</li>
                 </ul>
             </div>
         </div>
@@ -63,15 +63,31 @@ onMounted(() => {
     });
 });
 function handleWheel(e: WheelEvent) {
-    console.log(e, 9999999999);
-
-    // currentTab.value++;
-    // let child = Array.from(appIconWrap.value!.children) as HTMLElement[];
-    // let h = appIconWrap.value!.offsetHeight;
-    // child.forEach((ele: HTMLElement, index: number) => {
-    //     ele.style.transform = `translateY(${-h * index}px)`;
-    // });
+    currentTab.value++;
+    if (currentTab.value === siderList.value.length) {
+        currentTab.value = 0;
+    }
+    let child = Array.from(appIconWrap.value!.children) as HTMLElement[];
+    let h = appIconWrap.value!.offsetHeight;
+    child.forEach((ele: HTMLElement, index: number) => {
+        ele.style.transform = `translateY(${(index - currentTab.value) * h}px) scale(1)`;
+    });
 }
+function debounce<T extends (...args: any[]) => void>(func: T, delay: number) {
+    let timer: NodeJS.Timeout | null;
+
+    return function (...args: Parameters<T>) {
+        if (timer) {
+            clearTimeout(timer);
+        }
+        timer = setTimeout(() => {
+            console.log("debounce");
+
+            func(...args);
+        }, delay);
+    };
+}
+const debouncedHandleWheel = debounce(handleWheel, 200);
 </script>
 <style scoped>
 .app-sider {
