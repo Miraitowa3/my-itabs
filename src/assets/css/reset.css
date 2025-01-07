@@ -6,8 +6,17 @@
     padding: 0;
     box-sizing: border-box;
 }
-body {
-    font: 12px/1.5 '微软雅黑', Arial, Tahoma, Helvetica, \5b8b\4f53, sans-serif;
+body,
+html {
+    font:
+        12px/1.5 "微软雅黑",
+        Arial,
+        Tahoma,
+        Helvetica,
+        \5b8b\4f53,
+        sans-serif;
+    position: relative;
+    height: 100%;
 }
 html,
 body,
@@ -115,9 +124,9 @@ table {
     float: right;
 }
 button,
-input[type='reset'],
-input[type='button'],
-input[type='submit'] {
+input[type="reset"],
+input[type="button"],
+input[type="submit"] {
     line-height: normal !important;
 }
 a {
@@ -136,7 +145,7 @@ input {
 ------------------------------------------------------------------------------------------*/
 .clearfix:after {
     clear: both;
-    content: '.';
+    content: ".";
     display: block;
     font-size: 0;
     height: 0;

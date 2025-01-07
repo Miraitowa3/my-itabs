@@ -1,6 +1,6 @@
 import  './assets/css/base.css'
 import  './assets/css/reset.css'
-
+import  './web-components/index'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
