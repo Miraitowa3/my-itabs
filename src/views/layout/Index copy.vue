@@ -108,7 +108,7 @@ onMounted(() => {
     };
     appSidebarUl.ondragenter = (e) => {
         e.preventDefault();
-        if (e.target === appSidebarUl || e.target === souceNode) {
+        if (e.target === appSidebarUl || e.target === souceNode || (e.target as HTMLElement).tagName !== "LI") {
             return;
         }
         const children = Array.from(appSidebarUl.children);
@@ -117,7 +117,6 @@ onMounted(() => {
         Fliap.start();
         if (souceNodeIndex < targetNodeIndex) {
             appSidebarUl.insertBefore(souceNode, (e.target as HTMLElement).nextElementSibling);
-            console.log(appSidebarUl, 9999999999, souceNode);
 
             console.log("向下拖动");
         } else {
