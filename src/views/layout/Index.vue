@@ -2,6 +2,7 @@
     <Teleport to="body">
         <itab-wallpaper url="https://files.codelife.cc/wallhaven/full/5g/wallhaven-5ggol7.png?x-oss-process=image/resize,limit_0,m_fill,w_2560,h_1440/quality,Q_95/format,webp"> </itab-wallpaper>
     </Teleport>
+
     <div class="app-sider fixed bottom-0 top-0 z-[2]">
         <div class="app-sidebar-body f12 flex h-full w-full flex-col text-center">
             <div class="app-sidebar-avatar flex justify-center"><img data-v-10b8c295="" class="h-[30px] w-[30px] rounded-full object-cover" src="https://files.codelife.cc/blog/avatar/default-avatar.png?x-oss-process=image/resize,limit_0,m_fill,w_40,h_40/quality,q_92/format,webp" /></div>
@@ -33,6 +34,8 @@
         </div>
     </div>
     <div id="app-main" class="app-main absolute flex h-full w-full flex-col" @wheel="debouncedHandleWheel">
+        <MacDocker class="fixed left-1/2 top-1/2 h-12 -translate-x-1/2 pl-5 pr-5"></MacDocker>
+
         <div class="app-header"></div>
         <div class="app-date-box bg-orange-300">time</div>
         <div class="app-search bg-slate-400">search</div>
@@ -41,8 +44,6 @@
                 <ul class="app-icon-wrap" ref="appIconWrap">
                     <li class="app-icon-item" v-for="(item, index) in siderList" :name="item.id" :key="item.id" :style="{ opacity: current === item.title ? 1 : 0 }">
                         <h1>{{ item.title }}</h1>
-
-                        <MacDocker class="tr bottom-13 fixed left-1/2 h-12 -translate-x-1/2 pl-5 pr-5"></MacDocker>
                     </li>
                 </ul>
             </div>
