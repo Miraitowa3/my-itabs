@@ -7,9 +7,27 @@
             <div class="app-sidebar-avatar flex justify-center"><img data-v-10b8c295="" class="h-[30px] w-[30px] rounded-full object-cover" src="https://files.codelife.cc/blog/avatar/default-avatar.png?x-oss-process=image/resize,limit_0,m_fill,w_40,h_40/quality,q_92/format,webp" /></div>
             <div class="app-sidebar-group d-scrollbar-hide">
                 <ul class="app-sidebar-ul">
-                    <li class="app-group-item" :draggable="true" :style="{ backgroundColor: currentTab === index ? '#ffffff26' : '' }" v-for="(item, index) in siderList" :key="item.title" @click="currentTab = index">
-                        {{ item.title }}
-                    </li>
+                    <VueDraggable v-model="siderList" :animation="150" target=".sort-target" @start="onStart" @end="onEnd">
+                        <TransitionGroup type="transition" tag="ul" :name="!drag ? 'fade' : undefined" class="sort-target">
+                            <li
+                                class="app-group-item"
+                                :name="item.id"
+                                :style="{ backgroundColor: current === item.title ? '#ffffff26' : '' }"
+                                v-for="item in siderList"
+                                :key="item.id"
+                                @click="
+                                    () => {
+                                        current = item.title;
+                                        currentTab = getInex(item.title);
+                                        console.log(currentTab);
+                                        updateTranslateY();
+                                    }
+                                "
+                            >
+                                <p>{{ item.title }}</p>
+                            </li>
+                        </TransitionGroup>
+                    </VueDraggable>
                 </ul>
             </div>
         </div>
@@ -21,7 +39,11 @@
         <div class="app-icon-grid-wrap flex-1" style="flex: 1 1 0%">
             <div class="app-icon-grid d-hidden h-full">
                 <ul class="app-icon-wrap" ref="appIconWrap">
-                    <li class="app-icon-item" v-for="(item, index) in siderList" :key="item.title" :style="{ opacity: currentTab === index ? 1 : 0 }">{{ item.title }}</li>
+                    <li class="app-icon-item" v-for="(item, index) in siderList" :name="item.id" :key="item.id" :style="{ opacity: current === item.title ? 1 : 0 }">
+                        <h1>{{ item.title }}</h1>
+
+                        <MacDocker class="tr bottom-13 fixed left-1/2 h-12 -translate-x-1/2 pl-5 pr-5"></MacDocker>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -29,32 +51,58 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, nextTick } from "vue";
+import MacDocker from "../../components/MacDocker.vue";
 const appIconWrap = ref<HTMLElement>();
+const current = ref("首页");
 const currentTab = ref(0);
 
+import { VueDraggable } from "vue-draggable-plus";
+const drag = ref(false);
 const siderList = ref([
     {
         title: "首页",
         icon: "red",
+        id: "首页",
     },
     {
         title: "程序员",
         icon: "pink",
+        id: "程序员",
     },
     {
         title: "设计",
         icon: "green",
+        id: "设计",
     },
     {
         title: "摸鱼",
         icon: "blue",
+        id: "摸鱼",
     },
     {
         title: "软件工具",
         icon: "orange",
+        id: "软件工具",
     },
 ]);
+
+function getInex(name: string) {
+    return siderList.value.findIndex((item) => item.title === name);
+}
+function onStart() {
+    drag.value = true;
+}
+function onEnd(e: any) {
+    if (e.clonedData.title === current.value) {
+        currentTab.value = e.newIndex;
+    }
+
+    console.log("onEnd");
+    nextTick(() => {
+        drag.value = false;
+    });
+}
 onMounted(() => {
     let child = Array.from(appIconWrap.value!.children) as HTMLElement[];
     let h = appIconWrap.value!.offsetHeight;
@@ -63,10 +111,22 @@ onMounted(() => {
     });
 });
 function handleWheel(e: WheelEvent) {
-    currentTab.value++;
-    if (currentTab.value === siderList.value.length) {
-        currentTab.value = 0;
+    if (e.deltaY > 0) {
+        currentTab.value++;
+        if (currentTab.value === siderList.value.length) {
+            currentTab.value = 0;
+        }
+    } else {
+        currentTab.value--;
+        if (currentTab.value < 0) {
+            currentTab.value = siderList.value.length - 1;
+        }
     }
+
+    current.value = siderList.value[currentTab.value].title;
+    updateTranslateY();
+}
+function updateTranslateY() {
     let child = Array.from(appIconWrap.value!.children) as HTMLElement[];
     let h = appIconWrap.value!.offsetHeight;
     child.forEach((ele: HTMLElement, index: number) => {
@@ -90,111 +150,6 @@ function debounce<T extends (...args: any[]) => void>(func: T, delay: number) {
 const debouncedHandleWheel = debounce(handleWheel, 200);
 
 //拖拽
-
-onMounted(() => {
-    let souceNode: any;
-    const appSidebarUl = document.querySelector(".app-sidebar-ul") as HTMLElement;
-    let Fliap = new Filp({ el: ".app-sidebar-ul" });
-    appSidebarUl.ondragstart = (e) => {
-        setTimeout(() => {
-            (e.target as HTMLElement).classList.add("moving");
-        }, 0);
-
-        souceNode = e.target;
-        e.dataTransfer!.effectAllowed = "move";
-    };
-    appSidebarUl.ondragover = (e) => {
-        e.preventDefault();
-    };
-    appSidebarUl.ondragenter = (e) => {
-        e.preventDefault();
-        if (e.target === appSidebarUl || e.target === souceNode || (e.target as HTMLElement).tagName !== "LI") {
-            return;
-        }
-        const children = Array.from(appSidebarUl.children);
-        const souceNodeIndex = children.indexOf(souceNode);
-        const targetNodeIndex = children.indexOf(e.target as HTMLElement);
-        Fliap.start();
-        if (souceNodeIndex < targetNodeIndex) {
-            appSidebarUl.insertBefore(souceNode, (e.target as HTMLElement).nextElementSibling);
-
-            console.log("向下拖动");
-        } else {
-            appSidebarUl.insertBefore(souceNode, e.target as HTMLElement);
-
-            console.log("向上拖动");
-        }
-
-        Fliap.play();
-    };
-    appSidebarUl.ondragend = (e) => {
-        (e.target as HTMLElement).classList.remove("moving");
-    };
-});
-class Filp {
-    el: HTMLElement | string;
-    elements: HTMLElement[];
-    startLocation: DOMRect[];
-    lastLocation: DOMRect[];
-    constructor({ el }: { el: HTMLElement | string }) {
-        this.el = el;
-        if (typeof el === "string") {
-            this.elements = Array.from(this.getElement(el)[0].children) as HTMLElement[];
-        } else {
-            this.elements = Array.from(el.children) as HTMLElement[];
-        }
-
-        this.startLocation = this.getLoacton(this.elements);
-        this.lastLocation = [];
-    }
-    getElement(el: string) {
-        return Array.from(document.querySelectorAll(el));
-    }
-    start() {
-        if (typeof this.el === "string") {
-            this.elements = Array.from(this.getElement(this.el)[0].children) as HTMLElement[];
-        } else {
-            this.elements = Array.from(this.el.children) as HTMLElement[];
-        }
-        this.startLocation = this.getLoacton(this.elements);
-    }
-    last() {
-        this.lastLocation = this.getLoacton(this.elements);
-    }
-    play() {
-        this.last();
-        this.invert();
-    }
-    invert() {
-        const diff = this.startLocation.map((first, index) => {
-            const last = this.lastLocation[index];
-            return {
-                left: first.left - last.left,
-                top: first.top - last.top,
-            };
-        });
-        this.elements.forEach((element, index) => {
-            const { left, top } = diff[index];
-            element.animate(
-                [
-                    {
-                        transform: `translate(${left}px, ${top}px)`,
-                    },
-                    {
-                        transform: "none",
-                    },
-                ],
-                {
-                    duration: 600,
-                    easing: `cubic-bezier(0.33, 1, 0.68, 1)`,
-                },
-            );
-        });
-    }
-    getLoacton(elements: HTMLElement[]) {
-        return elements.map((el) => el.getBoundingClientRect());
-    }
-}
 </script>
 <style scoped>
 .app-sider {
