@@ -198,7 +198,7 @@ onMounted(() => {
         Fliap.play();
     };
     container.ondragend = (e) => {
-        e.target.classList.remove("moving");
+        (e.target as HTMLElement).classList.remove("moving");
     };
 });
 
