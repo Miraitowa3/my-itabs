@@ -16,9 +16,12 @@ export default defineConfig({
                     //上述配置中，通过 @vitejs/plugin - vue 插件的 template.compilerOptions.isCustomElement 选项，告诉 Vite 编译器将 itab - wallpaper 标签视为自定义元素。这样，在 Vue 模板中使用 itab - wallpaper 时就不会引发找不到组件的错误。
                 },
             },
+            script:{
+              defineModel:true
+            }
         }),
         vueJsx(),
-        vueDevTools(),
+        // vueDevTools(),
     ],
     resolve: {
         alias: {
