@@ -3,15 +3,15 @@
         <!-- <MacDocker class="fixed left-1/2 top-1/2 h-12 -translate-x-1/2 pl-5 pr-5"></MacDocker> -->
 
         <div class="app-header"></div>
-        <div class="app-date-box bg-orange-300">time</div>
-        <div class="app-search bg-slate-400">search</div>
+        <div class="app-date-box 00">time</div>
+        <div class="app-search">search</div>
         <div class="app-icon-grid-wrap flex-1" style="flex: 1 1 0%">
             <div class="app-icon-grid d-hidden h-full">
                 <ul class="app-icon-wrap" ref="appIconWrap">
                     <li class="app-icon-item" v-for="(item, index) in siderList" :name="item.id" :key="item.id" :style="{ opacity: cur.current === item.title ? 1 : 0 }">
                         <div class="d-scrollbar-hide h-full" :id="'app-grid_' + item.id" style="pointer-events: auto; transition: transform 0.26s cubic-bezier(0.165, 0.84, 0.44, 1)">
                             <ul class="app-grid">
-                                <li class="item mb-4 flex h-20 items-center justify-center rounded-xl bg-fuchsia-500" v-for="(item, index) in itemList">{{ item }}</li>
+                                <li class="item mb-4 flex h-20 items-center justify-center rounded-xl" v-for="(item, index) in itemList">{{ item }}</li>
                             </ul>
                         </div>
                     </li>
@@ -65,8 +65,10 @@ watch(
 
 function handleWheel(e: WheelEvent) {
     if (e.deltaY > 0) {
+        //向下滚动
         scrollDisYIndex.value += 1;
         if (scrollDisYIndex.value > scrollDisYList.value.length - 1) {
+            //app-grid 滚动到底部，切换下一个tab
             cur.value.currentTab++;
             if (cur.value.currentTab === props.siderList.length) {
                 cur.value.currentTab = 0;
@@ -85,8 +87,11 @@ function handleWheel(e: WheelEvent) {
             appGridId.value!.style.transform = `translateY(-${totalY}px)`;
         }
     } else {
+        //向上滚动
+
         scrollDisYIndex.value -= 1;
         if (scrollDisYIndex.value < 0) {
+            //app-grid 滚动到顶部，切换上一个tab
             cur.value.currentTab--;
             if (cur.value.currentTab < 0) {
                 cur.value.currentTab = props.siderList.length - 1;
@@ -124,8 +129,10 @@ function handleWheel(e: WheelEvent) {
 //     updateTranslateY();
 // }
 function updateTranslateY() {
+    // 切换tab时，app-grid重置到初始位置
     scrollDisYIndex.value = 0;
     appGridId.value!.style.transform = `translateY(-${scrollDisYIndex.value}px)`;
+    //更新位置
     let child = Array.from(appIconWrap.value!.children) as HTMLElement[];
     let h = appIconWrap.value!.offsetHeight;
     child.forEach((ele: HTMLElement, index: number) => {
@@ -151,7 +158,7 @@ onMounted(() => {
     child.forEach((ele: HTMLElement, index: number) => {
         ele.style.transform = `translateY(${h * index}px)`;
     });
-
+    //
     const clientY = appIconWrap.value!.getBoundingClientRect().height;
     if (BASE_TRANSLATE_Y.value > clientY) {
         BASE_TRANSLATE_Y.value = clientY / 2;
@@ -172,6 +179,11 @@ defineExpose({
     color: #080505;
     transition: 0.2s;
     position: relative;
+}
+@media screen and (min-height: 768px) {
+    .app-header {
+        --height: 6vh;
+    }
 }
 .app-date-box {
     height: 99px;

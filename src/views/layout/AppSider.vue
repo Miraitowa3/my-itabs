@@ -7,6 +7,13 @@
                     <VueDraggable v-model="siderList" :animation="150" target=".sort-target" @start="onStart" @end="onEnd">
                         <TransitionGroup type="transition" tag="ul" :name="!drag ? 'fade' : undefined" class="sort-target">
                             <li class="app-group-item" :name="item.id" :style="{ backgroundColor: cur.current === item.title ? '#ffffff26' : '' }" v-for="item in siderList" :key="item.id" @click="changeTab(item)">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
+                                    <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M7 8l-4 4l4 4"></path>
+                                        <path d="M17 8l4 4l-4 4"></path>
+                                        <path d="M14 4l-4 16"></path>
+                                    </g>
+                                </svg>
                                 <p>{{ item.title }}</p>
                             </li>
                         </TransitionGroup>
