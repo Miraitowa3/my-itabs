@@ -3,8 +3,38 @@
         <!-- <MacDocker class="fixed left-1/2 top-1/2 h-12 -translate-x-1/2 pl-5 pr-5"></MacDocker> -->
 
         <div class="app-header"></div>
-        <div class="app-date-box 00">time</div>
-        <div class="app-search">search</div>
+
+        <div class="app-date-box ac" style="">
+            <div>
+                <div class="app-time"><time class="hh">20</time><span class="colon hh">:</span><time class="mm">44</time><span class="colon" style="display: none">:</span><span class="sec">34</span></div>
+            </div>
+            <div class="app-date"><span class="time-month">01月13日</span><span class="time-week">星期一</span><span class="time-lunar">腊月十四</span></div>
+        </div>
+
+        <div id="app-search-wrap" class="w-full">
+            <div class="app-search-box relative">
+                <form action="#" class="se-input-box relative flex items-center overflow-hidden">
+                    <div class="se-select">
+                        <img class="search-icon" src="https://files.codelife.cc/itab/search/google.svg" style="width: 20px; height: 20px" />
+                        <i class="d-icon select-icon-arrow absolute right-[2px] top-1/2 mt-[-5px] text-[12px]" style="color: rgba(0, 0, 0, 0.2)">
+                            <svg-icon name="opt"></svg-icon>
+                        </i>
+                    </div>
+                    <input id="searchInput" autocomplete="off" class="se-input h-ful w-full bg-transparent text-[14px] leading-[22px]" maxlength="220" placeholder="输入搜索内容" type="text" />
+                    <div class="se-close flex cursor-pointer">
+                        <i class="d-icon text-[30px]" style="color: rgba(0, 0, 0, 0.52)">
+                            <svg-icon name="close"></svg-icon>
+                        </i>
+                    </div>
+                    <button type="button" class="se-select">
+                        <i class="d-icon text-[20px]" style="color: rgba(0, 0, 0, 0.52)">
+                            <svg-icon name="search"></svg-icon>
+                        </i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
         <div class="app-icon-grid-wrap flex-1" style="flex: 1 1 0%">
             <div class="app-icon-grid d-hidden h-full">
                 <ul class="app-icon-wrap" ref="appIconWrap">
@@ -186,16 +216,23 @@ defineExpose({
     }
 }
 .app-date-box {
-    height: 99px;
     text-align: center;
-    line-height: 99px;
-    font-size: 40px;
 }
-.app-search {
-    height: 95px;
-    text-align: center;
-    line-height: 95px;
-    font-size: 40px;
+.app-search-box {
+    max-width: 600px;
+    margin: 3vh auto 20px;
+    width: 100%;
+}
+.se-input-box {
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 0 10px 3px #0000001a;
+    z-index: 1;
+    border-radius: 23px;
+    height: 46px;
+    background-color: rgba(255, 255, 255, 0.5);
+    transition: background 0.2s;
+    color: #222;
 }
 .app-icon-grid {
     pointer-events: none;
@@ -242,5 +279,85 @@ defineExpose({
 }
 .app-yiyan .app-yiyan-body:hover .yiyan-from {
     opacity: 1;
+}
+.se-select {
+    background-color: initial;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-width: 50px;
+    max-width: 50px;
+    transition: 0.2s;
+    position: relative;
+}
+.se-close {
+    /* transform: scale(0); */
+    transition: transform 0.2s;
+}
+.se-input {
+    color: #222 !important;
+}
+
+/* date 样式 */
+:host {
+    user-select: none;
+    text-align: center;
+    -webkit-user-select: none;
+    color: #fff;
+}
+.app-date-box {
+    font-family: auto;
+}
+.app-date {
+    font-size: 14px;
+    line-height: 26px;
+    opacity: 0.88;
+    margin-top: -3px;
+    text-shadow: 0 2px 4px rgb(0 0 0 / 16%);
+}
+
+.app-date span {
+    margin: 0 2px;
+}
+
+.app-date .time-month {
+    color: #fff;
+
+    display: inline;
+}
+
+.app-date .time-week {
+    color: #fff;
+
+    display: inline;
+}
+
+.app-date .time-lunar {
+    color: #fff;
+
+    display: inline;
+}
+
+.app-time {
+    font-size: 70px;
+    font-family: HarmonyOS_Sans;
+    user-select: none;
+    font-weight: var(400);
+    text-shadow: 0 2px 6px rgb(0 0 0 / 16%);
+    display: inline-block;
+    line-height: 70px;
+    transition: font 0.2s;
+    color: #fff;
+}
+.app-time.fontFamily-align .colon {
+    vertical-align: unset !important;
+}
+.app-time .colon {
+    vertical-align: calc(70px / 12);
+}
+.app-time .sec {
+    display: none;
 }
 </style>

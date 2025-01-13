@@ -6,14 +6,11 @@
                 <ul class="app-sidebar-ul">
                     <VueDraggable v-model="siderList" :animation="150" target=".sort-target" @start="onStart" @end="onEnd">
                         <TransitionGroup type="transition" tag="ul" :name="!drag ? 'fade' : undefined" class="sort-target">
-                            <li class="app-group-item" :name="item.id" :style="{ backgroundColor: cur.current === item.title ? '#ffffff26' : '' }" v-for="item in siderList" :key="item.id" @click="changeTab(item)">
-                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
-                                    <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M7 8l-4 4l4 4"></path>
-                                        <path d="M17 8l4 4l-4 4"></path>
-                                        <path d="M14 4l-4 16"></path>
-                                    </g>
-                                </svg>
+                            <li class="app-group-item flex cursor-pointer flex-col items-center justify-center" :name="item.id" :style="{ backgroundColor: cur.current === item.title ? '#ffffff26' : '' }" v-for="item in siderList" :key="item.id" @click="changeTab(item)">
+                                <i class="d-icon text-[22px]">
+                                    <svg-icon name="sider-zhuye" color="#ff0000"></svg-icon>
+                                </i>
+
                                 <p>{{ item.title }}</p>
                             </li>
                         </TransitionGroup>
@@ -25,6 +22,7 @@
 </template>
 
 <script setup lang="ts">
+import SvgIcon from "@/components/SvgIcon.vue";
 import { ref, onMounted, nextTick } from "vue";
 import { VueDraggable } from "vue-draggable-plus";
 
@@ -93,11 +91,19 @@ function onEnd(e: any) {
 .app-sidebar-ul {
 }
 .app-group-item {
-    padding: 20px 0 20px 0;
+    margin: 4px 0;
+    height: 50px;
+    transition: background 300ms;
 }
 .app-group-item.moving {
     /* background: transparent;
     color: transparent;
     border: 1px dashed red; */
+}
+.app-group-item .d-icon {
+    transition: transform 0.2s;
+}
+.app-sidebar-group .app-group-item:hover .d-icon {
+    transform: scale(1.2);
 }
 </style>
