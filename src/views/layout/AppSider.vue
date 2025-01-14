@@ -1,17 +1,41 @@
 <template>
     <div class="app-sider fixed bottom-0 top-0 z-[2]">
         <div class="app-sidebar-body f12 flex h-full w-full flex-col text-center">
-            <div class="app-sidebar-avatar flex justify-center"><img data-v-10b8c295="" class="h-[30px] w-[30px] rounded-full object-cover" src="https://files.codelife.cc/blog/avatar/default-avatar.png?x-oss-process=image/resize,limit_0,m_fill,w_40,h_40/quality,q_92/format,webp" /></div>
+            <div class="app-sidebar-avatar flex justify-center">
+                <img
+                    data-v-10b8c295=""
+                    class="h-[30px] w-[30px] rounded-full object-cover"
+                    src="https://files.codelife.cc/blog/avatar/default-avatar.png?x-oss-process=image/resize,limit_0,m_fill,w_40,h_40/quality,q_92/format,webp"
+                />
+            </div>
             <div class="app-sidebar-group d-scrollbar-hide">
                 <ul class="app-sidebar-ul">
-                    <VueDraggable v-model="siderList" :animation="150" target=".sort-target" @start="onStart" @end="onEnd">
-                        <TransitionGroup type="transition" tag="ul" :name="!drag ? 'fade' : undefined" class="sort-target">
-                            <li class="app-group-item flex cursor-pointer flex-col items-center justify-center" :name="item.id" :style="{ backgroundColor: cur.current === item.title ? '#ffffff26' : '' }" v-for="item in siderList" :key="item.id" @click="changeTab(item)">
+                    <VueDraggable
+                        v-model="siderList"
+                        :animation="150"
+                        target=".sort-target"
+                        @start="onStart"
+                        @end="onEnd"
+                    >
+                        <TransitionGroup
+                            type="transition"
+                            tag="ul"
+                            :name="!drag ? 'fade' : undefined"
+                            class="sort-target"
+                        >
+                            <li
+                                class="app-group-item flex cursor-pointer flex-col items-center justify-center"
+                                :name="item.id"
+                                :style="{ backgroundColor: cur.current === item.id ? '#ffffff26' : '' }"
+                                v-for="item in siderList"
+                                :key="item.id"
+                                @click="changeTab(item)"
+                            >
                                 <i class="d-icon text-[22px]">
-                                    <svg-icon name="sider-zhuye" color="#ff0000"></svg-icon>
+                                    <svg-icon :name="'sider-' + item.icon" color="#ff0000"></svg-icon>
                                 </i>
 
-                                <p>{{ item.title }}</p>
+                                <p class="app-group-item-title">{{ item.name }}</p>
                             </li>
                         </TransitionGroup>
                     </VueDraggable>
@@ -27,26 +51,26 @@ import { ref, onMounted, nextTick } from "vue";
 import { VueDraggable } from "vue-draggable-plus";
 
 const cur = defineModel<any>({ required: true });
-const siderList = defineModel<{ title: string; icon: string; id: string }[]>("siderList", { required: true });
+const siderList = defineModel<any[]>("siderList", { required: true });
 
 const drag = ref(false);
 const emits = defineEmits(["updateTranslateY"]);
 function changeTab(item: any) {
-    cur.value.current = item.title;
-    cur.value.currentTab = getInex(item.title);
+    cur.value.current = item.id;
+    cur.value.currentTab = getInex(item.id);
     emits("updateTranslateY");
 }
 function onStart() {
     drag.value = true;
 }
 function getInex(name: string) {
-    return siderList.value.findIndex((item) => item.title === name);
+    return siderList.value.findIndex((item) => item.id === name);
 }
 
 function onEnd(e: any) {
     nextTick(() => {
         //等待dom更新后，再能获取最新index
-        if (e.clonedData.title === cur.value.current) {
+        if (e.clonedData.id === cur.value.current) {
             cur.value.currentTab = e.newIndex;
         } else {
             cur.value.currentTab = getInex(cur.value.current);
@@ -103,6 +127,14 @@ function onEnd(e: any) {
 .app-group-item .d-icon {
     transition: transform 0.2s;
 }
+.app-group-item-title {
+    width: 100%;
+    margin-top: -2px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 .app-sidebar-group .app-group-item:hover .d-icon {
     transform: scale(1.2);
 }

@@ -6,21 +6,41 @@
 
         <div class="app-date-box ac" style="">
             <div>
-                <div class="app-time"><time class="hh">20</time><span class="colon hh">:</span><time class="mm">44</time><span class="colon" style="display: none">:</span><span class="sec">34</span></div>
+                <div class="app-time">
+                    <time class="hh">20</time><span class="colon hh">:</span><time class="mm">44</time
+                    ><span class="colon" style="display: none">:</span><span class="sec">34</span>
+                </div>
             </div>
-            <div class="app-date"><span class="time-month">01月13日</span><span class="time-week">星期一</span><span class="time-lunar">腊月十四</span></div>
+            <div class="app-date">
+                <span class="time-month">01月13日</span><span class="time-week">星期一</span
+                ><span class="time-lunar">腊月十四</span>
+            </div>
         </div>
 
         <div id="app-search-wrap" class="w-full">
             <div class="app-search-box relative">
                 <form action="#" class="se-input-box relative flex items-center overflow-hidden">
                     <div class="se-select">
-                        <img class="search-icon" src="https://files.codelife.cc/itab/search/google.svg" style="width: 20px; height: 20px" />
-                        <i class="d-icon select-icon-arrow absolute right-[2px] top-1/2 mt-[-5px] text-[12px]" style="color: rgba(0, 0, 0, 0.2)">
+                        <img
+                            class="search-icon"
+                            src="https://files.codelife.cc/itab/search/google.svg"
+                            style="width: 20px; height: 20px"
+                        />
+                        <i
+                            class="d-icon select-icon-arrow absolute right-[2px] top-1/2 mt-[-5px] text-[12px]"
+                            style="color: rgba(0, 0, 0, 0.2)"
+                        >
                             <svg-icon name="opt"></svg-icon>
                         </i>
                     </div>
-                    <input id="searchInput" autocomplete="off" class="se-input h-ful w-full bg-transparent text-[14px] leading-[22px]" maxlength="220" placeholder="输入搜索内容" type="text" />
+                    <input
+                        id="searchInput"
+                        autocomplete="off"
+                        class="se-input h-ful w-full bg-transparent text-[14px] leading-[22px]"
+                        maxlength="220"
+                        placeholder="输入搜索内容"
+                        type="text"
+                    />
                     <div class="se-close flex cursor-pointer">
                         <i class="d-icon text-[30px]" style="color: rgba(0, 0, 0, 0.52)">
                             <svg-icon name="close"></svg-icon>
@@ -34,33 +54,62 @@
                 </form>
             </div>
         </div>
-
         <div class="app-icon-grid-wrap flex-1" style="flex: 1 1 0%">
             <div class="app-icon-grid d-hidden h-full">
                 <ul class="app-icon-wrap" ref="appIconWrap">
-                    <li class="app-icon-item" v-for="(item, index) in siderList" :name="item.id" :key="item.id" :style="{ opacity: cur.current === item.title ? 1 : 0 }">
-                        <div class="d-scrollbar-hide h-full" :id="'app-grid_' + item.id" style="pointer-events: auto; transition: transform 0.26s cubic-bezier(0.165, 0.84, 0.44, 1)">
-                            <ul class="app-grid">
-                                <li class="item mb-4 flex h-20 items-center justify-center rounded-xl" v-for="(item, index) in itemList">{{ item }}</li>
+                    <li
+                        class="app-icon-item"
+                        v-for="(item, index) in siderList"
+                        :name="item.id"
+                        :key="item.id"
+                        :style="{ opacity: cur.current === item.id ? 1 : 0 }"
+                    >
+                        <div
+                            class="d-scrollbar-hide h-full"
+                            :id="'app-grid_' + item.id"
+                            style="pointer-events: auto; transition: transform 0.26s cubic-bezier(0.165, 0.84, 0.44, 1)"
+                        >
+                            <ul class="app-grid mb-3 mr-2 flex">
+                                <li
+                                    class="item mb-4 flex h-20 flex-col items-center justify-center rounded-xl"
+                                    v-for="(it, index) in item.children"
+                                >
+                                    <div class="app-item-icon">
+                                        <img
+                                            class="app-item-img"
+                                            :src="it.src"
+                                            :style="{
+                                                'pointer-events': 'none',
+                                                '--icon-bg-color': it['backgroundColor'],
+                                                '--icon-fit': 'contain',
+                                            }"
+                                        />
+                                    </div>
+                                    <p class="app-item-title d-elip">{{ it.name }}</p>
+                                </li>
                             </ul>
                         </div>
                     </li>
                 </ul>
             </div>
         </div>
+
         <div class="app-yiyan app-yiyan flex cursor-pointer justify-center overflow-hidden bg-transparent leading-5">
             <div class="app-yiyan-body relative">
-                <div class="yiyan-text" title="点击左键复制，右键切换">「 那些听不见音乐的人认为那些跳舞的人疯了。 」</div>
+                <div class="yiyan-text" title="点击左键复制，右键切换">
+                    「 那些听不见音乐的人认为那些跳舞的人疯了。 」
+                </div>
                 <div class="yiyan-from text-center">-亨利·柏格森-</div>
             </div>
         </div>
     </div>
 </template>
+
 <script lang="ts" setup>
 import { ref, onMounted, nextTick, watch } from "vue";
 const cur = defineModel<any>({ required: true });
-const itemList = ref<any>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43]);
-const props = defineProps<{ siderList: { title: string; icon: string; id: string }[] }>();
+const itemList = ref<any>([]);
+const props = defineProps<{ siderList: any[] }>();
 const appIconWrap = ref<HTMLUListElement>();
 const scrollDisYIndex = ref<number>(0);
 const BASE_TRANSLATE_Y = ref(500);
@@ -71,7 +120,10 @@ watch(
     (value: number) => {
         nextTick(() => {
             const clientY = appIconWrap.value!.getBoundingClientRect().height;
-            const scorllY = (document.querySelector("#" + "app-grid_" + cur.value.current + "> ul") as HTMLUListElement).getBoundingClientRect().height;
+
+            const scorllY = (
+                document.querySelector("#" + "app-grid_" + cur.value.current + "> ul") as HTMLUListElement
+            ).getBoundingClientRect().height;
             const disY = scorllY - clientY;
             let total = Math.floor(disY / BASE_TRANSLATE_Y.value);
             if (total === 0) {
@@ -103,7 +155,7 @@ function handleWheel(e: WheelEvent) {
             if (cur.value.currentTab === props.siderList.length) {
                 cur.value.currentTab = 0;
             }
-            cur.value.current = props.siderList[cur.value.currentTab].title;
+            cur.value.current = props.siderList[cur.value.currentTab].id;
             updateTranslateY();
         } else {
             let totalY = 0;
@@ -126,7 +178,7 @@ function handleWheel(e: WheelEvent) {
             if (cur.value.currentTab < 0) {
                 cur.value.currentTab = props.siderList.length - 1;
             }
-            cur.value.current = props.siderList[cur.value.currentTab].title;
+            cur.value.current = props.siderList[cur.value.currentTab].id;
             updateTranslateY();
         } else {
             let totalY = 0;
@@ -141,23 +193,7 @@ function handleWheel(e: WheelEvent) {
         }
     }
 }
-// function handleWheel(e: WheelEvent) {
-//     if (e.deltaY > 0) {
-//         cur.value.currentTab++;
 
-//         if (cur.value.currentTab === props.siderList.length) {
-//             cur.value.currentTab = 0;
-//         }
-//     } else {
-//         cur.value.currentTab--;
-//         if (cur.value.currentTab < 0) {
-//             cur.value.currentTab = props.siderList.length - 1;
-//         }
-//     }
-
-//     cur.value.current = props.siderList[cur.value.currentTab].title;
-//     updateTranslateY();
-// }
 function updateTranslateY() {
     // 切换tab时，app-grid重置到初始位置
     scrollDisYIndex.value = 0;
@@ -359,5 +395,39 @@ defineExpose({
 }
 .app-time .sec {
     display: none;
+}
+
+.app-item-icon {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 12.8px;
+    font-size: 12px;
+    box-shadow: 0 0 5px #0000001a;
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+.app-item-img {
+    display: block;
+    -o-object-fit: contain;
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: var(--icon-bg-color);
+}
+.app-item-title {
+    --icon-gap-y: 24px;
+    width: calc(100% + var(--icon-gap-y));
+    margin-left: calc(var(--icon-gap-y) / 2 * -1);
+    display: block;
+    margin-top: 6px;
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+    line-height: 1.1;
+    filter: drop-shadow(0px 2px 7px rgba(0, 0, 0, 0.8));
 }
 </style>
