@@ -2,11 +2,11 @@
     <div id="app-main" class="app-main absolute flex h-full w-full flex-col" @wheel="debouncedHandleWheel">
         <!-- <MacDocker class="fixed left-1/2 top-1/2 h-12 -translate-x-1/2 pl-5 pr-5"></MacDocker> -->
 
-        <div class="app-header"></div>
+        <div class="app-header" :style="{ height: isSiderShow ? '3vh' : '18vh' }"></div>
 
         <div class="app-date-box ac" style="">
             <div>
-                <div class="app-time">
+                <div class="app-time" @click="toggleTime">
                     <time class="hh">20</time><span class="colon hh">:</span><time class="mm">44</time
                     ><span class="colon" style="display: none">:</span><span class="sec">34</span>
                 </div>
@@ -16,46 +16,11 @@
                 ><span class="time-lunar">腊月十四</span>
             </div>
         </div>
+        <!-- 搜索栏 -->
+        <AppSearch />
 
-        <div id="app-search-wrap" class="w-full">
-            <div class="app-search-box relative">
-                <form action="#" class="se-input-box relative flex items-center overflow-hidden">
-                    <div class="se-select">
-                        <img
-                            class="search-icon"
-                            src="https://files.codelife.cc/itab/search/google.svg"
-                            style="width: 20px; height: 20px"
-                        />
-                        <i
-                            class="d-icon select-icon-arrow absolute right-[2px] top-1/2 mt-[-5px] text-[12px]"
-                            style="color: rgba(0, 0, 0, 0.2)"
-                        >
-                            <svg-icon name="opt"></svg-icon>
-                        </i>
-                    </div>
-                    <input
-                        id="searchInput"
-                        autocomplete="off"
-                        class="se-input h-ful w-full bg-transparent text-[14px] leading-[22px]"
-                        maxlength="220"
-                        placeholder="输入搜索内容"
-                        type="text"
-                    />
-                    <div class="se-close flex cursor-pointer">
-                        <i class="d-icon text-[30px]" style="color: rgba(0, 0, 0, 0.52)">
-                            <svg-icon name="close"></svg-icon>
-                        </i>
-                    </div>
-                    <button type="button" class="se-select">
-                        <i class="d-icon text-[20px]" style="color: rgba(0, 0, 0, 0.52)">
-                            <svg-icon name="search"></svg-icon>
-                        </i>
-                    </button>
-                </form>
-            </div>
-        </div>
         <div class="app-icon-grid-wrap flex-1" style="flex: 1 1 0%">
-            <div class="app-icon-grid d-hidden h-full">
+            <div class="app-icon-grid d-hidden h-full" :style="{ opacity: isSiderShow ? 1 : 0 }">
                 <ul class="app-icon-wrap" ref="appIconWrap">
                     <li
                         class="app-icon-item"
@@ -69,25 +34,49 @@
                             :id="'app-grid_' + item.id"
                             style="pointer-events: auto; transition: transform 0.26s cubic-bezier(0.165, 0.84, 0.44, 1)"
                         >
-                            <ul class="app-grid mb-3 mr-2 flex">
-                                <li
-                                    class="item mb-4 flex h-20 flex-col items-center justify-center rounded-xl"
-                                    v-for="(it, index) in item.children"
+                            <VueDraggable
+                                v-model="item.children"
+                                :animation="150"
+                                target=".app-grid"
+                                @start="onStart"
+                                @end="onEnd"
+                            >
+                                <TransitionGroup
+                                    type="transition"
+                                    tag="ul"
+                                    :name="!drag ? 'fade' : undefined"
+                                    class="app-grid"
                                 >
-                                    <div class="app-item-icon">
-                                        <img
-                                            class="app-item-img"
-                                            :src="it.src"
+                                    <li
+                                        :class="['app-item', `icon-size-${it.size ? it.size : '1X1'}`]"
+                                        v-for="(it, index) in item.children"
+                                        :key="it.id"
+                                    >
+                                        <div
+                                            class="app-item-icon"
                                             :style="{
-                                                'pointer-events': 'none',
-                                                '--icon-bg-color': it['backgroundColor'],
-                                                '--icon-fit': 'contain',
+                                                'background-color': it['backgroundColor']
+                                                    ? it['backgroundColor']
+                                                    : '#FFFFFF',
                                             }"
-                                        />
-                                    </div>
-                                    <p class="app-item-title d-elip">{{ it.name }}</p>
-                                </li>
-                            </ul>
+                                        >
+                                            <img
+                                                v-if="it.src"
+                                                class="app-item-img"
+                                                :src="it.src"
+                                                :style="{
+                                                    'pointer-events': 'none',
+                                                    '--icon-bg-color': it['backgroundColor']
+                                                        ? it['backgroundColor']
+                                                        : '#FFFFFF',
+                                                    '--icon-fit': 'contain',
+                                                }"
+                                            />
+                                        </div>
+                                        <p class="app-item-title d-elip">{{ it.name }}</p>
+                                    </li>
+                                </TransitionGroup>
+                            </VueDraggable>
                         </div>
                     </li>
                 </ul>
@@ -106,9 +95,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, nextTick, watch } from "vue";
+import AppSearch from "./AppSearch.vue";
+import { VueDraggable } from "vue-draggable-plus";
 const cur = defineModel<any>({ required: true });
-const itemList = ref<any>([]);
+const isSiderShow = defineModel<any>("isSiderShow", { required: true });
+
+const drag = ref(false);
 const props = defineProps<{ siderList: any[] }>();
 const appIconWrap = ref<HTMLUListElement>();
 const scrollDisYIndex = ref<number>(0);
@@ -122,7 +114,7 @@ watch(
             const clientY = appIconWrap.value!.getBoundingClientRect().height;
 
             const scorllY = (
-                document.querySelector("#" + "app-grid_" + cur.value.current + "> ul") as HTMLUListElement
+                document.querySelector("#" + "app-grid_" + cur.value.current + "> div") as HTMLUListElement
             ).getBoundingClientRect().height;
             const disY = scorllY - clientY;
             let total = Math.floor(disY / BASE_TRANSLATE_Y.value);
@@ -144,7 +136,14 @@ watch(
     },
     { immediate: true },
 );
-
+function onStart() {
+    drag.value = true;
+}
+function onEnd(e: any) {
+    nextTick(() => {
+        drag.value = false;
+    });
+}
 function handleWheel(e: WheelEvent) {
     if (e.deltaY > 0) {
         //向下滚动
@@ -230,6 +229,9 @@ onMounted(() => {
         BASE_TRANSLATE_Y.value = clientY / 2;
     }
 });
+function toggleTime() {
+    isSiderShow.value = !isSiderShow.value;
+}
 defineExpose({
     updateTranslateY,
 });
@@ -254,22 +256,7 @@ defineExpose({
 .app-date-box {
     text-align: center;
 }
-.app-search-box {
-    max-width: 600px;
-    margin: 3vh auto 20px;
-    width: 100%;
-}
-.se-input-box {
-    -webkit-backdrop-filter: blur(18px);
-    backdrop-filter: blur(18px);
-    box-shadow: 0 0 10px 3px #0000001a;
-    z-index: 1;
-    border-radius: 23px;
-    height: 46px;
-    background-color: rgba(255, 255, 255, 0.5);
-    transition: background 0.2s;
-    color: #222;
-}
+
 .app-icon-grid {
     pointer-events: none;
     max-width: 1350px;
@@ -315,25 +302,6 @@ defineExpose({
 }
 .app-yiyan .app-yiyan-body:hover .yiyan-from {
     opacity: 1;
-}
-.se-select {
-    background-color: initial;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    min-width: 50px;
-    max-width: 50px;
-    transition: 0.2s;
-    position: relative;
-}
-.se-close {
-    /* transform: scale(0); */
-    transition: transform 0.2s;
-}
-.se-input {
-    color: #222 !important;
 }
 
 /* date 样式 */
@@ -429,5 +397,87 @@ defineExpose({
     font-size: 12px;
     line-height: 1.1;
     filter: drop-shadow(0px 2px 7px rgba(0, 0, 0, 0.8));
+}
+.app-grid {
+    --icon-size: 47.28888888888889px;
+    --icon-gap-x: 25.333333333333332px;
+    --icon-gap-y: 25.333333333333332px;
+    position: relative;
+    display: grid;
+    padding-top: 2vh;
+    -webkit-user-select: none;
+    user-select: none;
+    grid-template-columns: repeat(auto-fill, var(--icon-size));
+    grid-template-rows: repeat(auto-fill, var(--icon-size));
+    grid-auto-flow: dense;
+    grid-gap: var(--icon-gap-x) var(--icon-gap-y);
+    box-sizing: border-box;
+    justify-content: center;
+    padding-bottom: 50px;
+}
+.app-item {
+    --icon-size: 47.28888888888889px;
+    --icon-opacity: 1;
+    --icon-radius: 13.511111111111111px;
+    list-style-type: none;
+    position: relative;
+    grid-column: span 1;
+    grid-row: span 1;
+    height: 100%;
+    user-select: none;
+    -webkit-user-select: none;
+    box-sizing: border-box;
+    opacity: var(--icon-opacity);
+    width: var(--icon-size);
+    height: var(--icon-size);
+    border-radius: var(--icon-radius);
+}
+
+.d-elip {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.icon-size-1x2 {
+    --icon-gap-y: 24px;
+    --icon-size: 44.800000000000004px;
+    grid-column: span 2;
+    width: calc(var(--icon-size) * 2 + var(--icon-gap-y) * 1);
+    height: var(--icon-size);
+}
+.icon-size-2x1 {
+    --icon-gap-x: 24px;
+    --icon-size: 44.800000000000004px;
+    grid-row: span 2;
+    width: var(--icon-size);
+    height: calc(var(--icon-size) * 2 + var(--icon-gap-x) * 1);
+}
+.icon-size-2x2,
+.icon-size-small {
+    --icon-gap-x: 24px;
+    --icon-gap-y: 24px;
+    --icon-size: 44.800000000000004px;
+    grid-column: span 2;
+    grid-row: span 2;
+    width: calc(var(--icon-size) * 2 + var(--icon-gap-y));
+    height: calc(var(--icon-size) * 2 + var(--icon-gap-x));
+}
+.icon-size-2x4,
+.icon-size-medium {
+    --icon-gap-x: 24px;
+    --icon-gap-y: 24px;
+    --icon-size: 44.800000000000004px;
+    grid-column: span 4;
+    grid-row: span 2;
+    width: calc(var(--icon-size) * 4 + var(--icon-gap-y) * 3);
+    height: calc(var(--icon-size) * 2 + var(--icon-gap-x));
+}
+.icon-size-1x1,
+.icon-size-mini {
+    --icon-gap-y: 24px;
+
+    width: var(--icon-size);
+    height: var(--icon-size);
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
-    <div class="app-sider fixed bottom-0 top-0 z-[2]">
-        <div class="app-sidebar-body f12 flex h-full w-full flex-col text-center">
+    <div class="app-sider fixed bottom-0 top-0 z-[2]" v-show="isSiderShow">
+        <div class="app-sidebar-body flex h-full w-full flex-col text-center">
             <div class="app-sidebar-avatar flex justify-center">
                 <img
                     data-v-10b8c295=""
@@ -9,37 +9,35 @@
                 />
             </div>
             <div class="app-sidebar-group d-scrollbar-hide">
-                <ul class="app-sidebar-ul">
-                    <VueDraggable
-                        v-model="siderList"
-                        :animation="150"
-                        target=".sort-target"
-                        @start="onStart"
-                        @end="onEnd"
+                <VueDraggable
+                    v-model="siderList"
+                    :animation="150"
+                    target=".app-sidebar-ul"
+                    @start="onStart"
+                    @end="onEnd"
+                >
+                    <TransitionGroup
+                        type="transition"
+                        tag="ul"
+                        :name="!drag ? 'fade' : undefined"
+                        class="app-sidebar-ul"
                     >
-                        <TransitionGroup
-                            type="transition"
-                            tag="ul"
-                            :name="!drag ? 'fade' : undefined"
-                            class="sort-target"
+                        <li
+                            class="app-group-item flex cursor-pointer flex-col items-center justify-center"
+                            :name="item.id"
+                            :style="{ backgroundColor: cur.current === item.id ? '#ffffff26' : '' }"
+                            v-for="item in siderList"
+                            :key="item.id"
+                            @click="changeTab(item)"
                         >
-                            <li
-                                class="app-group-item flex cursor-pointer flex-col items-center justify-center"
-                                :name="item.id"
-                                :style="{ backgroundColor: cur.current === item.id ? '#ffffff26' : '' }"
-                                v-for="item in siderList"
-                                :key="item.id"
-                                @click="changeTab(item)"
-                            >
-                                <i class="d-icon text-[22px]">
-                                    <svg-icon :name="'sider-' + item.icon" color="#ff0000"></svg-icon>
-                                </i>
+                            <i class="d-icon text-[22px]">
+                                <svg-icon :name="'sider-' + item.icon" color="#ff0000"></svg-icon>
+                            </i>
 
-                                <p class="app-group-item-title">{{ item.name }}</p>
-                            </li>
-                        </TransitionGroup>
-                    </VueDraggable>
-                </ul>
+                            <p class="app-group-item-title">{{ item.name }}</p>
+                        </li>
+                    </TransitionGroup>
+                </VueDraggable>
             </div>
         </div>
     </div>
@@ -47,12 +45,12 @@
 
 <script setup lang="ts">
 import SvgIcon from "@/components/SvgIcon.vue";
-import { ref, onMounted, nextTick } from "vue";
 import { VueDraggable } from "vue-draggable-plus";
-
+const props = defineProps<{
+    isSiderShow: boolean;
+}>();
 const cur = defineModel<any>({ required: true });
 const siderList = defineModel<any[]>("siderList", { required: true });
-
 const drag = ref(false);
 const emits = defineEmits(["updateTranslateY"]);
 function changeTab(item: any) {
@@ -97,6 +95,7 @@ function onEnd(e: any) {
     background-color: rgba(98, 118, 115, 0.1);
     backdrop-filter: blur(6px);
     color: rgba(233, 233, 233, 0.6);
+    font-size: 12px;
 }
 .app-sider .app-sidebar-body .app-sidebar-avatar {
     margin-top: 40px;
