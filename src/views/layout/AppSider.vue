@@ -31,7 +31,7 @@
                             @click="changeTab(item)"
                         >
                             <i class="d-icon text-[22px]">
-                                <svg-icon :name="'sider-' + item.icon" color="#ff0000"></svg-icon>
+                                <svg-icon :name="'sider-' + item.icon"></svg-icon>
                             </i>
 
                             <p class="app-group-item-title">{{ item.name }}</p>

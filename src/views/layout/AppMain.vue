@@ -387,7 +387,7 @@ defineExpose({
     background-color: var(--icon-bg-color);
 }
 .app-item-title {
-    --icon-gap-y: 24px;
+    --icon-gap-y: 30px;
     width: calc(100% + var(--icon-gap-y));
     margin-left: calc(var(--icon-gap-y) / 2 * -1);
     display: block;
@@ -399,9 +399,9 @@ defineExpose({
     filter: drop-shadow(0px 2px 7px rgba(0, 0, 0, 0.8));
 }
 .app-grid {
-    --icon-size: 47.28888888888889px;
-    --icon-gap-x: 25.333333333333332px;
-    --icon-gap-y: 25.333333333333332px;
+    --icon-size: 60px;
+    --icon-gap-x: 30px;
+    --icon-gap-y: 30px;
     position: relative;
     display: grid;
     padding-top: 2vh;
@@ -416,7 +416,7 @@ defineExpose({
     padding-bottom: 50px;
 }
 .app-item {
-    --icon-size: 47.28888888888889px;
+    --icon-size: 60px;
     --icon-opacity: 1;
     --icon-radius: 13.511111111111111px;
     list-style-type: none;
@@ -440,24 +440,26 @@ defineExpose({
 }
 
 .icon-size-1x2 {
-    --icon-gap-y: 24px;
-    --icon-size: 44.800000000000004px;
+    --icon-gap-y: 30px;
+    --icon-size: 60px;
     grid-column: span 2;
     width: calc(var(--icon-size) * 2 + var(--icon-gap-y) * 1);
     height: var(--icon-size);
 }
 .icon-size-2x1 {
-    --icon-gap-x: 24px;
-    --icon-size: 44.800000000000004px;
+    --icon-gap-x: 30px;
+
+    --icon-size: 60px;
     grid-row: span 2;
     width: var(--icon-size);
     height: calc(var(--icon-size) * 2 + var(--icon-gap-x) * 1);
 }
 .icon-size-2x2,
 .icon-size-small {
-    --icon-gap-x: 24px;
-    --icon-gap-y: 24px;
-    --icon-size: 44.800000000000004px;
+    --icon-gap-x: 30px;
+
+    --icon-gap-y: 30px;
+    --icon-size: 60px;
     grid-column: span 2;
     grid-row: span 2;
     width: calc(var(--icon-size) * 2 + var(--icon-gap-y));
@@ -465,9 +467,9 @@ defineExpose({
 }
 .icon-size-2x4,
 .icon-size-medium {
-    --icon-gap-x: 24px;
-    --icon-gap-y: 24px;
-    --icon-size: 44.800000000000004px;
+    --icon-gap-x: 30px;
+    --icon-gap-y: 30px;
+    --icon-size: 60px;
     grid-column: span 4;
     grid-row: span 2;
     width: calc(var(--icon-size) * 4 + var(--icon-gap-y) * 3);
@@ -475,7 +477,7 @@ defineExpose({
 }
 .icon-size-1x1,
 .icon-size-mini {
-    --icon-gap-y: 24px;
+    --icon-gap-y: 30px;
 
     width: var(--icon-size);
     height: var(--icon-size);
