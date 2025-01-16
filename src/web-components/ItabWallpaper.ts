@@ -1,20 +1,31 @@
+
+
 class ItabWallpaper extends HTMLElement {
+    static observedAttributes = ["url"];
+    div: HTMLDivElement | null;
     constructor() {
         super();
+        this.div = null;
+        this.init()
     }
+
     connectedCallback() {
-        // 创建 Shadow DOM
-        const shadow = this.attachShadow({ mode: "open" });
-        const div = document.createElement("div");
-        const style = document.createElement("style");
 
-        div.classList.add("wallpaper");
+    }
+    attributeChangedCallback(name: any, oldValue: any, newValue: any) {
+        if (name === "url") {
+            if (this.div) {
+                this.div.style.backgroundImage = `url(${this.getAttribute("url")})`;
 
-        if (this.hasAttribute("url")) {
-            div.style.backgroundImage = `url(${this.getAttribute("url")})`;
-            this.removeAttribute("url");
+            }
         }
-
+    }
+    init(){
+// 创建 Shadow DOM
+        const shadow = this.attachShadow({ mode: "open" });
+        this.div = document.createElement("div");
+        const style = document.createElement("style");
+        this.div.classList.add("wallpaper");
         style.textContent = `
      .wallpaper{
             position: absolute;
@@ -53,7 +64,7 @@ class ItabWallpaper extends HTMLElement {
         }
 
         `;
-        shadow.appendChild(div);
+        shadow.appendChild(this.div);
         shadow.appendChild(style);
     }
 }

@@ -31,7 +31,7 @@ export default defineConfig({
             symbolId: 'icon-[dir]-[name]',
         }),
          AutoImport({
-            imports: ['vue', 'vue-router'],
+            imports: ['vue', 'vue-router','pinia'] // 自动导入 Pinia 的相关函数],
 
         }),
         Components({

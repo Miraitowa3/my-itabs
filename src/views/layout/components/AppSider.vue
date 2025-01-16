@@ -46,17 +46,16 @@
 <script setup lang="ts">
 import SvgIcon from "@/components/SvgIcon.vue";
 import { VueDraggable } from "vue-draggable-plus";
-const props = defineProps<{
-    isSiderShow: boolean;
-}>();
-const cur = defineModel<any>({ required: true });
-const siderList = defineModel<any[]>("siderList", { required: true });
+import { useSiderStatusStore, useGlobalStore } from "@/stores/global";
+const global = useGlobalStore();
+const { cur, siderList } = storeToRefs(global);
 const drag = ref(false);
 const emits = defineEmits(["updateTranslateY"]);
+const siderStatus = useSiderStatusStore();
+const { isSiderShow } = storeToRefs(siderStatus);
 function changeTab(item: any) {
     cur.value.current = item.id;
     cur.value.currentTab = getInex(item.id);
-    emits("updateTranslateY");
 }
 function onStart() {
     drag.value = true;
@@ -92,9 +91,13 @@ function onEnd(e: any) {
     }
 }
 .app-sider > .app-sidebar-body {
-    background-color: rgba(98, 118, 115, 0.1);
+    --img-bg: 34, 34, 34;
+    --sidebar-opacity: 0.4;
+    --img-text: 233, 233, 233;
+    background-color: rgba(var(--img-bg), var(--sidebar-opacity, 0.4));
+
     backdrop-filter: blur(6px);
-    color: rgba(233, 233, 233, 0.6);
+    color: rgba(var(--img-text), 0.6);
     font-size: 12px;
 }
 .app-sider .app-sidebar-body .app-sidebar-avatar {
@@ -111,18 +114,13 @@ function onEnd(e: any) {
     scrollbar-width: none;
     scrollbar-color: rgba(255, 255, 255, 0.4) rgba(0, 0, 0, 0);
 }
-.app-sidebar-ul {
-}
+
 .app-group-item {
     margin: 4px 0;
     height: 50px;
     transition: background 300ms;
 }
-.app-group-item.moving {
-    /* background: transparent;
-    color: transparent;
-    border: 1px dashed red; */
-}
+
 .app-group-item .d-icon {
     transition: transform 0.2s;
 }

@@ -1,118 +1,96 @@
 <template>
-    <div id="app-main" class="app-main absolute flex h-full w-full flex-col" @wheel="debouncedHandleWheel">
-        <!-- <MacDocker class="fixed left-1/2 top-1/2 h-12 -translate-x-1/2 pl-5 pr-5"></MacDocker> -->
-
-        <div class="app-header" :style="{ height: isSiderShow ? '3vh' : '18vh' }"></div>
-
-        <div class="app-date-box ac" style="">
-            <div>
-                <div class="app-time" @click="toggleTime">
-                    <time class="hh">20</time><span class="colon hh">:</span><time class="mm">44</time
-                    ><span class="colon" style="display: none">:</span><span class="sec">34</span>
-                </div>
-            </div>
-            <div class="app-date">
-                <span class="time-month">01月13日</span><span class="time-week">星期一</span
-                ><span class="time-lunar">腊月十四</span>
-            </div>
-        </div>
-        <!-- 搜索栏 -->
-        <AppSearch />
-
-        <div class="app-icon-grid-wrap flex-1" style="flex: 1 1 0%">
-            <div class="app-icon-grid d-hidden h-full" :style="{ opacity: isSiderShow ? 1 : 0 }">
-                <ul class="app-icon-wrap" ref="appIconWrap">
-                    <li
-                        class="app-icon-item"
-                        v-for="(item, index) in siderList"
-                        :name="item.id"
-                        :key="item.id"
-                        :style="{ opacity: cur.current === item.id ? 1 : 0 }"
+    <div class="app-icon-grid-wrap flex-1" style="flex: 1 1 0%">
+        <div class="app-icon-grid d-hidden h-full" :style="{ opacity: isSiderShow ? 1 : 0 }">
+            <ul class="app-icon-wrap" ref="appIconWrap">
+                <li
+                    class="app-icon-item"
+                    v-for="(item, index) in siderList"
+                    :name="item.id"
+                    :key="item.id"
+                    :style="{ opacity: cur.current === item.id ? 1 : 0 }"
+                >
+                    <div
+                        class="d-scrollbar-hide h-full"
+                        :id="'app-grid_' + item.id"
+                        style="pointer-events: auto; transition: transform 0.26s cubic-bezier(0.165, 0.84, 0.44, 1)"
                     >
-                        <div
-                            class="d-scrollbar-hide h-full"
-                            :id="'app-grid_' + item.id"
-                            style="pointer-events: auto; transition: transform 0.26s cubic-bezier(0.165, 0.84, 0.44, 1)"
+                        <VueDraggable
+                            v-model="item.children"
+                            :animation="150"
+                            target=".app-grid"
+                            @start="onStart"
+                            @end="onEnd"
                         >
-                            <VueDraggable
-                                v-model="item.children"
-                                :animation="150"
-                                target=".app-grid"
-                                @start="onStart"
-                                @end="onEnd"
+                            <TransitionGroup
+                                type="transition"
+                                tag="ul"
+                                :name="!drag ? 'fade' : undefined"
+                                class="app-grid"
                             >
-                                <TransitionGroup
-                                    type="transition"
-                                    tag="ul"
-                                    :name="!drag ? 'fade' : undefined"
-                                    class="app-grid"
+                                <li
+                                    :class="['app-item', `icon-size-${it.size ? it.size : '1X1'}`]"
+                                    v-for="(it, index) in item.children"
+                                    :key="it.id"
                                 >
-                                    <li
-                                        :class="['app-item', `icon-size-${it.size ? it.size : '1X1'}`]"
-                                        v-for="(it, index) in item.children"
-                                        :key="it.id"
+                                    <div
+                                        class="app-item-icon"
+                                        :style="{
+                                            'background-color': it['backgroundColor']
+                                                ? it['backgroundColor']
+                                                : '#FFFFFF',
+                                        }"
                                     >
-                                        <div
-                                            class="app-item-icon"
+                                        <img
+                                            v-if="it.src"
+                                            class="app-item-img"
+                                            :src="it.src"
                                             :style="{
-                                                'background-color': it['backgroundColor']
+                                                'pointer-events': 'none',
+                                                '--icon-bg-color': it['backgroundColor']
                                                     ? it['backgroundColor']
                                                     : '#FFFFFF',
+                                                '--icon-fit': 'contain',
                                             }"
-                                        >
-                                            <img
-                                                v-if="it.src"
-                                                class="app-item-img"
-                                                :src="it.src"
-                                                :style="{
-                                                    'pointer-events': 'none',
-                                                    '--icon-bg-color': it['backgroundColor']
-                                                        ? it['backgroundColor']
-                                                        : '#FFFFFF',
-                                                    '--icon-fit': 'contain',
-                                                }"
-                                            />
-                                        </div>
-                                        <p class="app-item-title d-elip">{{ it.name }}</p>
-                                    </li>
-                                </TransitionGroup>
-                            </VueDraggable>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="app-yiyan app-yiyan flex cursor-pointer justify-center overflow-hidden bg-transparent leading-5">
-            <div class="app-yiyan-body relative">
-                <div class="yiyan-text" title="点击左键复制，右键切换">
-                    「 那些听不见音乐的人认为那些跳舞的人疯了。 」
-                </div>
-                <div class="yiyan-from text-center">-亨利·柏格森-</div>
-            </div>
+                                        />
+                                    </div>
+                                    <p class="app-item-title d-elip">{{ it.name }}</p>
+                                </li>
+                            </TransitionGroup>
+                        </VueDraggable>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import AppSearch from "./AppSearch.vue";
 import { VueDraggable } from "vue-draggable-plus";
-const cur = defineModel<any>({ required: true });
-const isSiderShow = defineModel<any>("isSiderShow", { required: true });
-
+import { useSiderStatusStore, useGlobalStore } from "@/stores/global";
+const siderStatus = useSiderStatusStore();
+const { isSiderShow } = storeToRefs(siderStatus);
+const global = useGlobalStore();
+const { cur, siderList } = storeToRefs(global);
 const drag = ref(false);
-const props = defineProps<{ siderList: any[] }>();
 const appIconWrap = ref<HTMLUListElement>();
 const scrollDisYIndex = ref<number>(0);
 const BASE_TRANSLATE_Y = ref(500);
 const scrollDisYList = ref<number[]>([]);
 const appGridId = ref<HTMLUListElement>();
+function onStart() {
+    drag.value = true;
+}
+function onEnd(e: any) {
+    nextTick(() => {
+        drag.value = false;
+    });
+}
+
 watch(
     () => cur.value.current,
-    (value: number) => {
+    (value: string) => {
         nextTick(() => {
             const clientY = appIconWrap.value!.getBoundingClientRect().height;
-
             const scorllY = (
                 document.querySelector("#" + "app-grid_" + cur.value.current + "> div") as HTMLUListElement
             ).getBoundingClientRect().height;
@@ -136,14 +114,13 @@ watch(
     },
     { immediate: true },
 );
-function onStart() {
-    drag.value = true;
-}
-function onEnd(e: any) {
-    nextTick(() => {
-        drag.value = false;
-    });
-}
+watch(
+    () => cur.value.current,
+    (value: string) => {
+        //切换tab时，更新 tab-content 位置
+        updateTranslateY();
+    },
+);
 function handleWheel(e: WheelEvent) {
     if (e.deltaY > 0) {
         //向下滚动
@@ -151,11 +128,10 @@ function handleWheel(e: WheelEvent) {
         if (scrollDisYIndex.value > scrollDisYList.value.length - 1) {
             //app-grid 滚动到底部，切换下一个tab
             cur.value.currentTab++;
-            if (cur.value.currentTab === props.siderList.length) {
+            if (cur.value.currentTab === siderList.value.length) {
                 cur.value.currentTab = 0;
             }
-            cur.value.current = props.siderList[cur.value.currentTab].id;
-            updateTranslateY();
+            cur.value.current = siderList.value[cur.value.currentTab].id;
         } else {
             let totalY = 0;
             scrollDisYList.value.forEach((item: number, index: number) => {
@@ -175,10 +151,9 @@ function handleWheel(e: WheelEvent) {
             //app-grid 滚动到顶部，切换上一个tab
             cur.value.currentTab--;
             if (cur.value.currentTab < 0) {
-                cur.value.currentTab = props.siderList.length - 1;
+                cur.value.currentTab = siderList.value.length - 1;
             }
-            cur.value.current = props.siderList[cur.value.currentTab].id;
-            updateTranslateY();
+            cur.value.current = siderList.value[cur.value.currentTab].id;
         } else {
             let totalY = 0;
             scrollDisYList.value.forEach((item: number, index: number) => {
@@ -229,34 +204,11 @@ onMounted(() => {
         BASE_TRANSLATE_Y.value = clientY / 2;
     }
 });
-function toggleTime() {
-    isSiderShow.value = !isSiderShow.value;
-}
 defineExpose({
-    updateTranslateY,
+    debouncedHandleWheel,
 });
 </script>
 <style scoped>
-.app-main {
-    z-index: 1;
-}
-
-.app-header {
-    --height: 3vh;
-    height: var(--height);
-    color: #080505;
-    transition: 0.2s;
-    position: relative;
-}
-@media screen and (min-height: 768px) {
-    .app-header {
-        --height: 6vh;
-    }
-}
-.app-date-box {
-    text-align: center;
-}
-
 .app-icon-grid {
     pointer-events: none;
     max-width: 1350px;
@@ -282,87 +234,6 @@ defineExpose({
     font-size: 40px;
     text-align: center;
     line-height: 200px;
-}
-
-.app-yiyan {
-    max-height: 60px;
-    color: #ffffffe6;
-}
-.yiyan-text {
-    text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-    font-size: 12px;
-}
-.yiyan-from {
-    font-size: 12px;
-    opacity: 0;
-    transition: 0.4s;
-}
-.app-yiyan .app-yiyan-body:hover {
-    background-color: #00000005;
-}
-.app-yiyan .app-yiyan-body:hover .yiyan-from {
-    opacity: 1;
-}
-
-/* date 样式 */
-:host {
-    user-select: none;
-    text-align: center;
-    -webkit-user-select: none;
-    color: #fff;
-}
-.app-date-box {
-    font-family: auto;
-}
-.app-date {
-    font-size: 14px;
-    line-height: 26px;
-    opacity: 0.88;
-    margin-top: -3px;
-    text-shadow: 0 2px 4px rgb(0 0 0 / 16%);
-}
-
-.app-date span {
-    margin: 0 2px;
-}
-
-.app-date .time-month {
-    color: #fff;
-
-    display: inline;
-}
-
-.app-date .time-week {
-    color: #fff;
-
-    display: inline;
-}
-
-.app-date .time-lunar {
-    color: #fff;
-
-    display: inline;
-}
-
-.app-time {
-    font-size: 70px;
-    font-family: HarmonyOS_Sans;
-    user-select: none;
-    font-weight: var(400);
-    text-shadow: 0 2px 6px rgb(0 0 0 / 16%);
-    display: inline-block;
-    line-height: 70px;
-    transition: font 0.2s;
-    color: #fff;
-}
-.app-time.fontFamily-align .colon {
-    vertical-align: unset !important;
-}
-.app-time .colon {
-    vertical-align: calc(70px / 12);
-}
-.app-time .sec {
-    display: none;
 }
 
 .app-item-icon {
