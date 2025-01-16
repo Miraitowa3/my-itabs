@@ -26,6 +26,7 @@
                                 tag="ul"
                                 :name="!drag ? 'fade' : undefined"
                                 class="app-grid"
+                                id="app-grid"
                             >
                                 <li
                                     :class="['app-item', `icon-size-${it.size ? it.size : '1X1'}`]"
@@ -62,11 +63,13 @@
             </ul>
         </div>
     </div>
+    <AppItemContentMenu />
 </template>
 
 <script lang="ts" setup>
 import { VueDraggable } from "vue-draggable-plus";
 import { useSiderStatusStore, useGlobalStore } from "@/stores/global";
+import AppItemContentMenu from "./AppItemContentMenu.vue";
 const siderStatus = useSiderStatusStore();
 const { isSiderShow } = storeToRefs(siderStatus);
 const global = useGlobalStore();
