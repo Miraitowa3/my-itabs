@@ -1,5 +1,5 @@
 <template>
-    <div class="app-date-box ac" style="">
+    <div class="app-date-box ac">
         <div>
             <div class="app-time" @click="toggleTime">
                 <time class="hh">20</time><span class="colon hh">:</span><time class="mm">44</time

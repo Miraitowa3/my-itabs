@@ -3,10 +3,8 @@ export default function useContentMenu(containerRef: string,hanlderCallback: (ev
     const x = ref(0);
     const y = ref(0);
     const handleContextMenu = (event: MouseEvent) => {
-
-
         event.preventDefault();
-        event.stopPropagation();
+        // event.stopPropagation();
         const isContinue=hanlderCallback(event);
        if(!isContinue) return;
         showMenu.value = true;

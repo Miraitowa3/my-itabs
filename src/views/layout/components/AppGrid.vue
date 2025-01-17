@@ -14,6 +14,7 @@
                         :id="'app-grid_' + item.id"
                         style="pointer-events: auto; transition: transform 0.26s cubic-bezier(0.165, 0.84, 0.44, 1)"
                     >
+                        <AppItemContentMenu :target="`#app-grid_${item.id} .app-grid`" />
                         <VueDraggable
                             v-model="item.children"
                             :animation="150"
@@ -26,7 +27,6 @@
                                 tag="ul"
                                 :name="!drag ? 'fade' : undefined"
                                 class="app-grid"
-                                id="app-grid"
                             >
                                 <li
                                     :class="['app-item', `icon-size-${it.size ? it.size : '1X1'}`]"
@@ -63,7 +63,6 @@
             </ul>
         </div>
     </div>
-    <AppItemContentMenu />
 </template>
 
 <script lang="ts" setup>

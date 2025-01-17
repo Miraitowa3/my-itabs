@@ -1,18 +1,19 @@
 <template>
     <Teleport to="body">
-        <div
-            class="content-menu fixed"
-            :class="{ animation: showMenu }"
-            v-if="showMenu"
-            :style="{
-                left: `${x}px`,
-                top: `${y}px`,
-            }"
-        >
-            <slot></slot>
-        </div>
+        <Transition @before-enter="handleBeforeEnter" @after-enter="handleAfterEnter" @enter="handleEnter">
+            <div
+                id="content-menu"
+                class="content-menu fixed"
+                v-if="showMenu"
+                :style="{
+                    left: `${x}px`,
+                    top: `${y}px`,
+                }"
+            >
+                <slot></slot>
+            </div>
+        </Transition>
     </Teleport>
-    <
 </template>
 
 <script lang="ts" setup>
@@ -28,8 +29,26 @@ const props = defineProps({
         required: true,
     },
 });
-
 const { showMenu, x, y } = useContentMenu(props.containerRef, props.hanlderCallback);
+
+function handleBeforeEnter(e: Element) {
+    e.classList.add("animation");
+}
+function handleAfterEnter(e: Element) {
+    e.classList.remove("animation");
+}
+function handleEnter(e: Element) {
+    let h = (e as HTMLElement).offsetHeight;
+    let w = (e as HTMLElement).offsetWidth;
+    let wH = window.innerHeight;
+    let wW = window.innerWidth;
+    if (x.value + w > wW) {
+        x.value = wW - w;
+    }
+    if (y.value + h > wH) {
+        y.value = wH - h;
+    }
+}
 </script>
 <style scoped>
 .content-menu {

@@ -39,20 +39,16 @@
 </template>
 
 <script lang="ts" setup>
-const whiteClass = ["app-item-icon", "app-item-title", "yiyan-text", "yiyan-from", "se-input", "search-icon"];
-const textElements = ["P", "SPAN", "SVG", "TEXTAREA", "INPUT", "IMG"]; // 添加您认为是文字元素的标签名
+const whiteClass = ["app-item-icon", "yiyan-text", "yiyan-from", "se-input", "search-icon"];
+
 function hanlderCallback(e: MouseEvent) {
     const target = e.target as HTMLElement;
     const classes = (target.getAttribute("class") || "").split(" ");
-    // 检查元素是否是文字元素
-    if (textElements.includes(target.nodeName)) {
-        return false;
-    }
+
     if (classes.some((cls) => whiteClass.includes(cls))) {
         return false;
     }
     return true;
-    return false;
 }
 </script>
 <style scoped>

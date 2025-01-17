@@ -170,6 +170,7 @@ function changeSelect() {
     transition: background 0.2s;
     border-radius: 8px;
 }
+
 .se-all .se-item:hover {
     background-color: rgba(255, 255, 255, 0.7);
 }

@@ -1,5 +1,5 @@
 <template>
-    <ContentMenu containerRef="#app-grid" :hanlderCallback="hanlderCallback">
+    <ContentMenu :containerRef="target" :hanlderCallback="hanlderCallback">
         <ul class="menu-list">
             <li class="menu-item">
                 <span class="align-center flex">
@@ -38,13 +38,14 @@
 </template>
 
 <script lang="ts" setup>
+const props = defineProps<{
+    target: string;
+}>();
+
 const whiteClass = ["app-item-icon"];
 function hanlderCallback(e: MouseEvent) {
     const target = e.target as HTMLElement;
-    console.log(target);
-
     const classes = (target.getAttribute("class") || "").split(" ");
-
     if (!classes.some((cls) => whiteClass.includes(cls))) {
         return false;
     }
