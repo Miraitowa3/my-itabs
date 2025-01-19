@@ -32,12 +32,13 @@ const props = defineProps({
 const { showMenu, x, y } = useContentMenu(props.containerRef, props.hanlderCallback);
 
 function handleBeforeEnter(e: Element) {
-    e.classList.add("animation");
+    // e.classList.add("animation");
 }
 function handleAfterEnter(e: Element) {
-    e.classList.remove("animation");
+    // e.classList.remove("animation");
 }
 function handleEnter(e: Element) {
+    e.classList.add("animation");
     let h = (e as HTMLElement).offsetHeight;
     let w = (e as HTMLElement).offsetWidth;
     let wH = window.innerHeight;

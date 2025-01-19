@@ -3,7 +3,7 @@
         <div class="app-sidebar-body flex h-full w-full flex-col text-center">
             <div class="app-sidebar-avatar flex justify-center">
                 <img
-                    data-v-10b8c295=""
+                    @click="show = !show"
                     class="h-[30px] w-[30px] rounded-full object-cover"
                     src="https://files.codelife.cc/blog/avatar/default-avatar.png?x-oss-process=image/resize,limit_0,m_fill,w_40,h_40/quality,q_92/format,webp"
                 />
@@ -41,18 +41,22 @@
             </div>
         </div>
     </div>
+
+    <Login v-model="show"></Login>
 </template>
 
 <script setup lang="ts">
 import SvgIcon from "@/components/SvgIcon.vue";
 import { VueDraggable } from "vue-draggable-plus";
 import { useSiderStatusStore, useGlobalStore } from "@/stores/global";
+import Login from "@/views/login/Index.vue";
 const global = useGlobalStore();
 const { cur, siderList } = storeToRefs(global);
 const drag = ref(false);
 const emits = defineEmits(["updateTranslateY"]);
 const siderStatus = useSiderStatusStore();
 const { isSiderShow } = storeToRefs(siderStatus);
+const show = ref(false);
 function changeTab(item: any) {
     cur.value.current = item.id;
     cur.value.currentTab = getInex(item.id);
