@@ -2,43 +2,16 @@
     <div class="app-icon-grid-wrap flex-1" style="flex: 1 1 0%">
         <div class="app-icon-grid d-hidden h-full" :style="{ opacity: isSiderShow ? 1 : 0 }">
             <ul class="app-icon-wrap" ref="appIconWrap">
-                <li
-                    class="app-icon-item"
-                    v-for="(item, index) in siderList"
-                    :name="item.id"
-                    :key="item.id"
-                    :style="{ opacity: cur.current === item.id ? 1 : 0 }"
-                >
-                    <div
-                        class="d-scrollbar-hide h-full"
-                        :id="'app-grid_' + item.id"
-                        style="pointer-events: auto; transition: transform 0.26s cubic-bezier(0.165, 0.84, 0.44, 1)"
-                    >
+                <li class="app-icon-item" v-for="(item, index) in siderList" :name="item.id" :key="item.id" :style="{ opacity: cur.current === item.id ? 1 : 0 }">
+                    <div class="d-scrollbar-hide h-full" :id="'app-grid_' + item.id" style="pointer-events: auto; transition: transform 0.26s cubic-bezier(0.165, 0.84, 0.44, 1)">
                         <AppItemContentMenu :target="`#app-grid_${item.id} .app-grid`" />
-                        <VueDraggable
-                            v-model="item.children"
-                            :animation="150"
-                            target=".app-grid"
-                            @start="onStart"
-                            @end="onEnd"
-                        >
-                            <TransitionGroup
-                                type="transition"
-                                tag="ul"
-                                :name="!drag ? 'fade' : undefined"
-                                class="app-grid"
-                            >
-                                <li
-                                    :class="['app-item', `icon-size-${it.size ? it.size : '1X1'}`]"
-                                    v-for="(it, index) in item.children"
-                                    :key="it.id"
-                                >
+                        <VueDraggable v-model="item.children" :animation="150" target=".app-grid" @start="onStart" @end="onEnd">
+                            <TransitionGroup type="transition" tag="ul" :name="!drag ? 'fade' : undefined" class="app-grid">
+                                <li :class="['app-item', `icon-size-${it.size ? it.size : '1X1'}`]" v-for="(it, index) in item.children" :key="it.id">
                                     <div
                                         class="app-item-icon"
                                         :style="{
-                                            'background-color': it['backgroundColor']
-                                                ? it['backgroundColor']
-                                                : '#FFFFFF',
+                                            'background-color': it['backgroundColor'] ? it['backgroundColor'] : '#FFFFFF',
                                         }"
                                     >
                                         <img
@@ -47,9 +20,7 @@
                                             :src="it.src"
                                             :style="{
                                                 'pointer-events': 'none',
-                                                '--icon-bg-color': it['backgroundColor']
-                                                    ? it['backgroundColor']
-                                                    : '#FFFFFF',
+                                                '--icon-bg-color': it['backgroundColor'] ? it['backgroundColor'] : '#FFFFFF',
                                                 '--icon-fit': 'contain',
                                             }"
                                         />
@@ -93,9 +64,7 @@ watch(
     (value: string) => {
         nextTick(() => {
             const clientY = appIconWrap.value!.getBoundingClientRect().height;
-            const scorllY = (
-                document.querySelector("#" + "app-grid_" + cur.value.current + "> div") as HTMLUListElement
-            ).getBoundingClientRect().height;
+            const scorllY = (document.querySelector("#" + "app-grid_" + cur.value.current + "> div") as HTMLUListElement).getBoundingClientRect().height;
             const disY = scorllY - clientY;
             let total = Math.floor(disY / BASE_TRANSLATE_Y.value);
             if (total === 0) {

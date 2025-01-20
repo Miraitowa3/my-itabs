@@ -8,7 +8,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ContentMenu: typeof import('./src/components/ContentMenu.vue')['default']
-    copy: typeof import('./src/components/Popup copy.vue')['default']
     Dialog: typeof import('./src/components/Dialog.vue')['default']
     MacDocker: typeof import('./src/components/MacDocker.vue')['default']
     Overlay: typeof import('./src/components/Overlay.vue')['default']

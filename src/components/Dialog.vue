@@ -1,7 +1,7 @@
 <template>
     <Teleport to="body">
         <Transition @before-enter="handleBeforeEnter" @enter="enter" @leave="leave" @before-leave="onBeforeLeave">
-            <Overlay v-if="show" @click="show = false">
+            <Overlay v-if="show" @click="modalClose">
                 <div class="overlay-dialog">
                     <div :class="['dialog', customClass]" :style="{ width: width }">
                         <slot></slot>
@@ -18,12 +18,14 @@ interface Props {
     customClass?: string;
     width?: string;
     time?: string;
+    closeOnClickModal?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     dlogClass: "",
     width: "30%",
     time: "0.3s",
+    closeOnClickModal: true,
 });
 
 function handleBeforeEnter(e: Element) {
@@ -59,6 +61,16 @@ function leave(e: Element, done: () => void) {
         { once: true },
     );
 }
+function close() {
+    show.value = false;
+}
+function modalClose(e: MouseEvent) {
+    e.stopPropagation();
+
+    if (e.target === e.currentTarget && props.closeOnClickModal) {
+        close();
+    }
+}
 </script>
 <style>
 .dialog {
@@ -73,8 +85,6 @@ function leave(e: Element, done: () => void) {
     overflow-wrap: break-word;
     padding: 16px;
     position: relative;
-
-    height: 400px;
 }
 .overlay-dialog {
     bottom: 0;

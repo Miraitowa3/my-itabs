@@ -1,7 +1,19 @@
 <template>
-    <Dialog v-model:show="show">111111111111111</Dialog>
+    <Dialog v-model:show="show" width="40%" :closeOnClickModal="false">
+        <div class="login">
+            <Login></Login>
+            <Registry></Registry>
+        </div>
+    </Dialog>
 </template>
 <script lang="ts" setup>
+import Login from "./Login.vue";
+import Registry from "./Registry.vue";
+
 const show = defineModel();
 </script>
-<style scoped lang="scss"></style>
+<style scoped>
+.login {
+    display: flex;
+}
+</style>
