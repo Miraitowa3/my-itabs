@@ -9,19 +9,8 @@
                 />
             </div>
             <div class="app-sidebar-group d-scrollbar-hide">
-                <VueDraggable
-                    v-model="siderList"
-                    :animation="150"
-                    target=".app-sidebar-ul"
-                    @start="onStart"
-                    @end="onEnd"
-                >
-                    <TransitionGroup
-                        type="transition"
-                        tag="ul"
-                        :name="!drag ? 'fade' : undefined"
-                        class="app-sidebar-ul"
-                    >
+                <VueDraggable v-model="siderList" :animation="150" target=".app-sidebar-ul" @start="onStart" @end="onEnd">
+                    <TransitionGroup type="transition" tag="ul" :name="!drag ? 'fade' : undefined" class="app-sidebar-ul">
                         <li
                             class="app-group-item flex cursor-pointer flex-col items-center justify-center"
                             :name="item.id"
@@ -42,7 +31,7 @@
         </div>
     </div>
 
-    <Login v-model="show"></Login>
+    <!-- <Login v-model="show"></Login> -->
 </template>
 
 <script setup lang="ts">

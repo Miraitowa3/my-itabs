@@ -1,5 +1,5 @@
 <template>
-    <div class="login-container">
+    <div class="login-container absolute top-0 h-full" :style="{ transform: !props.show ? 'translateX(0)' : 'translateX(100%)' }">
         <div class="form-item">
             <input type="text" id="emil" required />
             <span class="bar"></span>
@@ -19,10 +19,16 @@ const form = ref<any>({
     emil: "",
     password: "",
 });
+const props = defineProps<{
+    show: boolean;
+}>();
 </script>
 <style scoped>
 .login-container {
     width: 50%;
+    transform: translateX(100%);
+    transition: all 0.6s ease-in-out;
+    background: #fff;
 }
 .form-item {
     box-sizing: border-box;

@@ -1,5 +1,5 @@
 <template>
-    <div class="registry">
+    <div class="registry absolute top-0 h-full">
         <div class="form-item">
             <input type="text" id="emil" required />
             <span class="bar"></span>
@@ -29,10 +29,16 @@ const form = ref<any>({
     emil: "",
     password: "",
 });
+const props = defineProps<{
+    show: boolean;
+}>();
 </script>
 <style scoped>
 .registry {
     width: 50%;
+    transform: translateX(100%);
+    transition: all 0.6s ease-in-out;
+    background: #fff;
 }
 .form-item {
     box-sizing: border-box;
