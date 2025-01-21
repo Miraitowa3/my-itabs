@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    <!-- <Login v-model="show"></Login> -->
+    <Login v-model:show="show"></Login>
 </template>
 
 <script setup lang="ts">

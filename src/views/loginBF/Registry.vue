@@ -1,36 +1,44 @@
 <template>
-    <Dialog v-model:show="show" width="420px">
-        <div class="app-login"></div>
-        <Tab style="width: 100%"></Tab>
-        <div class="login-container">
-            <div class="form-item">
-                <input type="text" id="emil" required />
-                <span class="bar"></span>
-                <label for="emil">邮箱</label>
-            </div>
-            <div class="form-item">
-                <input type="text" id="password" required />
-                <span class="bar"></span>
-                <label for="password">密码</label>
-            </div>
-            <button>登录</button>
+    <div class="registry absolute top-0 h-full">
+        <div class="form-item">
+            <input type="text" id="emil" required />
+            <span class="bar"></span>
+            <label for="emil">邮箱</label>
         </div>
-    </Dialog>
+        <div class="form-item">
+            <input type="text" id="emil" required />
+            <span class="bar"></span>
+            <label for="emil">验证码</label>
+        </div>
+        <div class="form-item">
+            <input type="text" id="emil" required />
+            <span class="bar"></span>
+            <label for="emil">昵称</label>
+        </div>
+        <div class="form-item">
+            <input type="text" id="password" required />
+            <span class="bar"></span>
+            <label for="password">密码</label>
+        </div>
+        <button>注册</button>
+    </div>
 </template>
 
 <script lang="ts" setup>
-const show = defineModel("show");
 const form = ref<any>({
     emil: "",
     password: "",
 });
+const props = defineProps<{
+    show: boolean;
+}>();
 </script>
 <style scoped>
-.login-container {
+.registry {
     width: 50%;
-}
-.app-login {
-    padding: 20px;
+    transform: translateX(100%);
+    transition: all 0.6s ease-in-out;
+    background: #fff;
 }
 .form-item {
     box-sizing: border-box;

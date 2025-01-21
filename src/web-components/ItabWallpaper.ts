@@ -35,8 +35,10 @@ class ItabWallpaper extends HTMLElement {
             bottom: 0;
             transition:background .3s,transform .3s, height .3s;
             background-size: cover;
-            background-position: 50%;
+            background-position: 50% 50%;
+            background-repeat: no-repeat;
             z-index:0;
+
         }
         .wallpaper.change {
             transform:scale(1.1)

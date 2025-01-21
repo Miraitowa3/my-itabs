@@ -1,0 +1,19 @@
+.tabs {
+    width: 100%;
+}
+.tabs-header-item {
+    cursor: pointer;
+    font-size: 16px;
+    border-bottom: 2px solid transparent;
+    line-height: 20px;
+    padding-bottom: 10px;
+    flex: 1;
+    text-align: center;
+}
+
+.line {
+    height: 2px;
+    width: 100%;
+    overflow: hidden;
+    background: #000;
+}

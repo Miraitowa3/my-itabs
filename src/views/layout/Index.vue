@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import AppMain from "./components/AppMain.vue";
 import AppSider from "./components/AppSider.vue";
-const url = ref("https://raw.gitcode.com/snows_l/assets/raw/main/imgs/bg/1.png");
+const url = ref("https://raw.gitcode.com/snows_l/blog_assets/raw/master/imgs/bg/1.png");
 const timer = ref<NodeJS.Timeout>();
 const Max_INDEX = 100;
 const Min_INDEX = 1;
@@ -19,7 +19,7 @@ function changeWallpaper() {
     if (cur > Max_INDEX) {
         cur = Min_INDEX;
     }
-    url.value = `https://raw.gitcode.com/snows_l/assets/raw/main/imgs/bg/${cur}.png`;
+    url.value = `https://raw.gitcode.com/snows_l/blog_assets/raw/master/imgs/bg/${cur}.png`;
 }
 
 onMounted(() => {
