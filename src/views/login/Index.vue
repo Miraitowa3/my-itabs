@@ -1,33 +1,53 @@
 <template>
     <Dialog v-model:show="show" width="420px">
-        <div class="app-login"></div>
-        <Tab style="width: 100%"></Tab>
-        <div class="login-container">
-            <div class="form-item">
-                <input type="text" id="emil" required />
-                <span class="bar"></span>
-                <label for="emil">邮箱</label>
+        <div class="app-login">
+            <Tab style="width: 100%" @change="handleTabChange" :modelValue="activeTab" :list="tabList" @update:modelValue="(value) => (activeTab = value)"></Tab>
+            <div class="login-container">
+                <WxCodeLogin v-if="activeTab === '微信登录'"></WxCodeLogin>
+                <OtherLogin v-if="activeTab === '其它方式登录'"></OtherLogin>
+
+                <!-- <div class="form-item">
+                    <input type="text" id="emil" required />
+                    <span class="bar"></span>
+                    <label for="emil">邮箱</label>
+                </div>
+                <div class="form-item">
+                    <input type="text" id="password" required />
+                    <span class="bar"></span>
+                    <label for="password">密码</label>
+                </div>
+                <button>登录</button> -->
             </div>
-            <div class="form-item">
-                <input type="text" id="password" required />
-                <span class="bar"></span>
-                <label for="password">密码</label>
-            </div>
-            <button>登录</button>
         </div>
     </Dialog>
 </template>
 
 <script lang="ts" setup>
+import WxCodeLogin from "./components/WxCodeLogin.vue";
+import OtherLogin from "./components/OtherLogin.vue";
+
 const show = defineModel("show");
 const form = ref<any>({
     emil: "",
     password: "",
 });
+const tabList = ref([
+    {
+        label: "微信登录",
+        value: "微信登录",
+    },
+    {
+        label: "其它方式登录",
+        value: "其它方式登录",
+    },
+]);
+const activeTab = ref("微信登录");
+const handleTabChange = (cur: any) => {
+    console.log(cur);
+};
 </script>
 <style scoped>
 .login-container {
-    width: 50%;
 }
 .app-login {
     padding: 20px;
