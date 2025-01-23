@@ -6,7 +6,7 @@ import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import * as path from "path";
-
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import vueDevTools from "vite-plugin-vue-devtools";
 
 // https://vite.dev/config/
@@ -31,11 +31,12 @@ export default defineConfig({
             symbolId: "icon-[dir]-[name]",
         }),
         AutoImport({
-
+            resolvers: [ElementPlusResolver()],
             imports: ["vue", "vue-router", "pinia"], // 自动导入 Pinia 的相关函数],
         }),
         Components({
-         extensions: ['vue','tsx','jsx'],
+            resolvers: [ElementPlusResolver()],
+            extensions: ["vue", "tsx", "jsx"],
             dirs: ["src/components"],
         }),
     ],

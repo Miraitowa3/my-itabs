@@ -9,6 +9,10 @@ declare module 'vue' {
   export interface GlobalComponents {
     ContentMenu: typeof import('./src/components/ContentMenu.vue')['default']
     Dialog: typeof import('./src/components/Dialog.vue')['default']
+    ElButton: typeof import('element-plus/es')['ElButton']
+    ElForm: typeof import('element-plus/es')['ElForm']
+    ElFormItem: typeof import('element-plus/es')['ElFormItem']
+    ElInput: typeof import('element-plus/es')['ElInput']
     MacDocker: typeof import('./src/components/MacDocker.vue')['default']
     Overlay: typeof import('./src/components/Overlay.vue')['default']
     Popup: typeof import('./src/components/Popup.vue')['default']
