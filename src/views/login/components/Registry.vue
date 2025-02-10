@@ -6,94 +6,54 @@
             <span class="brid-claw right"></span>
         </div>
         <el-form ref="ruleFormRef" style="max-width: 600px" :model="ruleForm" status-icon :rules="rules" label-width="auto" class="demo-ruleForm">
-            <el-form-item :label="item.label" :prop="item.prop" v-for="item in colums" :key="item.prop"></el-form-item>
-            <el-form-item label="Password" prop="pass"> </el-form-item>
-            <el-form-item label="Confirm" prop="checkPass">
-                <el-input v-model="ruleForm.checkPass" type="password" autocomplete="off" />
+            <el-form-item prop="pass" style="flex: 1">
+                <div class="flex items-center justify-around">
+                    <el-input v-model="ruleForm.emil" type="text" placeholder="请输入邮箱" @change="handleEmilChange" />
+                    <el-button type="primary" :disabled="!isEmilCode" class="w-[90px]">10 </el-button>
+                </div>
             </el-form-item>
-            <el-form-item label="Age" prop="age">
-                <el-input v-model.number="ruleForm.age" />
+            <el-form-item prop="checkPass">
+                <el-input v-model="ruleForm.checkPass" type="text" placeholder="请输入6位邮箱验证码" />
+            </el-form-item>
+            <el-form-item prop="age">
+                <el-input v-model="ruleForm.checkPass" type="text" placeholder="请输入用户名" />
+            </el-form-item>
+            <el-form-item prop="age">
+                <el-input
+                    v-model="ruleForm.checkPass"
+                    type="password"
+                    autocomplete="off"
+                    placeholder="请输入8 到 16 位密码"
+                    @blur="handlePasswordBlur"
+                    @focus="handlePasswordFocus"
+                />
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="submitForm(ruleFormRef)"> Submit </el-button>
-                <el-button @click="resetForm(ruleFormRef)">Reset</el-button>
+                <el-button type="primary" @click="submitForm(ruleFormRef)" class="w-full"> 立即注册 </el-button>
             </el-form-item>
         </el-form>
     </div>
 </template>
 
 <script lang="ts" setup>
-const password = ref<HTMLInputElement>();
 import type { FormInstance, FormRules } from "element-plus";
-const colums = [
-    {
-        prop: "emil",
-        label: "",
-    },
-    {
-        prop: "code",
-        label: "",
-    },
-    {
-        prop: "name",
-        label: "",
-    },
-    {
-        prop: "password",
-        label: "",
-    },
-];
+import { validateEmil } from "@/utils/reg";
 const ruleFormRef = ref<FormInstance>();
-
-const checkAge = (rule: any, value: any, callback: any) => {
-    if (!value) {
-        return callback(new Error("Please input the age"));
-    }
-    setTimeout(() => {
-        if (!Number.isInteger(value)) {
-            callback(new Error("Please input digits"));
-        } else {
-            if (value < 18) {
-                callback(new Error("Age must be greater than 18"));
-            } else {
-                callback();
-            }
-        }
-    }, 1000);
-};
-
-const validatePass = (rule: any, value: any, callback: any) => {
-    if (value === "") {
-        callback(new Error("Please input the password"));
-    } else {
-        if (ruleForm.checkPass !== "") {
-            if (!ruleFormRef.value) return;
-            ruleFormRef.value.validateField("checkPass");
-        }
-        callback();
-    }
-};
-const validatePass2 = (rule: any, value: any, callback: any) => {
-    if (value === "") {
-        callback(new Error("Please input the password again"));
-    } else if (value !== ruleForm.pass) {
-        callback(new Error("Two inputs don't match!"));
-    } else {
-        callback();
-    }
-};
-
-const ruleForm = reactive({
-    pass: "",
-    checkPass: "",
-    age: "",
+const isEmilCode = ref(false);
+const ruleForm = ref({
+    emil: "",
 });
+function handleEmilChange() {
+    //检测邮箱格式是否正确
+    console.log(ruleForm.value.emil, validateEmil(ruleForm.value.emil));
 
-const rules = reactive<FormRules<typeof ruleForm>>({
-    pass: [{ validator: validatePass, trigger: "blur" }],
-    checkPass: [{ validator: validatePass2, trigger: "blur" }],
-    age: [{ validator: checkAge, trigger: "blur" }],
-});
+    if (validateEmil(ruleForm.value.emil)) {
+        isEmilCode.value = true;
+    } else {
+        isEmilCode.value = false;
+    }
+}
+const rules = reactive<FormRules<typeof ruleForm>>({});
 
 const submitForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return;
@@ -110,15 +70,16 @@ const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return;
     formEl.resetFields();
 };
-onMounted(() => {
+function handlePasswordFocus() {
     const birdLogo = document.querySelector(".bird-logo");
-    password.value?.addEventListener("focus", () => {
-        birdLogo!.classList.add("password");
-    });
-    password.value?.addEventListener("blur", () => {
-        birdLogo!.classList.remove("password");
-    });
-});
+
+    birdLogo!.classList.add("password");
+}
+function handlePasswordBlur() {
+    const birdLogo = document.querySelector(".bird-logo");
+
+    birdLogo!.classList.remove("password");
+}
 </script>
 <style scoped>
 .bird-logo {
