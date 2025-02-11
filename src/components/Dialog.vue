@@ -4,6 +4,9 @@
             <Overlay v-if="show" @click="modalClose">
                 <div class="overlay-dialog">
                     <div :class="['dialog', customClass]" :style="{ width: width }">
+                        <i class="absolute right-3 top-3 cursor-pointer text-[30px] text-[#909399] hover:text-[#1890ff]" v-if="closeIcon" @click="close">
+                            <svg-icon name="close"></svg-icon>
+                        </i>
                         <slot></slot>
                     </div>
                 </div>
@@ -19,6 +22,7 @@ interface Props {
     width?: string;
     time?: string;
     closeOnClickModal?: boolean;
+    closeIcon?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -26,6 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
     width: "30%",
     time: "0.3s",
     closeOnClickModal: true,
+    closeIcon: true,
 });
 
 function handleBeforeEnter(e: Element) {

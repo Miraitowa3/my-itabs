@@ -1,37 +1,23 @@
 <template>
     <div class="registry">
-        <div class="mb-[40px] mt-4 text-center text-xl font-bold">注册</div>
+        <div class="mb-[40px] mt-4 text-center text-xl font-bold">登录</div>
+
         <!-- <div class="bird-logo relative mt-[10px]">
             <div class="brid-body"></div>
             <span class="brid-claw left"></span>
             <span class="brid-claw right"></span>
         </div> -->
         <el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules">
-            <el-form-item prop="pass">
-                <div class="flex w-full items-center justify-around">
-                    <el-input v-model="ruleForm.emil" type="text" placeholder="请输入邮箱" @change="handleEmilChange" />
-                    <el-button type="primary" :disabled="!isEmil || isSendCode" class="ml-[5px] w-[90px]" @click="sendCode">{{ sendTimer }} </el-button>
-                </div>
-            </el-form-item>
             <el-form-item prop="checkPass">
-                <el-input v-model="ruleForm.code" type="text" placeholder="请输入6位邮箱验证码" />
+                <el-input v-model="ruleForm.code" type="text" placeholder="请输入邮箱" />
             </el-form-item>
+
             <el-form-item prop="age">
-                <el-input v-model="ruleForm.username" type="text" placeholder="请输入用户名" />
-            </el-form-item>
-            <el-form-item prop="age">
-                <el-input
-                    v-model="ruleForm.password"
-                    type="password"
-                    autocomplete="off"
-                    placeholder="请输入8 到 18 位密码"
-                    @blur="handlePasswordBlur"
-                    @focus="handlePasswordFocus"
-                />
+                <el-input v-model="ruleForm.password" type="password" autocomplete="off" placeholder="请输入密码" @blur="handlePasswordBlur" @focus="handlePasswordFocus" />
             </el-form-item>
             <el-form-item>
                 <div class="h-10 w-full leading-none">
-                    <el-button type="primary" @click="submitForm(ruleFormRef)" style="height: 100%; width: 100%"> 立即注册 </el-button>
+                    <el-button type="primary" @click="submitForm(ruleFormRef)" style="height: 100%; width: 100%"> 立即登录 </el-button>
                 </div>
             </el-form-item>
         </el-form>
@@ -40,29 +26,15 @@
 
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from "element-plus";
-import { validateEmil } from "@/utils/reg";
 const ruleFormRef = ref<FormInstance>();
-const isEmil = ref(false);
-const isSendCode = ref(false);
-const CODE_TIMEOUT: number = 10;
-const sendTimer = ref<string | number>("获取验证码");
-const timer = ref<NodeJS.Timeout>();
+
 const ruleForm = ref({
     emil: "",
     code: "",
     username: "",
     password: "",
 });
-function handleEmilChange() {
-    //检测邮箱格式是否正确
 
-    if (validateEmil(ruleForm.value.emil)) {
-        isEmil.value = true;
-        sendTimer.value = "获取验证码";
-    } else {
-        isEmil.value = false;
-    }
-}
 const rules = reactive<FormRules<typeof ruleForm>>({});
 
 const submitForm = (formEl: FormInstance | undefined) => {
@@ -90,23 +62,6 @@ function handlePasswordBlur() {
 
     birdLogo!.classList.remove("password");
 }
-function sendCode() {
-    isSendCode.value = true;
-    //发送验证码
-    sendTimer.value = CODE_TIMEOUT;
-
-    timer.value = setInterval(() => {
-        sendTimer.value = (sendTimer.value as number) - 1;
-        if (sendTimer.value === 0) {
-            sendTimer.value = "获取验证码";
-            isSendCode.value = false;
-            timer.value && clearTimeout(timer.value);
-        }
-    }, 1000);
-}
-onUnmounted(() => {
-    timer.value && clearTimeout(timer.value);
-});
 </script>
 <style scoped>
 :deep(.el-input__wrapper) {

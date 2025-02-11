@@ -5,18 +5,6 @@
             <div class="login-container">
                 <WxCodeLogin v-if="activeTab === '微信登录'"></WxCodeLogin>
                 <OtherLogin v-if="activeTab === '其它方式登录'"></OtherLogin>
-
-                <!-- <div class="form-item">
-                    <input type="text" id="emil" required />
-                    <span class="bar"></span>
-                    <label for="emil">邮箱</label>
-                </div>
-                <div class="form-item">
-                    <input type="text" id="password" required />
-                    <span class="bar"></span>
-                    <label for="password">密码</label>
-                </div>
-                <button>登录</button> -->
             </div>
         </div>
     </Dialog>
