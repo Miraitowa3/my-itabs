@@ -45,4 +45,7 @@ export default defineConfig({
             "@": fileURLToPath(new URL("./src", import.meta.url)),
         },
     },
+    server: {
+        allowedHosts: ["snows.free.idcfengye.com"], // 允许的主机名
+    },
 });
