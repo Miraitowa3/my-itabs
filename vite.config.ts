@@ -47,5 +47,13 @@ export default defineConfig({
     },
     server: {
         allowedHosts: ["snows.free.idcfengye.com"], // 允许的主机名
+         proxy: {
+            '^/api': {
+                target: 'http://snows.free.idcfengye.com', // hadron
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/api/, ''),
+            },
+
+        },
     },
 });

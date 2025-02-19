@@ -3,15 +3,8 @@
         <div class="app-search-box relative">
             <form action="#" class="se-input-box relative flex items-center overflow-hidden">
                 <div class="se-select" @click="changeSelect">
-                    <img
-                        class="search-icon"
-                        src="https://files.codelife.cc/itab/search/google.svg"
-                        style="width: 20px; height: 20px"
-                    />
-                    <i
-                        class="d-icon select-icon-arrow absolute right-[2px] top-1/2 mt-[-5px] text-[12px]"
-                        style="color: rgba(0, 0, 0, 0.2)"
-                    >
+                    <img class="search-icon" src="https://files.codelife.cc/itab/search/google.svg" style="width: 20px; height: 20px" />
+                    <i class="d-icon select-icon-arrow absolute right-[2px] top-1/2 mt-[-5px] text-[12px]" style="color: rgba(0, 0, 0, 0.2)">
                         <svg-icon name="opt"></svg-icon>
                     </i>
                 </div>
