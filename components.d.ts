@@ -22,4 +22,7 @@ declare module 'vue' {
     SvgIcon: typeof import('./src/components/SvgIcon.vue')['default']
     Tab: typeof import('./src/components/Tab.tsx')['default']
   }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
+  }
 }

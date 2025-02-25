@@ -2,7 +2,7 @@
   <div class="wxchat-login text-center">
     <img class="wechat-logo" src="@/assets/img/wechat.svg"></img>
     <p class="wxchat-title">微信登录</p>
-    <div class="wxchat-qrcode relative inline-block">
+    <div class="wxchat-qrcode relative inline-block" v-loading="loading" element-loading-background="#000c">
       <div class="saomiao" ref="saomiao" v-if="codeUrl"></div>
       <i class="wechat-qrcode-refresh flex justify-center items-center " v-if="!codeStatus" @click.stop="getQrcode">
         <svg-icon name="refresh"></svg-icon>
@@ -22,6 +22,9 @@ const curTimer = ref<number>(0);
 const expireTime = ref<number>(0);
 const loading = ref<boolean>(false);
 function getQrcode() {
+  if(loading.value){
+    return ;
+  }
   loading.value = true;
   getWxCode().then((res: any) => {
     loading.value = false;
