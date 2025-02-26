@@ -4,7 +4,7 @@
     <p class="wxchat-title">微信登录</p>
     <div class="wxchat-qrcode relative inline-block" v-loading="loading" element-loading-background="#000c">
       <div class="saomiao" ref="saomiao" v-if="codeUrl"></div>
-      <i class="wechat-qrcode-refresh flex justify-center items-center " v-if="!codeStatus" @click.stop="getQrcode">
+      <i class="wechat-qrcode-refresh flex justify-center items-center " v-if="!codeStatus&&!loading" @click.stop="getQrcode">
         <svg-icon name="refresh"></svg-icon>
       </i>
       <img alt="加载二维码" :src="codeUrl" class="el-image__inner" v-if="codeUrl">
@@ -14,13 +14,16 @@
 </template>
 
 <script lang="ts" setup>
-import { getWxCode } from "@/api/login";
+import { getWxCode ,wxLogin} from "@/api/login";
+import { on } from "events";
 const saomiao = ref<HTMLDivElement>();
 const codeUrl = ref<string>();
+const ticket= ref<string>();
 const timer = ref<NodeJS.Timeout>();
 const curTimer = ref<number>(0);
 const expireTime = ref<number>(0);
 const loading = ref<boolean>(false);
+const timerInterval =  ref<NodeJS.Timeout>();
 function getQrcode() {
   if(loading.value){
     return ;
@@ -29,6 +32,7 @@ function getQrcode() {
   getWxCode().then((res: any) => {
     loading.value = false;
     codeUrl.value = res.url;
+    ticket.value = res.ticket;
       expireTime.value = res.expire_seconds;
 
     timer.value = setInterval(() => {
@@ -45,11 +49,12 @@ function getQrcode() {
   getQrcode()
 
 const codeStatus = computed(() => {
-
   if (curTimer.value > expireTime.value) {
     if (timer.value) {
       clearInterval(timer.value);
     }
+    codeUrl.value = '';
+    ticket.value = '';
     return false;
   } else {
     return true;
@@ -57,11 +62,26 @@ const codeStatus = computed(() => {
 
 })
 
+watch(()=>ticket.value, (newVal, oldVal) => {
+  if (ticket.value ) {
+    timerInterval.value = setInterval(() => {
+      wxLogin( { ticket: ticket.value }).then((res: any) => {
+
+      });
+    } , 1500);
+
+  }
+})
 
 onMounted(() => {
   // saomiao.value!.addEventListener('animationend', () => {
   //   saomiao.value!.style.display = 'none';
   // });
+});
+onUnmounted(() => {
+  if (timerInterval.value) {
+    clearInterval(timerInterval.value);
+  }
 });
 
 </script>
