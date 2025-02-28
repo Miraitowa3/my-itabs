@@ -15,6 +15,7 @@
 
 <script lang="ts" setup>
 import { getWxCode ,wxLogin} from "@/api/login";
+import { message } from "ant-design-vue";
 import { on } from "events";
 const saomiao = ref<HTMLDivElement>();
 const codeUrl = ref<string>();
@@ -31,9 +32,9 @@ function getQrcode() {
   loading.value = true;
   getWxCode().then((res: any) => {
     loading.value = false;
-    codeUrl.value = res.url;
-    ticket.value = res.ticket;
-      expireTime.value = res.expire_seconds;
+    codeUrl.value = res.data.url;
+    ticket.value = res.data.ticket;
+      expireTime.value = res.data.expire_seconds;
 
     timer.value = setInterval(() => {
       curTimer.value = Date.now() + 1000;
@@ -67,8 +68,19 @@ watch(()=>ticket.value, (newVal, oldVal) => {
     timerInterval.value = setInterval(() => {
       wxLogin( { ticket: ticket.value }).then((res: any) => {
 
+      console.log("🚀 ------------------------🚀");
+      console.log("🚀 ~ wxLogin ~ res:", res);
+      console.log("🚀 ------------------------🚀");
+
+       if(res.code === 200&&res.message==='sucess'){
+      clearInterval(timerInterval.value);
+      message.success('登录成功');
+      console.log(res.data);
+
+       }
+
       });
-    } , 1500);
+    } , 2500);
 
   }
 })

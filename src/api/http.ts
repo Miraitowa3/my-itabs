@@ -43,7 +43,7 @@ service.interceptors.response.use(
       console.error(res.message || 'Error');
       return Promise.reject(new Error(res.message || 'Error'));
     }
-    return res.data;
+    return res;
   },
   (error: AxiosError) => {
     // 对响应错误做点什么
