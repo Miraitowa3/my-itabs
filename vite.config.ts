@@ -7,7 +7,9 @@ import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import * as path from "path";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
+
 import vueDevTools from "vite-plugin-vue-devtools";
+import dayjs from "dayjs";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -31,8 +33,15 @@ export default defineConfig({
             symbolId: "icon-[dir]-[name]",
         }),
         AutoImport({
+            imports: [
+                "vue",
+                "vue-router",
+                "pinia",
+                {
+                    "element-plus": ["dayjs"],
+                },
+            ], // 自动导入 Pinia 的相关函数],
             resolvers: [ElementPlusResolver()],
-            imports: ["vue", "vue-router", "pinia"], // 自动导入 Pinia 的相关函数],
         }),
         Components({
             resolvers: [ElementPlusResolver()],
@@ -46,14 +55,13 @@ export default defineConfig({
         },
     },
     server: {
-        allowedHosts: ["snows.free.idcfengye.com"], // 允许的主机名
-         proxy: {
-            '^/api': {
-                target: 'http://snows.free.idcfengye.com', // hadron
+        allowedHosts: ["j39kq1ocub.by.takin.cc"], // 允许的主机名
+        proxy: {
+            "^/api": {
+                target: "http://j39kq1ocub.by.takin.cc", // hadron
                 changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/api/, ''),
+                rewrite: (path) => path.replace(/^\/api/, ""),
             },
-
         },
     },
 });

@@ -3,8 +3,8 @@
         <div class="app-login">
             <Tab style="width: 100%" @change="handleTabChange" :modelValue="activeTab" :list="tabList" @update:modelValue="(value) => (activeTab = value)"></Tab>
             <div class="login-container">
-                <WxCodeLogin v-if="activeTab === '微信登录'"></WxCodeLogin>
-                <OtherLogin v-if="activeTab === '其它方式登录'"></OtherLogin>
+                <WxCodeLogin v-if="activeTab === '微信登录'" @close="show = false"></WxCodeLogin>
+                <OtherLogin v-if="activeTab === '其它方式登录'" @close="show = false"></OtherLogin>
             </div>
         </div>
     </Dialog>

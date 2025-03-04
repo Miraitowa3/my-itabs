@@ -4,7 +4,8 @@
     <p class="wxchat-title">微信登录</p>
     <div class="wxchat-qrcode relative inline-block" v-loading="loading" element-loading-background="#000c">
       <div class="saomiao" ref="saomiao" v-if="codeUrl"></div>
-      <i class="wechat-qrcode-refresh flex justify-center items-center " v-if="!codeStatus&&!loading" @click.stop="getQrcode">
+      <i class="wechat-qrcode-refresh flex justify-center items-center " v-if="!codeStatus && !loading"
+        @click.stop="getQrcode">
         <svg-icon name="refresh"></svg-icon>
       </i>
       <img alt="加载二维码" :src="codeUrl" class="el-image__inner" v-if="codeUrl">
@@ -14,27 +15,28 @@
 </template>
 
 <script lang="ts" setup>
-import { getWxCode ,wxLogin} from "@/api/login";
-import { message } from "ant-design-vue";
-import { on } from "events";
+import { getWxCode, wxLogin } from "@/api/login";
+import userStore from "@/stores/user";
 const saomiao = ref<HTMLDivElement>();
 const codeUrl = ref<string>();
-const ticket= ref<string>();
+const ticket = ref<string>();
 const timer = ref<NodeJS.Timeout>();
 const curTimer = ref<number>(0);
 const expireTime = ref<number>(0);
 const loading = ref<boolean>(false);
-const timerInterval =  ref<NodeJS.Timeout>();
+const timerInterval = ref<NodeJS.Timeout>();
+const $user = userStore();
+const emits = defineEmits(['close'])
 function getQrcode() {
-  if(loading.value){
-    return ;
+  if (loading.value) {
+    return;
   }
   loading.value = true;
   getWxCode().then((res: any) => {
     loading.value = false;
     codeUrl.value = res.data.url;
     ticket.value = res.data.ticket;
-      expireTime.value = res.data.expire_seconds;
+    expireTime.value = res.data.expire_seconds;
 
     timer.value = setInterval(() => {
       curTimer.value = Date.now() + 1000;
@@ -44,10 +46,10 @@ function getQrcode() {
       saomiao.value!.addEventListener('animationend', () => {
         saomiao.value!.style.display = 'none';
       });
-      })
+    })
   })
 }
-  getQrcode()
+getQrcode()
 
 const codeStatus = computed(() => {
   if (curTimer.value > expireTime.value) {
@@ -59,28 +61,30 @@ const codeStatus = computed(() => {
     return false;
   } else {
     return true;
-            }
+  }
 
 })
 
-watch(()=>ticket.value, (newVal, oldVal) => {
-  if (ticket.value ) {
+watch(() => ticket.value, (newVal, oldVal) => {
+  if (ticket.value) {
     timerInterval.value = setInterval(() => {
-      wxLogin( { ticket: ticket.value }).then((res: any) => {
+      wxLogin({ ticket: ticket.value }).then((res: any) => {
 
-      console.log("🚀 ------------------------🚀");
-      console.log("🚀 ~ wxLogin ~ res:", res);
-      console.log("🚀 ------------------------🚀");
+        if (res.code === 200) {
+          if (res.data.sucess) {
+            clearInterval(timerInterval.value);
+            ElMessage.success('登录成功');
+            emits('close')
+            $user.setUserInfo({ token: res.data.token })
+          }
 
-       if(res.code === 200&&res.message==='sucess'){
-      clearInterval(timerInterval.value);
-      message.success('登录成功');
-      console.log(res.data);
 
-       }
+        } else {
+          ElMessage.error('登录失败，请重试');
+        }
 
       });
-    } , 2500);
+    }, 2400);
 
   }
 })
