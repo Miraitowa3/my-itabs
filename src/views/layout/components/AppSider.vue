@@ -1,12 +1,12 @@
 <template>
     <div class="app-sider fixed bottom-0 top-0 z-[2]" v-show="isSiderShow">
         <div class="app-sidebar-body flex h-full w-full flex-col text-center">
-            <div class="app-sidebar-avatar flex justify-center">
+            <div class="app-sidebar-avatar flex flex-col items-center justify-center">
                 <img
-                    @click="show = !show"
                     class="h-[30px] w-[30px] rounded-full object-cover"
                     src="https://files.codelife.cc/blog/avatar/default-avatar.png?x-oss-process=image/resize,limit_0,m_fill,w_40,h_40/quality,q_92/format,webp"
                 />
+                <p class="d-elip mt-1" @click="show = !show" v-if="!$user.userInfo">登录</p>
             </div>
             <div class="app-sidebar-group d-scrollbar-hide">
                 <VueDraggable v-model="siderList" :animation="150" target=".app-sidebar-ul" @start="onStart" @end="onEnd">
@@ -44,7 +44,10 @@ const { cur, siderList } = storeToRefs(global);
 const drag = ref(false);
 const emits = defineEmits(["updateTranslateY"]);
 const siderStatus = useSiderStatusStore();
+import userStore from "@/stores/user";
 const { isSiderShow } = storeToRefs(siderStatus);
+const $user = userStore();
+
 const show = ref(false);
 function changeTab(item: any) {
     cur.value.current = item.id;
@@ -97,6 +100,11 @@ function onEnd(e: any) {
     margin-top: 40px;
     margin-bottom: 40px;
     cursor: pointer;
+}
+.d-elip {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .app-sidebar-group {
     flex: 1;

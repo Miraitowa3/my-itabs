@@ -9,7 +9,7 @@
     <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules">
       <el-form-item prop="email">
         <div class="flex w-full items-center justify-around">
-          <el-input v-model="ruleForm.email" type="text" placeholder="请输入邮箱" @change="handleEmilChange" clearable />
+          <el-input v-model="ruleForm.email" type="text" placeholder="请输入邮箱" @input="handleEmilChange" clearable />
           <el-button type="primary" :disabled="!isEmil || isSendCode" class="ml-[5px] w-[90px]"
             @click="sendCode">{{ sendTimer }} </el-button>
         </div>
@@ -37,8 +37,7 @@
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from "element-plus";
 import { validateEmil, validatePassword, validateCode, validateUsername } from "@/utils/reg";
-import { sendVerifyCode } from "@/api/login";
-
+import { sendVerifyCode, register } from "@/api/login";
 const ruleFormRef = ref<FormInstance>();
 const isEmil = ref(false);
 const isSendCode = ref(false);
@@ -51,6 +50,8 @@ const ruleForm = ref({
   username: "",
   password: "",
 });
+const emits = defineEmits(['change'])
+
 function handleEmilChange() {
   //检测邮箱格式是否正确
 
@@ -107,9 +108,25 @@ const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      console.log("submit!");
-    } else {
-      console.log("error submit!");
+      const data = {
+        ...ruleForm.value,
+        password: window.btoa(ruleForm.value.password.trim()),
+      }
+      register(data).then((res: any) => {
+        if (res.code === 200) {
+          ElMessage({
+            type: 'success',
+            message: '注册成功，请登录',
+            onClose: () => {
+              emits('change', false)
+            }
+          })
+
+        } else {
+          ElMessage.error(res.message);
+
+        }
+      })
     }
   });
 };
@@ -130,19 +147,28 @@ function handlePasswordBlur() {
 }
 function sendCode() {
 
-  sendVerifyCode({ email: ruleForm.value.email })
-  isSendCode.value = true;
-  //发送验证码
-  sendTimer.value = CODE_TIMEOUT;
+  sendVerifyCode({ email: ruleForm.value.email }).then((res: any) => {
+    if (res.code === 200) {
+      ElMessage.success("验证码发送成功，请注意查收");
+      isSendCode.value = true;
+      //发送验证码
+      sendTimer.value = CODE_TIMEOUT;
 
-  timer.value = setInterval(() => {
-    sendTimer.value = (sendTimer.value as number) - 1;
-    if (sendTimer.value === 0) {
-      sendTimer.value = "获取验证码";
-      isSendCode.value = false;
-      timer.value && clearTimeout(timer.value);
+      timer.value = setInterval(() => {
+        sendTimer.value = (sendTimer.value as number) - 1;
+        if (sendTimer.value === 0) {
+          sendTimer.value = "获取验证码";
+          isSendCode.value = false;
+          timer.value && clearTimeout(timer.value);
+        }
+      }, 1000);
+    } else {
+
+      ElMessage.error(res.message);
+
     }
-  }, 1000);
+  })
+
 }
 onUnmounted(() => {
   timer.value && clearTimeout(timer.value);

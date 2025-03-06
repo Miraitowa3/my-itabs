@@ -72,10 +72,19 @@ watch(() => ticket.value, (newVal, oldVal) => {
 
         if (res.code === 200) {
           if (res.data.sucess) {
+              $user.setUserInfo(res.data)
             clearInterval(timerInterval.value);
-            ElMessage.success('登录成功');
+
+             ElMessage({
+            type: 'success',
+            message: '登录成功',
+            onClose: () => {
             emits('close')
-            $user.setUserInfo({ token: res.data.token })
+
+            }
+          })
+
+
           }
 
 

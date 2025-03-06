@@ -8,11 +8,11 @@
       <span class="brid-claw right"></span>
     </div>
     <el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules">
-      <el-form-item prop="checkPass">
-        <el-input v-model="ruleForm.code" type="text" placeholder="请输入邮箱" />
+      <el-form-item prop="email">
+        <el-input v-model="ruleForm.email" type="text" placeholder="请输入邮箱" />
       </el-form-item>
 
-      <el-form-item prop="age">
+      <el-form-item prop="password">
         <el-input v-model="ruleForm.password" type="password" autocomplete="off" placeholder="请输入密码"
           @blur="handlePasswordBlur" @focus="handlePasswordFocus" />
       </el-form-item>
@@ -29,23 +29,61 @@
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from "element-plus";
 const ruleFormRef = ref<FormInstance>();
-
+import { validateEmil, validatePassword } from "@/utils/reg";
+import { login } from "@/api/login";
+const emits = defineEmits(['change'])
+import userStore from '@/stores/user'
 const ruleForm = ref({
-  emil: "",
-  code: "",
-  username: "",
+  email: "",
   password: "",
 });
+const $user = userStore()
+const valiEmil = (rule: any, value: any, callback: any) => {
+  if (value === '' || !validateEmil(value)) {
+    callback('邮箱格式不正确')
+  } else {
+    callback()
 
-const rules = reactive<FormRules<typeof ruleForm>>({});
+  }
+}
+const vailPassword = (rule: any, value: any, callback: any) => {
+  if (value === '' || !validatePassword(value)) {
+    callback('密码格式不正确')
+  } else {
+    callback()
+
+  }
+}
+const rules = reactive<FormRules<typeof ruleForm>>({
+  email: [{ validator: valiEmil, trigger: 'change' }],
+  password: [{ validator: vailPassword, trigger: 'change' }],
+});
 
 const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      console.log("submit!");
-    } else {
-      console.log("error submit!");
+      const data = {
+        ...ruleForm.value,
+        password: window.btoa(ruleForm.value.password.trim()),
+      }
+      login(data).then((res: any) => {
+        if (res.code === 200) {
+          $user.setUserInfo(res.data)
+          ElMessage({
+            type: 'success',
+            message: '登录成功',
+            onClose: () => {
+              emits('change')
+            }
+          })
+
+
+        } else {
+
+          ElMessage.error(res.message)
+        }
+      })
     }
   });
 };
