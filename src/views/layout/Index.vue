@@ -2,13 +2,15 @@
     <Teleport to="body">
         <itab-wallpaper :url="url"> </itab-wallpaper>
     </Teleport>
-    <AppSider></AppSider>
+    <AppSider></AppSider><AddComponent v-model="show" />
     <AppMain></AppMain>
 </template>
 
 <script setup lang="ts">
 import AppMain from "./components/AppMain.vue";
 import AppSider from "./components/AppSider.vue";
+import AddComponent from "./components/AddComponent.vue";
+const show = ref(true);
 const url = ref("https://raw.gitcode.com/snows_l/blog_assets/raw/master/imgs/bg/1.png");
 const timer = ref<NodeJS.Timeout>();
 const Max_INDEX = 100;
