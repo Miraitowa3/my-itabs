@@ -1,5 +1,5 @@
 <template>
-    <div :class="['overlay', customClass]">
+    <div :class="['overlay', customClass]" :style="customStyle">
         <slot></slot>
     </div>
 </template>
@@ -7,9 +7,11 @@
 <script lang="ts" setup>
 interface Props {
     customClass?: string;
+    customStyle?: any;
 }
 const props = withDefaults(defineProps<Props>(), {
     customClass: "",
+    customStyle: {},
 });
 </script>
 <style scoped>

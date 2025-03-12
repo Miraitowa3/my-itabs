@@ -16,5 +16,8 @@ export const useGlobalStore = defineStore("global", () => {
         currentTab: 0,
     });
     const siderList = ref(navConfig);
-    return { siderList,cur };
+      function setNavConfig(list: any) {
+        siderList.value = list;
+    }
+    return { siderList, cur,setNavConfig };
 });

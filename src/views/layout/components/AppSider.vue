@@ -27,11 +27,24 @@
                         </li>
                     </TransitionGroup>
                 </VueDraggable>
+                <!-- 添加分组 -->
+                <div class="add-group-item">
+                    <i class="d-icon text-[20px]" @click.stop="showAdd = true">
+                        <svg-icon name="add"></svg-icon>
+                    </i>
+                </div>
+            </div>
+            <div class="sider-bottom">
+                <div class="setting">
+                    <i class="d-icon text-[20px]">
+                        <svg-icon name="menu-setting"></svg-icon>
+                    </i>
+                </div>
             </div>
         </div>
     </div>
 
-    <Login v-model:show="show"></Login>
+    <Login v-model:show="show"></Login><AddComponent v-model="showAdd" />
 </template>
 
 <script setup lang="ts">
@@ -39,6 +52,7 @@ import SvgIcon from "@/components/SvgIcon.vue";
 import { VueDraggable } from "vue-draggable-plus";
 import { useSiderStatusStore, useGlobalStore } from "@/stores/global";
 import Login from "@/views/login/Index.vue";
+import AddComponent from "./AddComponent.vue";
 const global = useGlobalStore();
 const { cur, siderList } = storeToRefs(global);
 const drag = ref(false);
@@ -47,7 +61,7 @@ const siderStatus = useSiderStatusStore();
 import userStore from "@/stores/user";
 const { isSiderShow } = storeToRefs(siderStatus);
 const $user = userStore();
-
+const showAdd = ref(false);
 const show = ref(false);
 function changeTab(item: any) {
     cur.value.current = item.id;
@@ -135,5 +149,31 @@ function onEnd(e: any) {
 
 .app-sidebar-group .app-group-item:hover .d-icon {
     transform: scale(1.2);
+}
+.add-group-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 4px 0;
+    height: 50px;
+    transition: background 0.3s;
+    pointer-events: cursor;
+}
+.setting i:hover {
+    animation: rotate ease-in-out 0.4s;
+}
+.sider-bottom {
+    margin-top: 10px;
+    .setting {
+        height: 56px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+@keyframes rotate {
+    0% {
+        transform: rotate(120deg);
+    }
 }
 </style>

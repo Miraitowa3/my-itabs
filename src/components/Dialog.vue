@@ -1,9 +1,9 @@
 <template>
     <Teleport to="body">
         <Transition @before-enter="handleBeforeEnter" @enter="enter" @leave="leave" @before-leave="onBeforeLeave">
-            <Overlay v-if="show" @click="modalClose">
+            <Overlay v-if="show" @click="modalClose" :customStyle="{ background: overlay ? 'rgba(0,0,0,0.5)' : 'transparent' }">
                 <div class="overlay-dialog">
-                    <div :class="['dialog', customClass]" :style="{ width: width }">
+                    <div :class="['dialog', customClass]" :style="{ width: width, ...customStyle }">
                         <i class="absolute right-3 top-3 cursor-pointer text-[30px] text-[#909399] hover:text-[#1890ff]" v-if="closeIcon" @click="close">
                             <svg-icon name="close"></svg-icon>
                         </i>
@@ -23,6 +23,8 @@ interface Props {
     time?: string;
     closeOnClickModal?: boolean;
     closeIcon?: boolean;
+    overlay?: boolean;
+    customStyle?: any;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -31,6 +33,8 @@ const props = withDefaults(defineProps<Props>(), {
     time: "0.3s",
     closeOnClickModal: true,
     closeIcon: true,
+    overlay: true,
+    customStyle: {},
 });
 
 function handleBeforeEnter(e: Element) {

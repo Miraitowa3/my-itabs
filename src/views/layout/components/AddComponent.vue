@@ -1,31 +1,123 @@
 <template>
-    <el-dialog v-model="show" width="260px" :modal="false" :append-to-body="true" class="custom-class">
-        <span>This is a message</span>
-        <template #header>
-            <header class="dialog-header">添加分组</header>
-        </template>
-        <template #footer>
-            <div class="dialog-footer">
-                <el-button @click="show = false">Cancel</el-button>
-                <el-button type="primary" @click="show = false"> Confirm </el-button>
-            </div>
-        </template>
-    </el-dialog>
+    <Dialog
+        v-model:show="show"
+        width="260px"
+        :customStyle="{
+            backdropFilter: 'blur(18px)',
+            background: 'rgba(255,255,255, 0.1)',
+            boxShadow: '0 12px 24px #0000002e',
+            marginLeft: '60px',
+            padding: '12px',
+        }"
+        :overlay="false"
+        :closeIcon="false"
+    >
+        <header class="dialog-header">添加分组</header>
+        <ul class="app-icon">
+            <li
+                v-for="(item, index) in siderIcons"
+                :class="[{ active: curIndex === index }]"
+                :key="item.icon + index"
+                @click.stop="
+                    () => {
+                        curIndex = index;
+                        siderItemName = item.name;
+                    }
+                "
+            >
+                <i class="text-[22px]">
+                    <svg-icon :name="'sider-' + item.icon"></svg-icon>
+                </i>
+            </li>
+        </ul>
+        <h5 class="mb-[5px] mt-[5px] text-sm text-[#fff]">名称</h5>
+        <div class="change-name"><el-input size="small" v-model="siderItemName" placeholder="请输入名称" class="add-component-input"></el-input></div>
+        <div class="dialog-footer mt-[5px]">
+            <el-button type="primary" @click="show = false" style="height: 24px; padding: 5px 11px; font-size: 12px" @click.stop="save">保存</el-button>
+            <el-button @click="show = false" style="height: 24px; padding: 5px 11px; font-size: 12px">取消</el-button>
+        </div>
+    </Dialog>
 </template>
+
 <script setup>
+import { useGlobalStore } from "@/stores/global";
+import { siderIcons } from "@/constant/config";
+const global = useGlobalStore();
+const { siderList } = storeToRefs(global);
+
 const show = defineModel();
-</script>
-<style lang="scss">
-.custom-class {
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    // color: rgba(var(--img-text), 0.8) !important;
-    background: rgba(#fff, 0.1);
-    box-shadow: 0 12px 24px #0000002e !important;
-    margin-left: 60px;
-    padding: 12px !important;
+const curIndex = ref(1);
+const siderItemName = ref(siderIcons[curIndex.value].name);
+function save() {
+    global.setNavConfig([
+        ...siderList.value,
+        {
+            name: siderItemName.value,
+            icon: siderIcons[curIndex.value].icon,
+            children: [
+                {
+                    id: "Vpdrvg_2bvxzGiyRKEpOA",
+                    url: "itab://add",
+                    type: "icon",
+                    name: "添加图标",
+                    src: "https://files.codelife.cc/icons/add.svg",
+                    backgroundColor: "#fff",
+                    iconText: "",
+                },
+            ],
+            id: Math.random().toString(36).substr(2, 9),
+        },
+    ]);
+    show.value = false;
 }
+</script>
+<style lang="scss" scoped>
 .dialog-header {
     color: #fff;
+    margin-bottom: 12px;
+}
+.app-icon {
+    display: grid;
+    color: rgba(255, 255, 255, 0.6);
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-flow: dense;
+    grid-gap: 5px;
+}
+.app-icon li {
+    padding-bottom: 100%;
+    border-radius: 5px;
+    transition: background 0.2s;
+    position: relative;
+}
+.app-icon li.active {
+    background-color: #fff3;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+.app-icon li i {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+:deep(.el-input__wrapper) {
+    box-shadow: 0 0 0 1px transparent inset;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+
+    &.is-focus {
+        box-shadow: 0 0 0 1px #fff inset;
+    }
+}
+:deep(.el-input__inner) {
+    color: #fff;
+
+    &::placeholder {
+        color: #fff;
+        font-size: 12px;
+    }
 }
 </style>

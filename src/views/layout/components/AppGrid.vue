@@ -7,26 +7,28 @@
                         <AppItemContentMenu :target="`#app-grid_${item.id} .app-grid`" />
                         <VueDraggable v-model="item.children" :animation="150" target=".app-grid" @start="onStart" @end="onEnd">
                             <TransitionGroup type="transition" tag="ul" :name="!drag ? 'fade' : undefined" class="app-grid">
-                                <li :class="['app-item', `icon-size-${it.size ? it.size : '1X1'}`]" v-for="(it, index) in item.children" :key="it.id">
-                                    <div
-                                        class="app-item-icon"
-                                        :style="{
-                                            'background-color': it['backgroundColor'] ? it['backgroundColor'] : '#FFFFFF',
-                                        }"
-                                    >
-                                        <img
-                                            v-if="it.src"
-                                            class="app-item-img"
-                                            :src="it.src"
+                                <template v-for="(it, index) in item.children" :key="it.id">
+                                    <li :class="['app-item', `icon-size-${it.size ? it.size : '1X1'}`]" v-if="it.type === 'icon'">
+                                        <div
+                                            class="app-item-icon"
                                             :style="{
-                                                'pointer-events': 'none',
-                                                '--icon-bg-color': it['backgroundColor'] ? it['backgroundColor'] : '#FFFFFF',
-                                                '--icon-fit': 'contain',
+                                                'background-color': it['backgroundColor'] ? it['backgroundColor'] : '#FFFFFF',
                                             }"
-                                        />
-                                    </div>
-                                    <p class="app-item-title d-elip">{{ it.name }}</p>
-                                </li>
+                                            @click.stop="clickIcon(it)"
+                                        >
+                                            <img
+                                                class="app-item-img"
+                                                :src="it.src"
+                                                :style="{
+                                                    'pointer-events': 'none',
+                                                    '--icon-bg-color': it['backgroundColor'] ? it['backgroundColor'] : '#FFFFFF',
+                                                    '--icon-fit': 'contain',
+                                                }"
+                                            />
+                                        </div>
+                                        <p class="app-item-title d-elip">{{ it.name }}</p>
+                                    </li>
+                                </template>
                             </TransitionGroup>
                         </VueDraggable>
                     </div>
@@ -162,6 +164,13 @@ function debounce<T extends (...args: any[]) => void>(func: T, delay: number) {
             func(...args);
         }, delay);
     };
+}
+function clickIcon(item: any) {
+    console.log(1111111111111);
+
+    if (item.type === "icon") {
+        window.open(item.url, "_blank");
+    }
 }
 onMounted(() => {
     let child = Array.from(appIconWrap.value!.children) as HTMLElement[];

@@ -2,15 +2,16 @@
     <Teleport to="body">
         <itab-wallpaper :url="url"> </itab-wallpaper>
     </Teleport>
-    <AppSider></AppSider><AddComponent v-model="show" />
+    <AppSider></AppSider>
     <AppMain></AppMain>
+    <AddIcon v-model="showAdd" />
 </template>
 
 <script setup lang="ts">
 import AppMain from "./components/AppMain.vue";
 import AppSider from "./components/AppSider.vue";
-import AddComponent from "./components/AddComponent.vue";
-const show = ref(true);
+import AddIcon from "./components/components/AddIcon.vue";
+const showAdd = ref(true);
 const url = ref("https://raw.gitcode.com/snows_l/blog_assets/raw/master/imgs/bg/1.png");
 const timer = ref<NodeJS.Timeout>();
 const Max_INDEX = 100;
@@ -25,7 +26,7 @@ function changeWallpaper() {
 }
 
 onMounted(() => {
-    timer.value = setInterval(changeWallpaper, 1000 * 60 * 20);
+    timer.value = setInterval(changeWallpaper, 1000 * 60);
 });
 
 onUnmounted(() => {
