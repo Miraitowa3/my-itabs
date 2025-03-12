@@ -15,7 +15,7 @@
             <aside class="sidebar">
                 <div class="sidebar-box">
                     <ul ref="ulRef">
-                        <div class="d-tabs-active" :style="{ top: `${list[cur].top}px` }"></div>
+                        <div class="d-tabs-active" :style="{ top: `${top}px` }"></div>
                         <li v-for="(item, index) in list" :key="index" @click.stop="cur = index">
                             <span>
                                 <i class="text-[20px]">
@@ -54,14 +54,16 @@ const list = ref<any>([
     {
         name: "自定义图标",
         icon: "sheji",
-        component: IconCustom,
+        component: markRaw(IconCustom),
     },
 ]);
+const top = computed(() => list.value[cur.value].top);
+
 onMounted(() => {
     Array.from((ulRef.value as Element).children)
         .filter((item: Element) => item.tagName === "LI")
         .forEach((item: Element, index: number) => {
-            list.value[index].top = item.getBoundingClientRect().y - 170;
+            list.value[index].top = (item as any).offsetTop;
         });
 });
 </script>
