@@ -33,7 +33,7 @@
         <h5 class="mb-[5px] mt-[5px] text-sm text-[#fff]">名称</h5>
         <div class="change-name"><el-input size="small" v-model="siderItemName" placeholder="请输入名称" class="add-component-input"></el-input></div>
         <div class="dialog-footer mt-[5px]">
-            <el-button type="primary" @click="show = false" style="height: 24px; padding: 5px 11px; font-size: 12px" @click.stop="save">保存</el-button>
+            <el-button type="primary" style="height: 24px; padding: 5px 11px; font-size: 12px" @click.stop="save">保存</el-button>
             <el-button @click="show = false" style="height: 24px; padding: 5px 11px; font-size: 12px">取消</el-button>
         </div>
     </Dialog>
