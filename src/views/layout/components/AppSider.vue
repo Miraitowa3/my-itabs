@@ -133,7 +133,7 @@ function onEnd(e: any) {
 .app-group-item {
     margin: 4px 0;
     height: 50px;
-    transition: background 300ms;
+    transition: background 100ms;
 }
 
 .app-group-item .d-icon {

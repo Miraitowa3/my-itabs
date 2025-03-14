@@ -4,14 +4,11 @@
     </Teleport>
     <AppSider></AppSider>
     <AppMain></AppMain>
-    <AddIcon v-model="showAdd" />
 </template>
 
 <script setup lang="ts">
 import AppMain from "./components/AppMain.vue";
 import AppSider from "./components/AppSider.vue";
-import AddIcon from "./components/components/AddIcon.vue";
-const showAdd = ref(true);
 const url = ref("https://raw.gitcode.com/snows_l/blog_assets/raw/master/imgs/bg/1.png");
 const timer = ref<NodeJS.Timeout>();
 const Max_INDEX = 100;

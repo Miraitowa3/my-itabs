@@ -8,3 +8,10 @@ export function extractDomainOrIP(str: string) {
   }
   return null; // 如果没有匹配，返回 null
 }
+export  function generateCustomRandomString(length = 10,chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_?') {
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return result;
+}

@@ -36,6 +36,8 @@ service.interceptors.response.use(
     (response: AxiosResponse<any>) => {
         // 对响应数据做点什么
         const res = response.data;
+
+
         return res;
     },
     (error: AxiosError) => {

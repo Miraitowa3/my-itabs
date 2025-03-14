@@ -28,7 +28,7 @@
                 </div>
             </aside>
             <main>
-                <component :is="list[cur].component"></component>
+                <component :is="list[cur].component" @close="show = false"></component>
             </main>
         </section>
     </Dialog>
@@ -59,12 +59,16 @@ const list = ref<any>([
 ]);
 const top = computed(() => list.value[cur.value].top);
 
-onMounted(() => {
-    Array.from((ulRef.value as Element).children)
-        .filter((item: Element) => item.tagName === "LI")
-        .forEach((item: Element, index: number) => {
-            list.value[index].top = (item as any).offsetTop;
+watch(show, () => {
+    if (show.value) {
+        nextTick(() => {
+            Array.from((ulRef.value as Element).children)
+                .filter((item: Element) => item.tagName === "LI")
+                .forEach((item: Element, index: number) => {
+                    list.value[index].top = (item as any).offsetTop;
+                });
         });
+    }
 });
 </script>
 <style lang="scss" scoped>

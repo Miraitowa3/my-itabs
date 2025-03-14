@@ -3,7 +3,7 @@
  * @Author: snows_l snows_l@163.com
  * @Date: 2025-03-12 18:45:54
  * @LastEditors: lyq
- * @LastEditTime: 2025-03-13 15:12:53
+ * @LastEditTime: 2025-03-13 21:46:26
  * @FilePath: /mTab/src/views/layout/components/components/IconCustom.vue
 -->
 <template>
@@ -11,7 +11,7 @@
         <div class="app-icon-wrap">
             <el-form ref="ruleFormRef" :model="form" label-position="left" label-width="66px">
                 <el-form-item prop="code" label="地址">
-                    <el-input v-model="form.address" type="text" placeholder="https://" clearable class="address-input">
+                    <el-input v-model="form.url" type="text" placeholder="https://" clearable class="url-input">
                         <template #append> <el-button class="get-icon-btn" @click="getLogo"> 获取图标</el-button> </template>
                         <template #prefix>
                             <i class="text-[14px] text-[#fff]"> <svg-icon name="lianjie" /> </i>
@@ -19,7 +19,7 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="mc" label="名称">
-                    <el-input v-model="form.mc" type="text" placeholder="网站名称" clearable class="address-input">
+                    <el-input v-model="form.mc" type="text" placeholder="网站名称" clearable class="url-input">
                         <template #prefix>
                             <i class="text-[14px] text-[#fff]"> <svg-icon name="bi" /> </i>
                         </template>
@@ -35,11 +35,11 @@
                         >
                             <i class="animate__animated animate__bounceIn text-[18px] text-[#fff]" v-show="index === curIndex"> <svg-icon name="dui" /> </i>
                         </span>
-                        <el-color-picker size="small" v-model="curColor" />
+                        <el-color-picker size="small" v-model="form.curColor" />
                     </div>
                 </el-form-item>
                 <el-form-item prop="tbMc" label="图标文字" v-if="picCur === '文字图标'">
-                    <el-input v-model="form.tbMc" type="text" placeholder="请输入图标文字" clearable class="address-input" maxlength="6" @input="changeText">
+                    <el-input v-model="form.tbMc" type="text" placeholder="请输入图标文字" clearable class="url-input" maxlength="6" @input="changeText">
                         <template #prefix>
                             <i class="text-[14px] text-[#fff]"> <svg-icon name="bi" /> </i>
                         </template>
@@ -49,7 +49,7 @@
                 <div class="mb-[20px] ml-[66px]">
                     <div :class="['icon-preview', picCur === '文字图标' ? 'active' : '']" @click="picCur = '文字图标'">
                         <div class="icon-preview-body">
-                            <div class="d-text-icon relative flex h-full w-full items-center whitespace-nowrap text-white" :style="{ background: curColor }">
+                            <div class="d-text-icon relative flex h-full w-full items-center whitespace-nowrap text-white" :style="{ background: form.curColor }">
                                 <span class="d-text-txt" :style="{ transform: `scale(${textScale}) translateX(-50%) ` }">{{ form.tbMc }}</span>
                             </div>
                         </div>
@@ -68,7 +68,7 @@
                 </div>
                 <el-form-item>
                     <div class="mt-[2px]">
-                        <el-button type="primary" style="height: 32px; font-size: 12px">保存</el-button>
+                        <el-button type="primary" style="height: 32px; font-size: 12px" @click.stop="save">保存</el-button>
                         <el-button style="height: 32px; font-size: 12px">保存并继续</el-button>
                     </div>
                 </el-form-item>
@@ -79,35 +79,28 @@
 
 <script lang="ts" setup>
 import axios from "axios";
-import { extractDomainOrIP } from "@/utils";
+import { useGlobalStore } from "@/stores/global";
+const global = useGlobalStore();
+const { siderList, cur } = storeToRefs(global);
+import { extractDomainOrIP, generateCustomRandomString } from "@/utils";
 type PicType = "文字图标" | "上传";
+const colorList = ref(["#1681FF", "#FBBE23", "#FC4548", "#4B3C36", "#7DAC68", "#023373", "#C8AC70", "#372128", "#C82C34", "#054092", "#A3DDB9", "transparent"]);
+const emits = defineEmits(["close"]);
+
 const picCur = ref<PicType>("文字图标");
 const textScale = ref(0.94);
 const form = ref({
-    address: "",
+    url: "",
     mc: "",
     tbMc: "A",
+    curColor: colorList.value[0],
 });
-const curIndex = ref(0);
-const colorList = ref([
-    "rgb(22, 129, 255)",
-    "rgb(251, 190, 35)",
-    "rgb(252, 69, 72)",
-    "rgb(75, 60, 54)",
-    "rgb(125, 172, 104)",
-    "rgb(2, 51, 115)",
-    "rgb(200, 172, 112)",
-    "rgb(55, 33, 40)",
-    "rgb(200, 44, 52)",
-    "rgb(5, 64, 146)",
-    "rgb(163, 221, 185)",
-    "transparent",
-]);
 
-const curColor = ref(colorList.value[0]);
+const curIndex = ref(0);
+
 function changeColor(index: number, color: string) {
     curIndex.value = index;
-    curColor.value = color;
+    form.value.curColor = color;
 }
 function changeText() {
     if (form.value.tbMc.length >= 5) {
@@ -116,8 +109,26 @@ function changeText() {
         textScale.value = 0.94;
     }
 }
-function getLogo() {
-    axios.get("https://api.vwood.xyz/v1/Favicon/collect/" + extractDomainOrIP(form.value.address));
+async function getLogo() {
+    // let { data, status } = await axios.get("https://api.vwood.xyz/v1/Favicon/collect/" + extractDomainOrIP(form.value.url));
+    // if (status === 200 && data.code === 0) {
+    //     console.log(data.data);
+    // }
+}
+function save() {
+    let list = siderList.value;
+    list[cur.value.currentTab].children.push({
+        backgroundColor: form.value.curColor,
+        iconText: form.value.tbMc,
+        id: generateCustomRandomString(11),
+        name: form.value.mc,
+        src: "",
+        type: "text",
+        url: form.value.url,
+    });
+
+    global.setNavConfig(list);
+    emits("close");
 }
 </script>
 <style scoped lang="scss">
@@ -152,7 +163,7 @@ function getLogo() {
     font-size: 14px;
     padding: 0;
 }
-.address-input {
+.url-input {
     width: 420px;
 }
 :deep(.el-input-group__append) {

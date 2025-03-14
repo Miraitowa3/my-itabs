@@ -1,7 +1,7 @@
 <template>
     <ContentMenu containerRef="#app-main" :hanlderCallback="hanlderCallback">
         <ul class="menu-list">
-            <li class="menu-item hover flex justify-between">
+            <li class="menu-item hover flex justify-between" @click="showAdd = true">
                 <span class="menu-item-title text-[12px]">添加图标</span>
                 <i class="menu-item-icon text-[15px]">
                     <svg-icon name="add" />
@@ -36,10 +36,14 @@
             </li>
         </ul>
     </ContentMenu>
+    <AddIcon v-model="showAdd" />
 </template>
 
 <script lang="ts" setup>
+import AddIcon from "./components/AddIcon.vue";
+
 const whiteClass = ["app-item-icon", "yiyan-text", "yiyan-from", "se-input", "search-icon"];
+const showAdd = ref(false);
 
 function hanlderCallback(e: MouseEvent) {
     const target = e.target as HTMLElement;

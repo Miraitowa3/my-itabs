@@ -8,7 +8,7 @@
                         <VueDraggable v-model="item.children" :animation="150" target=".app-grid" @start="onStart" @end="onEnd">
                             <TransitionGroup type="transition" tag="ul" :name="!drag ? 'fade' : undefined" class="app-grid">
                                 <template v-for="(it, index) in item.children" :key="it.id">
-                                    <li :class="['app-item', `icon-size-${it.size ? it.size : '1X1'}`]" v-if="it.type === 'icon'">
+                                    <li :class="['app-item', `icon-size-${it.size ? it.size : '1X1'}`]" v-if="it.type === 'icon' || it.type === 'text'">
                                         <div
                                             class="app-item-icon"
                                             :style="{
@@ -17,6 +17,7 @@
                                             @click.stop="clickIcon(it)"
                                         >
                                             <img
+                                                v-if="it.type === 'icon'"
                                                 class="app-item-img"
                                                 :src="it.src"
                                                 :style="{
@@ -25,6 +26,7 @@
                                                     '--icon-fit': 'contain',
                                                 }"
                                             />
+                                            <span v-else class="text-[#fff]">{{ it.iconText }}</span>
                                         </div>
                                         <p class="app-item-title d-elip">{{ it.name }}</p>
                                     </li>
@@ -94,6 +96,7 @@ watch(
         updateTranslateY();
     },
 );
+const timess = ref(0);
 function handleWheel(e: WheelEvent) {
     if (e.deltaY > 0) {
         //向下滚动
@@ -152,7 +155,7 @@ function updateTranslateY() {
         ele.style.transform = `translateY(${(index - cur.value.currentTab) * h}px) scale(1)`;
     });
 }
-const debouncedHandleWheel = debounce(handleWheel, 200);
+const debouncedHandleWheel = throttle(handleWheel, 600);
 function debounce<T extends (...args: any[]) => void>(func: T, delay: number) {
     let timer: NodeJS.Timeout | null;
 
@@ -165,9 +168,18 @@ function debounce<T extends (...args: any[]) => void>(func: T, delay: number) {
         }, delay);
     };
 }
-function clickIcon(item: any) {
-    console.log(1111111111111);
+function throttle(func, wait) {
+    let lastTime = 0;
+    return function (...args) {
+        const now = Date.now();
+        if (now - lastTime >= wait) {
+            func.apply(this, args);
+            lastTime = now;
+        }
+    };
+}
 
+function clickIcon(item: any) {
     if (item.type === "icon") {
         window.open(item.url, "_blank");
     }
@@ -226,6 +238,9 @@ defineExpose({
     box-shadow: 0 0 5px #0000001a;
     transition: transform 0.2s;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .app-item-img {
     display: block;
