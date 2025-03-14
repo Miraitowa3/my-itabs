@@ -3,7 +3,7 @@
  * @Author: snows_l snows_l@163.com
  * @Date: 2025-03-12 18:45:54
  * @LastEditors: lyq
- * @LastEditTime: 2025-03-13 21:46:26
+ * @LastEditTime: 2025-03-14 17:13:12
  * @FilePath: /mTab/src/views/layout/components/components/IconCustom.vue
 -->
 <template>
@@ -12,7 +12,7 @@
             <el-form ref="ruleFormRef" :model="form" label-position="left" label-width="66px">
                 <el-form-item prop="code" label="地址">
                     <el-input v-model="form.url" type="text" placeholder="https://" clearable class="url-input">
-                        <template #append> <el-button class="get-icon-btn" @click="getLogo"> 获取图标</el-button> </template>
+                        <!-- <template #append> <el-button class="get-icon-btn" @click="getLogo"> 获取图标</el-button> </template> -->
                         <template #prefix>
                             <i class="text-[14px] text-[#fff]"> <svg-icon name="lianjie" /> </i>
                         </template>
@@ -33,7 +33,7 @@
                             v-for="(color, index) in colorList"
                             @click.stop="changeColor(index, color)"
                         >
-                            <i class="animate__animated animate__bounceIn text-[18px] text-[#fff]" v-show="index === curIndex"> <svg-icon name="dui" /> </i>
+                            <i class="animate__animated animate__bounceIn text-[18px] text-[#fff]" v-show="color === form.curColor"> <svg-icon name="dui" /> </i>
                         </span>
                         <el-color-picker size="small" v-model="form.curColor" />
                     </div>
@@ -55,21 +55,24 @@
                         </div>
                         文字图标
                     </div>
-                    <div :class="['icon-preview', picCur === '上传' ? 'active' : '']" @click="picCur = '上传'">
+                    <!-- <div :class="['icon-preview', picCur === '上传' ? 'active' : '']" @click="picCur = '上传'">
                         <div class="icon-preview-body">
                             <div class="d-text-icon relative flex h-full w-full items-center whitespace-nowrap text-white">
-                                <span class="d-text-txt">
-                                    <i class="text-[14px] text-[#fff]"> <svg-icon name="add" /> </i>
-                                </span>
+                                <uploadImage class="avatar-uploader" action="###">
+                                    <span class="d-text-txt">
+                                        <i class="text-[14px] text-[#fff]"> <svg-icon name="add" /> </i>
+                                    </span>
+                                </uploadImage>
                             </div>
                         </div>
                         上传
-                    </div>
+                    </div> -->
                 </div>
+
                 <el-form-item>
                     <div class="mt-[2px]">
-                        <el-button type="primary" style="height: 32px; font-size: 12px" @click.stop="save">保存</el-button>
-                        <el-button style="height: 32px; font-size: 12px">保存并继续</el-button>
+                        <el-button type="primary" style="height: 32px; font-size: 12px" @click.stop="save('保存')">保存</el-button>
+                        <el-button style="height: 32px; font-size: 12px" @click="save('保存并继续')">保存并继续</el-button>
                     </div>
                 </el-form-item>
             </el-form>
@@ -79,6 +82,7 @@
 
 <script lang="ts" setup>
 import axios from "axios";
+import UseUploadImage from "@/hooks/UseUploadImage";
 import { useGlobalStore } from "@/stores/global";
 const global = useGlobalStore();
 const { siderList, cur } = storeToRefs(global);
@@ -86,20 +90,23 @@ import { extractDomainOrIP, generateCustomRandomString } from "@/utils";
 type PicType = "文字图标" | "上传";
 const colorList = ref(["#1681FF", "#FBBE23", "#FC4548", "#4B3C36", "#7DAC68", "#023373", "#C8AC70", "#372128", "#C82C34", "#054092", "#A3DDB9", "transparent"]);
 const emits = defineEmits(["close"]);
-
+const vailMap = {
+    url: "地址能为空！",
+    mc: "名称不能为空！",
+    tbMc: "图标文字不能为空！",
+    curColor: "请选择图标颜色！",
+};
+const { uploadImage } = UseUploadImage();
 const picCur = ref<PicType>("文字图标");
 const textScale = ref(0.94);
 const form = ref({
     url: "",
     mc: "",
-    tbMc: "A",
+    tbMc: "",
     curColor: colorList.value[0],
 });
 
-const curIndex = ref(0);
-
 function changeColor(index: number, color: string) {
-    curIndex.value = index;
     form.value.curColor = color;
 }
 function changeText() {
@@ -115,7 +122,17 @@ async function getLogo() {
     //     console.log(data.data);
     // }
 }
-function save() {
+function save(type: "保存" | "保存并继续") {
+    for (const key in vailMap) {
+        if (!form.value[key as keyof typeof vailMap]) {
+            ElMessage({
+                message: vailMap[key as keyof typeof vailMap],
+                type: "error",
+            });
+            return;
+        }
+    }
+
     let list = siderList.value;
     list[cur.value.currentTab].children.push({
         backgroundColor: form.value.curColor,
@@ -125,13 +142,41 @@ function save() {
         src: "",
         type: "text",
         url: form.value.url,
-    });
+    } as any);
 
     global.setNavConfig(list);
-    emits("close");
+    ElMessage({
+        message: `${form.value.mc} `,
+        type: "success",
+    });
+    if (type === "保存") {
+        emits("close");
+    } else {
+        form.value = {
+            url: "",
+            mc: "",
+            tbMc: "",
+            curColor: colorList.value[0],
+        };
+    }
 }
 </script>
 <style scoped lang="scss">
+.avatar-uploader {
+    width: 100%;
+    height: 100%;
+
+    :deep(.el-upload) {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        input {
+            display: none;
+        }
+    }
+}
 .icon-container {
     overflow: hidden;
     padding: 30px 20px;

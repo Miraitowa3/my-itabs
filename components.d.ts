@@ -16,6 +16,7 @@ declare module 'vue' {
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElInput: typeof import('element-plus/es')['ElInput']
+    ElUpload: typeof import('element-plus/es')['ElUpload']
     MacDocker: typeof import('./src/components/MacDocker.vue')['default']
     Overlay: typeof import('./src/components/Overlay.vue')['default']
     Popup: typeof import('./src/components/Popup.vue')['default']
@@ -24,6 +25,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SvgIcon: typeof import('./src/components/SvgIcon.vue')['default']
     Tab: typeof import('./src/components/Tab.tsx')['default']
+    UploadImage: typeof import('./src/components/UploadImage.tsx')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
