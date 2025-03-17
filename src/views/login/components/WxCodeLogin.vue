@@ -72,7 +72,7 @@ watch(() => ticket.value, (newVal, oldVal) => {
 
         if (res.code === 200) {
           if (res.data.sucess) {
-              $user.setUserInfo(res.data)
+              $user.setToken(res.data.token)
             clearInterval(timerInterval.value);
 
              ElMessage({

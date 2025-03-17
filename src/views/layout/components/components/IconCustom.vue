@@ -83,9 +83,9 @@
 <script lang="ts" setup>
 import axios from "axios";
 import UseUploadImage from "@/hooks/UseUploadImage";
-import { useGlobalStore } from "@/stores/global";
-const global = useGlobalStore();
-const { siderList, cur } = storeToRefs(global);
+import { useSiderStore } from "@/stores/global";
+const global = useSiderStore();
+const { navConfig, cur } = storeToRefs(global);
 import { extractDomainOrIP, generateCustomRandomString } from "@/utils";
 type PicType = "文字图标" | "上传";
 const colorList = ref(["#1681FF", "#FBBE23", "#FC4548", "#4B3C36", "#7DAC68", "#023373", "#C8AC70", "#372128", "#C82C34", "#054092", "#A3DDB9", "transparent"]);
@@ -133,7 +133,7 @@ function save(type: "保存" | "保存并继续") {
         }
     }
 
-    let list = siderList.value;
+    let list = navConfig.value;
     list[cur.value.currentTab].children.push({
         backgroundColor: form.value.curColor,
         iconText: form.value.tbMc,

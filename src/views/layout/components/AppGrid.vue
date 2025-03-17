@@ -2,7 +2,7 @@
     <div class="app-icon-grid-wrap flex-1" style="flex: 1 1 0%">
         <div class="app-icon-grid d-hidden h-full" :style="{ opacity: isSiderShow ? 1 : 0 }">
             <ul class="app-icon-wrap" ref="appIconWrap">
-                <li class="app-icon-item" v-for="(item, index) in siderList" :name="item.id" :key="item.id" :style="{ opacity: cur.current === item.id ? 1 : 0 }">
+                <li class="app-icon-item" v-for="(item, index) in navConfig" :name="item.id" :key="item.id" :style="{ opacity: cur.current === item.id ? 1 : 0 }">
                     <div class="d-scrollbar-hide h-full" :id="'app-grid_' + item.id" style="pointer-events: auto; transition: transform 0.26s cubic-bezier(0.165, 0.84, 0.44, 1)">
                         <AppItemContentMenu :target="`#app-grid_${item.id} .app-grid`" />
                         <VueDraggable v-model="item.children" :animation="150" target=".app-grid" @start="onStart" @end="onEnd">
@@ -42,12 +42,12 @@
 
 <script lang="ts" setup>
 import { VueDraggable } from "vue-draggable-plus";
-import { useSiderStatusStore, useGlobalStore } from "@/stores/global";
+import { useSiderStore } from "@/stores/global";
 import AppItemContentMenu from "./AppItemContentMenu.vue";
-const siderStatus = useSiderStatusStore();
+const siderStatus = useSiderStore();
 const { isSiderShow } = storeToRefs(siderStatus);
-const global = useGlobalStore();
-const { cur, siderList } = storeToRefs(global);
+const global = useSiderStore();
+const { cur, navConfig } = storeToRefs(global);
 const drag = ref(false);
 const appIconWrap = ref<HTMLUListElement>();
 const scrollDisYIndex = ref<number>(0);
@@ -104,10 +104,10 @@ function handleWheel(e: WheelEvent) {
         if (scrollDisYIndex.value > scrollDisYList.value.length - 1) {
             //app-grid 滚动到底部，切换下一个tab
             cur.value.currentTab++;
-            if (cur.value.currentTab === siderList.value.length) {
+            if (cur.value.currentTab === navConfig.value.length) {
                 cur.value.currentTab = 0;
             }
-            cur.value.current = siderList.value[cur.value.currentTab].id;
+            cur.value.current = navConfig.value[cur.value.currentTab].id;
         } else {
             let totalY = 0;
             scrollDisYList.value.forEach((item: number, index: number) => {
@@ -127,9 +127,9 @@ function handleWheel(e: WheelEvent) {
             //app-grid 滚动到顶部，切换上一个tab
             cur.value.currentTab--;
             if (cur.value.currentTab < 0) {
-                cur.value.currentTab = siderList.value.length - 1;
+                cur.value.currentTab = navConfig.value.length - 1;
             }
-            cur.value.current = siderList.value[cur.value.currentTab].id;
+            cur.value.current = navConfig.value[cur.value.currentTab].id;
         } else {
             let totalY = 0;
             scrollDisYList.value.forEach((item: number, index: number) => {

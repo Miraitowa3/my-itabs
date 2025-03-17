@@ -2,13 +2,23 @@ export default defineStore(
     "user",
     () => {
         const userInfo = ref<any>(null);
-
+        const token = ref<string>("");
 
         const setUserInfo = (data: any) => {
             userInfo.value = data;
         };
-
-        return { userInfo, setUserInfo };
+        const setToken = (data: any) => {
+            token.value = data;
+        };
+        return { userInfo, setUserInfo, token, setToken };
     },
-    { persist: { key: "user", storage: localStorage } },
+    {
+        persist: [
+            {
+                storage: localStorage,
+                pick: ["navConfig"],
+                key: "navConfig",
+            },
+        ],
+    },
 );

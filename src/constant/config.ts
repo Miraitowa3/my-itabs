@@ -1,4 +1,5 @@
-export const navConfig=[
+import { ThemeStyles } from "@/typing"
+export const defaultNavConfig=[
   {
     "id": "1",
     "name": "主页",
@@ -1433,3 +1434,33 @@ export const siderIcons=[
     "icon": "Bucket"
   }
 ]
+
+
+export const defaultTheme:ThemeStyles={
+
+  "--primary-color": "#1890ff",
+  "--search-height": "46px",
+  "--search-radius": "23px",
+  "--search-bgColor": "rgba(var(--alpha-bg), 0.5)",
+  "--icon-radius": "15.54962962962963px",
+  "--icon-size": "60.254814814814814px",
+  "--icon-gap-x": "29.155555555555555px",
+  "--icon-gap-y": "29.155555555555555px",
+  "--icon-max-width": "1350px",
+  "--icon-opacity": "0.58",
+  "--icon-name": "block",
+  "--icon-nameSize": "12px",
+  "--icon-nameColor": "#2ecc71",
+  "--time-size": "70px",
+  "--time-font": "HarmonyOS_Sans",
+  "--time-color": "#fff",
+  "--time-fontWeight": "400",
+  "--time-month": "inline",
+  "--time-week": "inline",
+  "--time-lunar": "inline",
+  "--time-sec": "none",
+  "--sidebar-width": "50px",
+  "--sidebar-opacity": "0.4",
+  "--wall-mask": "0",
+  "--wall-blur": "0px"
+}

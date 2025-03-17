@@ -3,8 +3,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useSiderStatusStore } from "@/stores/global";
-const siderStatus = useSiderStatusStore();
+import { useSiderStore } from "@/stores/global";
+const siderStatus = useSiderStore();
 const { isSiderShow } = storeToRefs(siderStatus);
 </script>
 <style scope>

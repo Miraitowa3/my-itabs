@@ -2,20 +2,16 @@
     <div class="app-date-box ac">
         <div>
             <div class="app-time" @click="toggleTime">
-                <time class="hh">20</time><span class="colon hh">:</span><time class="mm">44</time
-                ><span class="colon" style="display: none">:</span><span class="sec">34</span>
+                <time class="hh">20</time><span class="colon hh">:</span><time class="mm">44</time><span class="colon" style="display: none">:</span><span class="sec">34</span>
             </div>
         </div>
-        <div class="app-date">
-            <span class="time-month">01月13日</span><span class="time-week">星期一</span
-            ><span class="time-lunar">腊月十四</span>
-        </div>
+        <div class="app-date"><span class="time-month">01月13日</span><span class="time-week">星期一</span><span class="time-lunar">腊月十四</span></div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { useSiderStatusStore } from "@/stores/global";
-const siderStatus = useSiderStatusStore();
+import { useSiderStore } from "@/stores/global";
+const siderStatus = useSiderStore();
 const { isSiderShow } = storeToRefs(siderStatus);
 function toggleTime() {
     siderStatus.changeSiderShow(!isSiderShow.value);

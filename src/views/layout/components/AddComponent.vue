@@ -40,17 +40,17 @@
 </template>
 
 <script setup>
-import { useGlobalStore } from "@/stores/global";
+import { useSiderStore } from "@/stores/global";
 import { siderIcons } from "@/constant/config";
-const global = useGlobalStore();
-const { siderList } = storeToRefs(global);
+const global = useSiderStore();
+const { navConfig } = storeToRefs(global);
 
 const show = defineModel();
 const curIndex = ref(1);
 const siderItemName = ref(siderIcons[curIndex.value].name);
 function save() {
     global.setNavConfig([
-        ...siderList.value,
+        ...navConfig.value,
         {
             name: siderItemName.value,
             icon: siderIcons[curIndex.value].icon,

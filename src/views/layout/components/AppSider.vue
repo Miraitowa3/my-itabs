@@ -9,13 +9,13 @@
                 <p class="d-elip mt-1" @click="show = !show" v-if="!$user.userInfo">登录</p>
             </div>
             <div class="app-sidebar-group d-scrollbar-hide">
-                <VueDraggable v-model="siderList" :animation="150" target=".app-sidebar-ul" @start="onStart" @end="onEnd">
+                <VueDraggable v-model="navConfig" :animation="150" target=".app-sidebar-ul" @start="onStart" @end="onEnd">
                     <TransitionGroup type="transition" tag="ul" :name="!drag ? 'fade' : undefined" class="app-sidebar-ul">
                         <li
                             class="app-group-item flex cursor-pointer flex-col items-center justify-center"
                             :name="item.id"
                             :style="{ backgroundColor: cur.current === item.id ? '#ffffff26' : '' }"
-                            v-for="item in siderList"
+                            v-for="item in navConfig"
                             :key="item.id"
                             @click="changeTab(item)"
                         >
@@ -50,16 +50,15 @@
 <script setup lang="ts">
 import SvgIcon from "@/components/SvgIcon.vue";
 import { VueDraggable } from "vue-draggable-plus";
-import { useSiderStatusStore, useGlobalStore } from "@/stores/global";
+import { useSiderStore } from "@/stores/global";
 import Login from "@/views/login/Index.vue";
 import AddComponent from "./AddComponent.vue";
-const global = useGlobalStore();
-const { cur, siderList } = storeToRefs(global);
+
 const drag = ref(false);
 const emits = defineEmits(["updateTranslateY"]);
-const siderStatus = useSiderStatusStore();
+const siderStatus = useSiderStore();
 import userStore from "@/stores/user";
-const { isSiderShow } = storeToRefs(siderStatus);
+const { isSiderShow, cur, navConfig } = storeToRefs(siderStatus);
 const $user = userStore();
 const showAdd = ref(false);
 const show = ref(false);
@@ -71,7 +70,7 @@ function onStart() {
     drag.value = true;
 }
 function getInex(name: string) {
-    return siderList.value.findIndex((item) => item.id === name);
+    return navConfig.value.findIndex((item) => item.id === name);
 }
 
 function onEnd(e: any) {
