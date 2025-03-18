@@ -1,0 +1,23 @@
+.setting-li-sub {
+    --alpha-color: 0, 0, 0;
+    display: flex;
+    justify-content: space-between;
+    color: rgba(var(--alpha-color), 0.7);
+    padding: 0 0 6px 12px;
+    margin-top: 20px;
+    font-size: 13px;
+}
+.setting-panel {
+    padding: 8px 16px;
+    background-color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    line-height: 36px;
+    color: #222;
+    font-size: 13px;
+}
+
+.bb {
+    --dividing-line: #f2f2f2;
+    border-bottom: 1px solid var(--dividing-line);
+}

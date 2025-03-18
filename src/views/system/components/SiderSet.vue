@@ -11,7 +11,7 @@
                             </i>
                         </div>
                     </div>
-                    <div :class="['radio-title', icon.iconLayout === 'custom' ? 'is-checked' : '']">默认</div>
+                    <div :class="['radio-title', icon.iconLayout === 'custom' ? 'is-checked' : '']">左侧</div>
                 </div>
                 <div class="radio-item">
                     <div :class="['radio', icon.iconLayout === 'round' ? 'is-checked' : '']" @click.stop="opt('round')">
@@ -21,13 +21,13 @@
                             </i>
                         </div>
                     </div>
-                    <div :class="['radio-title', icon.iconLayout === 'round' ? 'is-checked' : '']">圆形</div>
+                    <div :class="['radio-title', icon.iconLayout === 'round' ? 'is-checked' : '']">右侧</div>
                 </div>
             </div>
             <p class="bb mb-[10px] w-full"></p>
             <!-- 图标尺寸 样式选择 -->
-
-            <Slider title="图标大小" unit="px" :attrs="{ min: 50, max: 130, step: 2 }" v-model="icon.iconSize" />
+            <h2 class="setting-li-sub">图标尺寸</h2>
+            <Slider title="图标尺寸" unit="px" :attrs="{ min: 50, max: 130, step: 2 }" v-model="icon.iconSize" />
             <!-- //todo:图标圆角中min不要设置否则会出bug -->
 
             <Slider title="图标圆角" unit="px" :attrs="{ max: maxRadius, step: 2 }" v-model="icon.iconRadius" />
@@ -72,7 +72,6 @@
             <Slider unit="%" :attrs="{ min: 0, max: 100, step: 2 }" v-if="icon.unit === '%'" v-model="icon.width" />
             <Slider unit="px" :attrs="{ min: 900, max: 2000, step: 2 }" v-else v-model="icon.width" />
         </div>
-        <div class="setting-panel mt-[10px] text-center" style="padding: 0px 16px; color: rgb(255, 90, 93)" @click.stop="resetIconLayout">重置图标布局</div>
     </div>
 </template>
 
@@ -94,9 +93,6 @@ const opt = (val: string) => {
     }
 };
 
-function resetIconLayout() {
-    themeStore.setIcon(cloneDeep(DefaultIcon));
-}
 function unitChange() {
     if (icon.value.unit === "%") {
         icon.value.width = 72;

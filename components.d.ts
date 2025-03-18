@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ColorPicker: typeof import('./src/components/ColorPicker.vue')['default']
     ContentMenu: typeof import('./src/components/ContentMenu.vue')['default']
     Dialog: typeof import('./src/components/Dialog.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -15,15 +16,19 @@ declare module 'vue' {
     ElDrawer: typeof import('element-plus/es')['ElDrawer']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
+    ElImage: typeof import('element-plus/es')['ElImage']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElRadio: typeof import('element-plus/es')['ElRadio']
     ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
+    ElSlider: typeof import('element-plus/es')['ElSlider']
+    ElSwitch: typeof import('element-plus/es')['ElSwitch']
     MacDocker: typeof import('./src/components/MacDocker.vue')['default']
     Overlay: typeof import('./src/components/Overlay.vue')['default']
     Popup: typeof import('./src/components/Popup.vue')['default']
     PopupBF: typeof import('./src/components/PopupBF.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Slider: typeof import('./src/components/Slider.vue')['default']
     SvgIcon: typeof import('./src/components/SvgIcon.vue')['default']
     Tab: typeof import('./src/components/Tab.tsx')['default']
   }

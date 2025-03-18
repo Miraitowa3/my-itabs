@@ -1,6 +1,5 @@
 import 'animate.css';
-import  './assets/css/base.css'
-import  './assets/css/reset.css'
+import  './assets/css/index.css'
 import  './web-components/index'
 
 import { createApp } from 'vue'

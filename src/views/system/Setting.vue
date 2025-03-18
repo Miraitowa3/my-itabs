@@ -41,7 +41,7 @@
 
 <script lang="ts" setup>
 const show = ref(true);
-const cur = ref(2);
+const cur = ref(3);
 const ulRef = ref<Element>();
 import { asideList } from "./data.ts";
 const list = ref(asideList);

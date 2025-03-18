@@ -1,5 +1,7 @@
 import type{ DefineComponent } from 'vue'
  import IconSet from '@/views/system/components/IconSet.vue'
+ import SiderSet from '@/views/system/components/SiderSet.vue'
+
 type AsideItem = {
     name: string;
     icon: string;
@@ -35,7 +37,7 @@ export const  asideList: AsideItem[]=[
         name: "图标",
         tip:'图标样式、图标间距、宽度',
         icon:  new URL('@/assets/svg/setting/icon_icon.svg',import.meta.url).href,
-        component:IconSet,
+        component:markRaw(IconSet),
         top:0
 
 
@@ -67,7 +69,7 @@ export const  asideList: AsideItem[]=[
         name: "侧边栏",
         tip:'侧边栏位置、是否隐藏、宽度',
         icon: new URL('@/assets/svg/setting/icon_sidebar.svg',import.meta.url).href,
-        component: null,
+        component: markRaw(SiderSet),
         top:0
 
     },

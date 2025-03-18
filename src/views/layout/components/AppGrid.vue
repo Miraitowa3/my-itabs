@@ -168,9 +168,9 @@ function debounce<T extends (...args: any[]) => void>(func: T, delay: number) {
         }, delay);
     };
 }
-function throttle(func, wait) {
+function throttle(func: any, wait: any) {
     let lastTime = 0;
-    return function (...args) {
+    return function (...args: any) {
         const now = Date.now();
         if (now - lastTime >= wait) {
             func.apply(this, args);
@@ -203,7 +203,7 @@ defineExpose({
 <style scoped>
 .app-icon-grid {
     pointer-events: none;
-    max-width: 1350px;
+    max-width: var(--icon-max-width, 1350px);
     margin: 0 auto;
     padding: 0 45px;
     height: 100%;
@@ -233,7 +233,7 @@ defineExpose({
     width: 100%;
     height: 100%;
     overflow: hidden;
-    border-radius: 12.8px;
+    border-radius: var(--icon-radius);
     font-size: 12px;
     box-shadow: 0 0 5px #0000001a;
     transition: transform 0.2s;
@@ -253,21 +253,17 @@ defineExpose({
     background-color: var(--icon-bg-color);
 }
 .app-item-title {
-    --icon-gap-y: 30px;
     width: calc(100% + var(--icon-gap-y));
     margin-left: calc(var(--icon-gap-y) / 2 * -1);
-    display: block;
+    display: var(--icon-name);
     margin-top: 6px;
     text-align: center;
-    color: #fff;
-    font-size: 12px;
+    color: var(--icon-nameColor);
+    font-size: var(--icon-nameSize);
     line-height: 1.1;
     filter: drop-shadow(0px 2px 7px rgba(0, 0, 0, 0.8));
 }
 .app-grid {
-    --icon-size: 60px;
-    --icon-gap-x: 30px;
-    --icon-gap-y: 30px;
     position: relative;
     display: grid;
     padding-top: 2vh;
@@ -282,9 +278,6 @@ defineExpose({
     padding-bottom: 50px;
 }
 .app-item {
-    --icon-size: 60px;
-    --icon-opacity: 1;
-    --icon-radius: 13.511111111111111px;
     list-style-type: none;
     position: relative;
     grid-column: span 1;
@@ -306,26 +299,17 @@ defineExpose({
 }
 
 .icon-size-1x2 {
-    --icon-gap-y: 30px;
-    --icon-size: 60px;
     grid-column: span 2;
     width: calc(var(--icon-size) * 2 + var(--icon-gap-y) * 1);
     height: var(--icon-size);
 }
 .icon-size-2x1 {
-    --icon-gap-x: 30px;
-
-    --icon-size: 60px;
     grid-row: span 2;
     width: var(--icon-size);
     height: calc(var(--icon-size) * 2 + var(--icon-gap-x) * 1);
 }
 .icon-size-2x2,
 .icon-size-small {
-    --icon-gap-x: 30px;
-
-    --icon-gap-y: 30px;
-    --icon-size: 60px;
     grid-column: span 2;
     grid-row: span 2;
     width: calc(var(--icon-size) * 2 + var(--icon-gap-y));
