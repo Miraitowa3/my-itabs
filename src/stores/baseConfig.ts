@@ -1,10 +1,18 @@
-import { DefaultIcon } from "@/constant/config";
-import { IconType } from "@/typing";
-import   {cloneDeep} from 'lodash-es'
-export const useThemeStore = defineStore(
-    "theme",
+import { DefaultIcon, DefaultSidebar,DefaultLayout } from "@/constant/config";
+import { IconType, SidebarType ,LayoutType} from "@/typing";
+import { cloneDeep } from "lodash-es";
+import {} from  './global'
+export const useBaseConfigStore = defineStore(
+    "baseConfig",
     () => {
         const icon = ref<IconType>(cloneDeep(DefaultIcon));
+        const sidebar = ref<SidebarType>(cloneDeep(DefaultSidebar));
+        const layout = ref<LayoutType>(cloneDeep(DefaultLayout));
+
+        const updateSidebar = () => {
+            document.documentElement.style.setProperty("--sidebar-width", sidebar.value.width + "px");
+            document.documentElement.style.setProperty("--sidebar-opacity", sidebar.value.opacity+'' );
+        };
 
         const updateIcon = () => {
             document.documentElement.style.setProperty("--icon-nameSize", icon.value.nameSize + "px");
@@ -18,10 +26,11 @@ export const useThemeStore = defineStore(
             document.documentElement.style.setProperty("--icon-max-width", icon.value.width + icon.value.unit);
         };
         const setIcon = (newIcon: IconType) => {
-
-          icon.value = newIcon;
-
-        }
+            icon.value = newIcon;
+        };
+        const setSidebar = (newIcon: SidebarType) => {
+            sidebar.value = newIcon;
+        };
         watch(
             icon,
             () => {
@@ -29,15 +38,26 @@ export const useThemeStore = defineStore(
             },
             {
                 deep: true,
+                immediate: true,
             },
         );
-        return { icon, setIcon };
+
+        watch(
+            sidebar,
+            () => {
+                updateSidebar();
+            },
+            {
+                deep: true,
+                immediate: true,
+            },
+        );
+        return { icon,sidebar, setIcon,setSidebar, layout };
     },
     {
         persist: [
             {
                 storage: localStorage,
-
                 key: "baseConfig",
             },
         ],

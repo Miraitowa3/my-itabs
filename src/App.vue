@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
-import { useThemeStore } from "@/stores/theme";
-useThemeStore();
+import { useBaseConfigStore } from "@/stores/baseConfig";
+useBaseConfigStore();
 </script>
 
 <template>

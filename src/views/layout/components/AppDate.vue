@@ -10,11 +10,16 @@
 </template>
 
 <script lang="ts" setup>
-import { useSiderStore } from "@/stores/global";
-const siderStatus = useSiderStore();
-const { isSiderShow } = storeToRefs(siderStatus);
+import { useBaseConfigStore } from "@/stores/baseConfig";
+const BaseConfig = useBaseConfigStore();
+const { layout } = storeToRefs(BaseConfig);
 function toggleTime() {
-    siderStatus.changeSiderShow(!isSiderShow.value);
+    console.log("toggleTime", layout.value.view);
+    if (layout.value.view === "simple") {
+        layout.value.view = "widget";
+    } else {
+        layout.value.view = "simple";
+    }
 }
 </script>
 <style scoped>

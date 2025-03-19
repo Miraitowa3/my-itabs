@@ -13,3 +13,16 @@ export interface IconType {
     width: number;
     xysync: boolean;
 }
+export interface SidebarType {
+    autoHide: boolean,
+    lastGroup: boolean,
+    mouseGroup: boolean,
+    opacity:number,
+    placement: string,
+    width: number,
+}
+export interface LayoutType {
+    view: string,
+    yiyan: boolean,
+
+}

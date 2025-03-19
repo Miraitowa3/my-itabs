@@ -10,6 +10,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     ColorPicker: typeof import('./src/components/ColorPicker.vue')['default']
     ContentMenu: typeof import('./src/components/ContentMenu.vue')['default']
+    copy: typeof import('./src/components/Slider copy.vue')['default']
     Dialog: typeof import('./src/components/Dialog.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElColorPicker: typeof import('element-plus/es')['ElColorPicker']
@@ -30,6 +31,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     Slider: typeof import('./src/components/Slider.vue')['default']
     SvgIcon: typeof import('./src/components/SvgIcon.vue')['default']
+    Switch: typeof import('./src/components/Switch.vue')['default']
     Tab: typeof import('./src/components/Tab.tsx')['default']
   }
   export interface ComponentCustomProperties {

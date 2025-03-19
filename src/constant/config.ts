@@ -1477,3 +1477,16 @@ export const DefaultIcon = {
     width: 1350,
     xysync: true,
 };
+export const DefaultSidebar = {
+    autoHide: false,
+    lastGroup: false,
+    mouseGroup: true,
+    opacity: 0.4,
+    placement: "left",
+    width: 50,
+};
+export const DefaultLayout= {
+    view: 'widget',
+    yiyan: true,
+
+}

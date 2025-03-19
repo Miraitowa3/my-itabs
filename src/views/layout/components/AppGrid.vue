@@ -1,6 +1,6 @@
 <template>
     <div class="app-icon-grid-wrap flex-1" style="flex: 1 1 0%">
-        <div class="app-icon-grid d-hidden h-full" :style="{ opacity: isSiderShow ? 1 : 0 }">
+        <div class="app-icon-grid d-hidden h-full" :style="{ opacity: layout.view === 'widget' ? 1 : 0 }">
             <ul class="app-icon-wrap" ref="appIconWrap">
                 <li class="app-icon-item" v-for="(item, index) in navConfig" :name="item.id" :key="item.id" :style="{ opacity: cur.current === item.id ? 1 : 0 }">
                     <div class="d-scrollbar-hide h-full" :id="'app-grid_' + item.id" style="pointer-events: auto; transition: transform 0.26s cubic-bezier(0.165, 0.84, 0.44, 1)">
@@ -41,11 +41,12 @@
 </template>
 
 <script lang="ts" setup>
+import { useBaseConfigStore } from "@/stores/baseConfig";
+
 import { VueDraggable } from "vue-draggable-plus";
 import { useSiderStore } from "@/stores/global";
 import AppItemContentMenu from "./AppItemContentMenu.vue";
-const siderStatus = useSiderStore();
-const { isSiderShow } = storeToRefs(siderStatus);
+
 const global = useSiderStore();
 const { cur, navConfig } = storeToRefs(global);
 const drag = ref(false);
@@ -54,6 +55,8 @@ const scrollDisYIndex = ref<number>(0);
 const BASE_TRANSLATE_Y = ref(500);
 const scrollDisYList = ref<number[]>([]);
 const appGridId = ref<HTMLUListElement>();
+const baseConfigStore = useBaseConfigStore();
+const { sidebar, layout } = storeToRefs(baseConfigStore);
 function onStart() {
     drag.value = true;
 }
@@ -98,6 +101,9 @@ watch(
 );
 const timess = ref(0);
 function handleWheel(e: WheelEvent) {
+    if (!sidebar.value.mouseGroup) {
+        return;
+    }
     if (e.deltaY > 0) {
         //向下滚动
         scrollDisYIndex.value += 1;
@@ -205,7 +211,7 @@ defineExpose({
     pointer-events: none;
     max-width: var(--icon-max-width, 1350px);
     margin: 0 auto;
-    padding: 0 45px;
+    padding: 0 var(--sidebar-width, 45px);
     height: 100%;
 }
 .app-icon-wrap {
@@ -317,9 +323,6 @@ defineExpose({
 }
 .icon-size-2x4,
 .icon-size-medium {
-    --icon-gap-x: 30px;
-    --icon-gap-y: 30px;
-    --icon-size: 60px;
     grid-column: span 4;
     grid-row: span 2;
     width: calc(var(--icon-size) * 4 + var(--icon-gap-y) * 3);
@@ -327,8 +330,6 @@ defineExpose({
 }
 .icon-size-1x1,
 .icon-size-mini {
-    --icon-gap-y: 30px;
-
     width: var(--icon-size);
     height: var(--icon-size);
 }

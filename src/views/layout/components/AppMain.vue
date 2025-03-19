@@ -11,20 +11,23 @@
         <!-- 图标列表 -->
         <AppGrid ref="appGrid" />
         <!-- 文心一言 -->
-        <AppYiyan />
+        <AppYiyan v-if="layout.yiyan" />
         <!-- 右键菜单 -->
         <GlobalContentMenu />
     </div>
 </template>
 
 <script lang="ts" setup>
+import { useBaseConfigStore } from "@/stores/baseConfig";
+
 import AppSearch from "./AppSearch.vue";
 import AppGrid from "./AppGrid.vue";
 import AppDate from "./AppDate.vue";
 import AppYiyan from "./AppYiyan.vue";
 import AppHeader from "./AppHeader.vue";
 import GlobalContentMenu from "./GlobalContentMenu.vue";
-
+const baseConfigStore = useBaseConfigStore();
+const { layout } = storeToRefs(baseConfigStore);
 const appGrid = ref<InstanceType<typeof AppGrid>>();
 const handleWheel = (e: WheelEvent) => {
     appGrid.value!.debouncedHandleWheel(e);

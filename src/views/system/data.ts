@@ -1,5 +1,6 @@
 import type{ DefineComponent } from 'vue'
  import IconSet from '@/views/system/components/IconSet.vue'
+ import LayoutSet from '@/views/system/components/LayoutSet.vue'
  import SiderSet from '@/views/system/components/SiderSet.vue'
 
 type AsideItem = {
@@ -61,7 +62,7 @@ export const  asideList: AsideItem[]=[
         name: "布局",
         tip:'极简模式、一言',
         icon: new URL('@/assets/svg/setting/icon_layout.svg',import.meta.url).href ,
-        component: null,
+        component:markRaw(LayoutSet) ,
         top:0
 
     },
@@ -88,19 +89,19 @@ export const  asideList: AsideItem[]=[
         top:0
 
     },
-     {
-        name: "关于",
-        tip:'版本：1.5.23',
-        icon: new URL('@/assets/svg/setting/icon_about.svg',import.meta.url) .href,
-        component: null,
-        top:0
+    //  {
+    //     name: "关于",
+    //     tip:'版本：1.5.23',
+    //     icon: new URL('@/assets/svg/setting/icon_about.svg',import.meta.url) .href,
+    //     component: null,
+    //     top:0
 
-    }, {
-        name: "实验功能",
-        tip:'实验功能',
-        icon: new URL('@/assets/svg/setting/icon_experiment.svg',import.meta.url).href ,
-        component: null,
-        top:0
+    // }, {
+    //     name: "实验功能",
+    //     tip:'实验功能',
+    //     icon: new URL('@/assets/svg/setting/icon_experiment.svg',import.meta.url).href ,
+    //     component: null,
+    //     top:0
 
-    },
+    // },
 ]

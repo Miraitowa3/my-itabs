@@ -1,11 +1,11 @@
 <template>
-    <div class="app-header" :style="{ height: isSiderShow ? '3vh' : '18vh' }"></div>
+    <div class="app-header" :style="{ height: layout.view === 'widget' ? '3vh' : '18vh' }"></div>
 </template>
 
 <script lang="ts" setup>
-import { useSiderStore } from "@/stores/global";
-const siderStatus = useSiderStore();
-const { isSiderShow } = storeToRefs(siderStatus);
+import { useBaseConfigStore } from "@/stores/baseConfig";
+const BaseConfig = useBaseConfigStore();
+const { layout } = storeToRefs(BaseConfig);
 </script>
 <style scope>
 .app-header {

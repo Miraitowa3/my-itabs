@@ -1,24 +1,40 @@
 import { defaultNavConfig } from "@/constant/config";
-
+import { useBaseConfigStore } from "./baseConfig";
 
 export const useSiderStore = defineStore(
-    "aSider",
+    "global",
     () => {
-        //侧边栏显示与隐藏
-        const isSiderShow = ref(true);
-        function changeSiderShow(status: boolean) {
-            isSiderShow.value = status;
-        }
+        const baseConfigStore = useBaseConfigStore();
+        const { sidebar } = storeToRefs(baseConfigStore);
+
         const cur = ref({
             current: defaultNavConfig[0].id,
             currentTab: 0,
         });
-
+        if (localStorage.getItem("cur")) {
+          cur.value = JSON.parse(localStorage.getItem("cur")!);
+        }
         const navConfig = ref(defaultNavConfig);
         function setNavConfig(list: any) {
             navConfig.value = list;
         }
-        return { navConfig, cur, setNavConfig, isSiderShow, changeSiderShow };
+        watch(
+            cur,
+            () => {
+                if (sidebar.value.lastGroup) {
+                    localStorage.setItem("cur", JSON.stringify(cur.value));
+                } else {
+                    if (localStorage.getItem("cur")) {
+                        localStorage.removeItem("cur");
+                    }
+                }
+            },
+            {
+                immediate: true,
+                deep: true,
+            },
+        );
+        return { navConfig, cur, setNavConfig };
     },
     {
         persist: [
@@ -30,4 +46,3 @@ export const useSiderStore = defineStore(
         ],
     },
 );
-

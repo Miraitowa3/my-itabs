@@ -4,140 +4,42 @@
         <div class="setting-panel">
             <div class="radio-group mb-[14px]">
                 <div class="radio-item">
-                    <div :class="['radio', icon.iconLayout === 'custom' ? 'is-checked' : '']" @click.stop="opt('custom')">
-                        <div class="icon icon-square overflow-hidden">
-                            <i class="text-[40px]">
-                                <svg-icon name="niao"></svg-icon>
-                            </i>
-                        </div>
+                    <div :class="['radio', sidebar.placement === 'left' ? 'is-checked' : '']" @click.stop="opt('left')">
+                        <div class="sidebar-item h-full w-full"><span></span></div>
                     </div>
-                    <div :class="['radio-title', icon.iconLayout === 'custom' ? 'is-checked' : '']">左侧</div>
+                    <div :class="['radio-title', sidebar.placement === 'left' ? 'is-checked' : '']">左侧</div>
                 </div>
                 <div class="radio-item">
-                    <div :class="['radio', icon.iconLayout === 'round' ? 'is-checked' : '']" @click.stop="opt('round')">
-                        <div class="icon icon-round overflow-hidden">
-                            <i class="text-[40px]">
-                                <svg-icon name="niao"></svg-icon>
-                            </i>
-                        </div>
+                    <div :class="['radio', sidebar.placement === 'right' ? 'is-checked' : '']" @click.stop="opt('right')">
+                        <div class="sidebar-item h-full w-full"><span class="absolute right-0"></span></div>
                     </div>
-                    <div :class="['radio-title', icon.iconLayout === 'round' ? 'is-checked' : '']">右侧</div>
+                    <div :class="['radio-title', sidebar.placement === 'right' ? 'is-checked' : '']">右侧</div>
                 </div>
             </div>
             <p class="bb mb-[10px] w-full"></p>
             <!-- 图标尺寸 样式选择 -->
-            <h2 class="setting-li-sub">图标尺寸</h2>
-            <Slider title="图标尺寸" unit="px" :attrs="{ min: 50, max: 130, step: 2 }" v-model="icon.iconSize" />
-            <!-- //todo:图标圆角中min不要设置否则会出bug -->
+            <Switch title="自动隐藏" v-model="sidebar.autoHide" />
+            <Switch title="记住上次分组" v-model="sidebar.lastGroup" />
+            <Switch title="鼠标滚轮滚动分组" v-model="sidebar.mouseGroup" />
 
-            <Slider title="图标圆角" unit="px" :attrs="{ max: maxRadius, step: 2 }" v-model="icon.iconRadius" />
-            <Slider title="不透明度" unit="%" :attrs="{ min: 0.1, max: 1, step: 0.1 }" v-model="icon.opactiy" />
-        </div>
-        <h2 class="setting-li-sub">
-            间距
-            <div class="switch">
-                <span>同步</span>
-                <el-switch v-model="icon.xysync" size="small" @change="xysyncChange" />
-            </div>
-        </h2>
-        <!-- 图标间距-->
-        <div class="setting-panel">
-            <template v-if="icon.xysync">
-                <Slider title="图标间距" unit="px" :attrs="{ min: 0, max: 100, step: 2 }" v-model="icon.iconX" />
-            </template>
-            <template v-else>
-                <Slider title="X间距" unit="px" :attrs="{ min: 0, max: 100, step: 2 }" v-model="icon.iconX" />
-                <Slider title="Y间距" unit="px" :attrs="{ min: 0, max: 100, step: 2 }" v-model="icon.iconY" />
-            </template>
-        </div>
-        <h2 class="setting-li-sub">名称</h2>
-        <!-- 名称-->
-        <div class="setting-panel">
-            <div class="flex items-center justify-between text-[13px]">
-                <span>图标名称</span>
-                <el-switch v-model="icon.name" size="small" :inactive-value="0" :active-value="1" />
-            </div>
-            <Slider unit="px" title="文字大小" :attrs="{ min: 12, max: 20, step: 2, disabled: !icon.name }" v-model="icon.nameSize" />
-            <h2>颜色</h2>
-            <ColorPicker v-model="icon.nameColor"></ColorPicker>
-        </div>
-        <h2 class="setting-li-sub">图标最大宽度</h2>
-        <!-- 图标最大宽度-->
-
-        <div class="setting-panel">
-            <div class="flex items-center justify-between text-[13px]">
-                <span>单位</span>
-                <el-switch v-model="icon.unit" size="small" active-text="%" inactive-text="px" inactive-value="px" active-value="%" @change="unitChange" />
-            </div>
-            <Slider unit="%" :attrs="{ min: 0, max: 100, step: 2 }" v-if="icon.unit === '%'" v-model="icon.width" />
-            <Slider unit="px" :attrs="{ min: 900, max: 2000, step: 2 }" v-else v-model="icon.width" />
+            <Slider title="透明度" unit="" :attrs="{ min: 0.1, max: 1, step: 0.01 }" v-model="sidebar.opacity" />
+            <Slider title="宽度" unit="px" :attrs="{ min: 42, max: 120, step: 2 }" v-model="sidebar.width" />
         </div>
     </div>
 </template>
-
 <script lang="ts" setup>
-import { useThemeStore } from "@/stores/theme";
+import { useBaseConfigStore } from "@/stores/baseConfig";
 import Slider from "@/components/Slider.vue";
-import ColorPicker from "@/components/ColorPicker.vue";
-const maxRadius = ref(25);
-const themeStore = useThemeStore();
-const { icon } = storeToRefs(themeStore);
-import { DefaultIcon } from "@/constant/config";
-import { cloneDeep } from "lodash-es";
+import Switch from "@/components/Switch.vue";
+const baseConfigStore = useBaseConfigStore();
+const { sidebar } = storeToRefs(baseConfigStore);
 const opt = (val: string) => {
-    icon.value.iconLayout = val;
-    if (val === "custom") {
-        icon.value.iconRadius = icon.value.iconSize / 4;
-    } else {
-        icon.value.iconRadius = icon.value.iconSize / 2;
-    }
+    sidebar.value.placement = val;
 };
-
-function unitChange() {
-    if (icon.value.unit === "%") {
-        icon.value.width = 72;
-    } else {
-        icon.value.width = 900;
-    }
-}
-function xysyncChange() {
-    if (icon.value.xysync) {
-        icon.value.iconY = icon.value.iconX;
-    }
-}
-
-watch(
-    () => icon.value.iconX,
-    () => {
-        if (icon.value.xysync) {
-            icon.value.iconY = icon.value.iconX;
-        }
-    },
-);
-watch(
-    () => icon.value.iconSize,
-    () => {
-        if (icon.value.iconSize) {
-            maxRadius.value = icon.value.iconSize / 2;
-        }
-    },
-    {
-        immediate: true,
-    },
-);
 </script>
 <style scoped lang="scss">
-.icon {
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-    width: 30px;
-    height: 30px;
-    transform: translate(-50%, -50%);
-    background: linear-gradient(135deg, rgb(77, 77, 77), rgb(10, 10, 10));
-}
 .radio-title {
+    width: 50px;
     transition: background 0.2s;
     background: transparent;
     color: #fff;
@@ -151,25 +53,62 @@ watch(
         background-color: #1681ff;
     }
 }
-.icon-square {
-    border-radius: 6px;
-}
-// background-color: rgba(24, 144, 255, 0.063);
-.icon-round {
-    border-radius: 50% 50%;
-}
 
+.sidebar-item {
+    --alpha-color: 0, 0, 0;
+    border-radius: 4px;
+
+    background: rgba(var(--alpha-color), 0.06);
+    position: relative;
+    border: 1px solid transparent;
+    span {
+        display: block;
+        width: 10px;
+        height: 100%;
+        background: rgba(var(--alpha-color), 0.1);
+        &:before {
+            content: "";
+            position: absolute;
+            top: 26px;
+            left: 2px;
+            width: 6px;
+            height: 2px;
+            border-radius: 2px;
+            background: rgba(var(--alpha-color), 0.3);
+            box-shadow:
+                0 10px rgba(var(--alpha-color), 0.3),
+                0 20px rgba(var(--alpha-color), 0.3);
+        }
+        &:after {
+            content: "";
+            position: absolute;
+            left: 2px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            top: 10px;
+            background: rgba(var(--alpha-color), 0.5);
+        }
+    }
+}
 .radio-group {
     width: 100%;
     display: flex;
     justify-content: space-around;
 }
+.radio-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 .radio {
     position: relative;
-    width: 60px;
-    height: 60px;
+    width: 110px;
+    height: 70px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 6px;
+
     &.is-checked {
         background-color: rgba(24, 144, 255, 0.063);
         border: 1px solid #1681ff;

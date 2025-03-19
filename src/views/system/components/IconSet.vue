@@ -77,11 +77,11 @@
 </template>
 
 <script lang="ts" setup>
-import { useThemeStore } from "@/stores/theme";
+import { useBaseConfigStore } from "@/stores/baseConfig";
 import Slider from "@/components/Slider.vue";
 import ColorPicker from "@/components/ColorPicker.vue";
 const maxRadius = ref(25);
-const themeStore = useThemeStore();
+const themeStore = useBaseConfigStore();
 const { icon } = storeToRefs(themeStore);
 import { DefaultIcon } from "@/constant/config";
 import { cloneDeep } from "lodash-es";

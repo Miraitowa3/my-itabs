@@ -1,5 +1,9 @@
 <template>
-    <div class="app-sider fixed bottom-0 top-0 z-[2]" v-show="isSiderShow">
+    <div
+        class="app-sider fixed bottom-0 top-0 z-[2]"
+        v-show="layout.view === 'widget'"
+        :class="[sidebar.placement === 'left' ? 'is-left' : 'is-right', sidebar.autoHide ? 'is-autoHide' : '']"
+    >
         <div class="app-sidebar-body flex h-full w-full flex-col text-center">
             <div class="app-sidebar-avatar flex flex-col items-center justify-center">
                 <img
@@ -53,12 +57,14 @@ import { VueDraggable } from "vue-draggable-plus";
 import { useSiderStore } from "@/stores/global";
 import Login from "@/views/login/Index.vue";
 import AddComponent from "./AddComponent.vue";
-
+import { useBaseConfigStore } from "@/stores/baseConfig";
+const baseConfigStore = useBaseConfigStore();
+const { sidebar, layout } = storeToRefs(baseConfigStore);
 const drag = ref(false);
 const emits = defineEmits(["updateTranslateY"]);
 const siderStatus = useSiderStore();
 import userStore from "@/stores/user";
-const { isSiderShow, cur, navConfig } = storeToRefs(siderStatus);
+const { cur, navConfig } = storeToRefs(siderStatus);
 const $user = userStore();
 const showAdd = ref(false);
 const show = ref(false);
@@ -86,10 +92,46 @@ function onEnd(e: any) {
     });
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
 .app-sider {
-    width: 50px;
+    width: var(--sidebar-width);
     animation: fadeIn 0.2s;
+    &:hover {
+        .app-sidebar-body {
+            transform: translateX(0) !important;
+        }
+    }
+    &.is-left {
+        left: 0;
+        &.is-autoHide {
+            .app-sidebar-body {
+                transform: translateX(-100%);
+            }
+        }
+    }
+    &.is-right {
+        right: 0;
+        &.is-autoHide {
+            .app-sidebar-body {
+                transform: translateX(100%);
+            }
+        }
+    }
+
+    & > .app-sidebar-body {
+        --img-bg: 34, 34, 34;
+        --img-text: 233, 233, 233;
+        background-color: rgba(var(--img-bg), var(--sidebar-opacity, 0.4));
+        transition: transform 0.2s;
+        backdrop-filter: blur(6px);
+        color: rgba(var(--img-text), 0.6);
+        font-size: 12px;
+        .app-sidebar-avatar {
+            margin-top: 40px;
+            margin-bottom: 40px;
+            cursor: pointer;
+        }
+    }
 }
 @keyframes fadeIn {
     from {
@@ -99,21 +141,7 @@ function onEnd(e: any) {
         opacity: 1;
     }
 }
-.app-sider > .app-sidebar-body {
-    --img-bg: 34, 34, 34;
-    --sidebar-opacity: 0.4;
-    --img-text: 233, 233, 233;
-    background-color: rgba(var(--img-bg), var(--sidebar-opacity, 0.4));
 
-    backdrop-filter: blur(6px);
-    color: rgba(var(--img-text), 0.6);
-    font-size: 12px;
-}
-.app-sider .app-sidebar-body .app-sidebar-avatar {
-    margin-top: 40px;
-    margin-bottom: 40px;
-    cursor: pointer;
-}
 .d-elip {
     text-overflow: ellipsis;
     overflow: hidden;
