@@ -2,7 +2,7 @@
     <div class="slider flex items-center">
         <span class="slider-title" v-if="title">{{ title }} </span>
 
-        <el-slider v-model="value" show-input size="small" v-bind="attrs" />
+        <div class="flex-1"><el-slider v-model="value" show-input size="small" v-bind="attrs" /></div>
 
         <span class="slider-value">{{ unit }} </span>
     </div>
@@ -25,6 +25,7 @@ const props = defineProps<{
     font-size: 13px;
     .slider-title {
         min-width: 60px;
+        white-space: no-wrap;
     }
     .slider-value {
         text-align: right;

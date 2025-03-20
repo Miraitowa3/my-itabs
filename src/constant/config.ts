@@ -1485,8 +1485,20 @@ export const DefaultSidebar = {
     placement: "left",
     width: 50,
 };
-export const DefaultLayout= {
-    view: 'widget',
+export const DefaultLayout = {
+    view: "widget",
     yiyan: true,
-
-}
+};
+export const DefaultOpen = {
+    iconBlank: true,
+    searchBlank: true,
+};
+export const DefaultSearch = {
+    bgColor: 0.5,
+    height: 46,
+    history: true,
+    radius: 23,
+    show: true,
+    translate: "https://translate.volcengine.com/translate?text=%s",
+    translateHide: true,
+};

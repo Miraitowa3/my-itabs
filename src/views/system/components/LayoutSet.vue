@@ -75,10 +75,12 @@ const opt = (val: string) => {
         width: 70%;
         margin: 5px auto;
         line-height: 0px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
         i {
             width: 8px;
             height: 8px;
-            display: inline-block;
             margin: 2px;
             border-radius: 2px;
             background: rgba(var(--alpha-color), 0.1);

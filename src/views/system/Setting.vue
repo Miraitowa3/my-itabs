@@ -11,7 +11,7 @@
                 <aside class="d-layout-aside h-full w-[140px]">
                     <template v-for="(item, index) in list" :key="index">
                         <p :class="['setting-user', index === cur ? 'active' : '']" v-if="index == 0">
-                            <el-button type="primary" size="small" style="height: 24px" @click.stop="changeIndex(index)">{{ item.name }}</el-button>
+                            <el-button type="primary" size="small" style="height: 24px; border-radius: 6px" @click.stop="changeIndex(index)">{{ item.name }}</el-button>
                         </p>
                     </template>
 

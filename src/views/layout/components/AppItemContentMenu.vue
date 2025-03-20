@@ -8,8 +8,7 @@
                 布局
 
                 <p class="contextmenu-layout overflow-hidden">
-                    <em class="">1x1</em><em class="">1x2</em><em class="">2x1</em><em class="">2x2</em
-                    ><em class="active">2x4</em>
+                    <em v-for="(item, index) in layoutList" :key="index" @click="optLayout(item, index)">{{ item }}</em>
                 </p>
             </li>
 
@@ -38,16 +37,24 @@
 <script lang="ts" setup>
 const props = defineProps<{
     target: string;
+    list: Array<any>;
 }>();
 
+const layoutList = ["1x1", "1x2", "2x1", "2x2", "2x4"];
 const whiteClass = ["app-item-icon"];
+let cur = 0;
 function hanlderCallback(e: MouseEvent) {
     const target = e.target as HTMLElement;
     const classes = (target.getAttribute("class") || "").split(" ");
     if (!classes.some((cls) => whiteClass.includes(cls))) {
         return false;
     }
+    cur = Number(target.getAttribute("cs")?.split("_")[1]);
+
     return true;
+}
+function optLayout(item: string, index: number) {
+    props.list[cur].size = item;
 }
 </script>
 <style scoped>

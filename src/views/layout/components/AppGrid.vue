@@ -2,18 +2,19 @@
     <div class="app-icon-grid-wrap flex-1" style="flex: 1 1 0%">
         <div class="app-icon-grid d-hidden h-full" :style="{ opacity: layout.view === 'widget' ? 1 : 0 }">
             <ul class="app-icon-wrap" ref="appIconWrap">
-                <li class="app-icon-item" v-for="(item, index) in navConfig" :name="item.id" :key="item.id" :style="{ opacity: cur.current === item.id ? 1 : 0 }">
+                <li class="app-icon-item" v-for="item in navConfig" :name="item.id" :key="item.id" :style="{ opacity: cur.current === item.id ? 1 : 0 }">
                     <div class="d-scrollbar-hide h-full" :id="'app-grid_' + item.id" style="pointer-events: auto; transition: transform 0.26s cubic-bezier(0.165, 0.84, 0.44, 1)">
-                        <AppItemContentMenu :target="`#app-grid_${item.id} .app-grid`" />
+                        <AppItemContentMenu :target="`#app-grid_${item.id} .app-grid`" :list="item.children" />
                         <VueDraggable v-model="item.children" :animation="150" target=".app-grid" @start="onStart" @end="onEnd">
                             <TransitionGroup type="transition" tag="ul" :name="!drag ? 'fade' : undefined" class="app-grid">
                                 <template v-for="(it, index) in item.children" :key="it.id">
                                     <li :class="['app-item', `icon-size-${it.size ? it.size : '1X1'}`]" v-if="it.type === 'icon' || it.type === 'text'">
                                         <div
-                                            class="app-item-icon"
+                                            class="app-item-icon swing"
                                             :style="{
                                                 'background-color': it['backgroundColor'] ? it['backgroundColor'] : '#FFFFFF',
                                             }"
+                                            :cs="it.id + '_' + index"
                                             @click.stop="clickIcon(it)"
                                         >
                                             <img
@@ -207,6 +208,32 @@ defineExpose({
 });
 </script>
 <style scoped>
+@keyframes aswing {
+    0% {
+        transform: rotate(0) scale(1);
+    }
+
+    20% {
+        transform: rotate(-2deg) scale(1);
+    }
+
+    60% {
+        transform: rotate(0) scale(1);
+    }
+
+    80% {
+        transform: rotate(2deg) scale(1);
+    }
+
+    to {
+        transform: rotate(0) scale(1);
+    }
+}
+
+.swing {
+    animation: aswing ease 0.3s infinite;
+    transform-origin: center 50px;
+}
 .app-icon-grid {
     pointer-events: none;
     max-width: var(--icon-max-width, 1350px);
