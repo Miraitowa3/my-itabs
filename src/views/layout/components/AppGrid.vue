@@ -2,15 +2,17 @@
     <div class="app-icon-grid-wrap flex-1" style="flex: 1 1 0%">
         <div class="app-icon-grid d-hidden h-full" :style="{ opacity: layout.view === 'widget' ? 1 : 0 }">
             <ul class="app-icon-wrap" ref="appIconWrap">
-                <li class="app-icon-item" v-for="item in navConfig" :name="item.id" :key="item.id" :style="{ opacity: cur.current === item.id ? 1 : 0 }">
+                <li class="app-icon-item" v-for="(item, i) in navConfig" :name="item.id" :key="item.id" :style="{ opacity: cur.current === item.id ? 1 : 0 }">
                     <div class="d-scrollbar-hide h-full" :id="'app-grid_' + item.id" style="pointer-events: auto; transition: transform 0.26s cubic-bezier(0.165, 0.84, 0.44, 1)">
                         <AppItemContentMenu :target="`#app-grid_${item.id} .app-grid`" :list="item.children" />
                         <VueDraggable v-model="item.children" :animation="150" target=".app-grid" @start="onStart" @end="onEnd">
-                            <TransitionGroup type="transition" tag="ul" :name="!drag ? 'fade' : undefined" class="app-grid">
+                            <!-- <TransitionGroup type="transition" tag="ul" :name="!drag ? 'fade' : 'fade'" class="app-grid"> -->
+                            <TransitionGroup type="transition" tag="ul" name="list" class="app-grid">
                                 <template v-for="(it, index) in item.children" :key="it.id">
                                     <li :class="['app-item', `icon-size-${it.size ? it.size : '1X1'}`]" v-if="it.type === 'icon' || it.type === 'text'">
                                         <div
-                                            class="app-item-icon swing"
+                                            class="app-item-icon"
+                                            :class="{ swing: isBatchEdit }"
                                             :style="{
                                                 'background-color': it['backgroundColor'] ? it['backgroundColor'] : '#FFFFFF',
                                             }"
@@ -28,6 +30,11 @@
                                                 }"
                                             />
                                             <span v-else class="text-[#fff]">{{ it.iconText }}</span>
+                                        </div>
+                                        <div class="icon-item-delete d-flex-center" v-if="isBatchEdit" @click="deleteIcon(i, index)">
+                                            <i class="text-[14px]">
+                                                <svg-icon name="close"></svg-icon>
+                                            </i>
                                         </div>
                                         <p class="app-item-title d-elip">{{ it.name }}</p>
                                     </li>
@@ -49,7 +56,7 @@ import { useSiderStore } from "@/stores/global";
 import AppItemContentMenu from "./AppItemContentMenu.vue";
 
 const global = useSiderStore();
-const { cur, navConfig } = storeToRefs(global);
+const { cur, navConfig, isBatchEdit } = storeToRefs(global);
 const drag = ref(false);
 const appIconWrap = ref<HTMLUListElement>();
 const scrollDisYIndex = ref<number>(0);
@@ -185,7 +192,9 @@ function throttle(func: any, wait: any) {
         }
     };
 }
-
+function deleteIcon(i: number, index: number) {
+    navConfig.value[i].children.splice(index, 1);
+}
 function clickIcon(item: any) {
     if (item.type === "icon") {
         window.open(item.url, "_blank");
@@ -207,7 +216,7 @@ defineExpose({
     debouncedHandleWheel,
 });
 </script>
-<style scoped>
+<style scoped lang="scss">
 @keyframes aswing {
     0% {
         transform: rotate(0) scale(1);
@@ -229,6 +238,19 @@ defineExpose({
         transform: rotate(0) scale(1);
     }
 }
+.list-complete-item {
+    transition: all 1s;
+    display: inline-block;
+    margin-right: 10px;
+}
+.list-complete-enter, .list-complete-leave-to
+/* .list-complete-leave-active for below version 2.1.8 */ {
+    opacity: 0;
+    transform: translateY(30px);
+}
+.list-complete-leave-active {
+    position: absolute;
+}
 
 .swing {
     animation: aswing ease 0.3s infinite;
@@ -240,6 +262,12 @@ defineExpose({
     margin: 0 auto;
     padding: 0 var(--sidebar-width, 45px);
     height: 100%;
+}
+.d-flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: wrap;
 }
 .app-icon-wrap {
     height: 100%;
@@ -323,6 +351,27 @@ defineExpose({
     width: var(--icon-size);
     height: var(--icon-size);
     border-radius: var(--icon-radius);
+
+    .icon-item-delete {
+        &:hover {
+            cursor: pointer;
+            background-color: rgb(216, 48, 48);
+            color: rgb(255, 255, 255);
+        }
+        z-index: 11;
+        position: absolute;
+        backdrop-filter: blur(10px);
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 7px;
+        right: 2px;
+        top: -5px;
+        height: 20px;
+        width: 20px;
+        color: rgb(51, 51, 51);
+        background-color: rgba(255, 255, 255, 0.4);
+
+        border-radius: 50%;
+        transition: 0.2s;
+    }
 }
 
 .d-elip {

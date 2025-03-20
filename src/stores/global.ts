@@ -1,9 +1,11 @@
 import { defaultNavConfig } from "@/constant/config";
 import { useBaseConfigStore } from "./baseConfig";
+import { cloneDeep } from "lodash-es";
 
 export const useSiderStore = defineStore(
     "global",
     () => {
+        const isBatchEdit = ref(false);
         const baseConfigStore = useBaseConfigStore();
         const { sidebar } = storeToRefs(baseConfigStore);
 
@@ -14,9 +16,12 @@ export const useSiderStore = defineStore(
         if (localStorage.getItem("cur")) {
           cur.value = JSON.parse(localStorage.getItem("cur")!);
         }
-        const navConfig = ref(defaultNavConfig);
+        const navConfig = ref(cloneDeep(defaultNavConfig));
         function setNavConfig(list: any) {
             navConfig.value = list;
+        }
+        function setBatchEdit(val:boolean) {
+            isBatchEdit.value = val;
         }
         watch(
             cur,
@@ -34,7 +39,7 @@ export const useSiderStore = defineStore(
                 deep: true,
             },
         );
-        return { navConfig, cur, setNavConfig };
+        return { navConfig, cur, setNavConfig ,setBatchEdit, isBatchEdit };
     },
     {
         persist: [

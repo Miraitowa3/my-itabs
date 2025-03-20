@@ -18,7 +18,7 @@
                 </i>
                 <span class="menu-item-title text-[12px]">编辑</span>
             </li>
-            <li class="menu-item hover">
+            <li class="menu-item hover" @click="handleBatchEdit">
                 <i class="item-icon d-icon">
                     <svg-icon name="menu-edit" />
                 </i>
@@ -35,6 +35,8 @@
 </template>
 
 <script lang="ts" setup>
+import { useSiderStore } from "@/stores/global";
+const siderStore = useSiderStore();
 const props = defineProps<{
     target: string;
     list: Array<any>;
@@ -44,6 +46,7 @@ const layoutList = ["1x1", "1x2", "2x1", "2x2", "2x4"];
 const whiteClass = ["app-item-icon"];
 let cur = 0;
 function hanlderCallback(e: MouseEvent) {
+    siderStore.setBatchEdit(false);
     const target = e.target as HTMLElement;
     const classes = (target.getAttribute("class") || "").split(" ");
     if (!classes.some((cls) => whiteClass.includes(cls))) {
@@ -55,6 +58,9 @@ function hanlderCallback(e: MouseEvent) {
 }
 function optLayout(item: string, index: number) {
     props.list[cur].size = item;
+}
+function handleBatchEdit() {
+    siderStore.setBatchEdit(true);
 }
 </script>
 <style scoped>
