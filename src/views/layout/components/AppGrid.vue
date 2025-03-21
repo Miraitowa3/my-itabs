@@ -6,8 +6,8 @@
                     <div class="d-scrollbar-hide h-full" :id="'app-grid_' + item.id" style="pointer-events: auto; transition: transform 0.26s cubic-bezier(0.165, 0.84, 0.44, 1)">
                         <AppItemContentMenu :target="`#app-grid_${item.id} .app-grid`" :list="item.children" />
                         <VueDraggable v-model="item.children" :animation="150" target=".app-grid" @start="onStart" @end="onEnd">
-                            <!-- <TransitionGroup type="transition" tag="ul" :name="!drag ? 'fade' : 'fade'" class="app-grid"> -->
-                            <TransitionGroup type="transition" tag="ul" name="list" class="app-grid">
+                            <!-- <ul class="app-grid"> -->
+                            <TransitionGroup type="transition" tag="ul" :name="!drag ? 'fade' : 'fade'" class="app-grid">
                                 <template v-for="(it, index) in item.children" :key="it.id">
                                     <li :class="['app-item', `icon-size-${it.size ? it.size : '1X1'}`]" v-if="it.type === 'icon' || it.type === 'text'">
                                         <div
@@ -39,6 +39,7 @@
                                         <p class="app-item-title d-elip">{{ it.name }}</p>
                                     </li>
                                 </template>
+                                <!-- </ul> -->
                             </TransitionGroup>
                         </VueDraggable>
                     </div>
@@ -54,7 +55,7 @@ import { useBaseConfigStore } from "@/stores/baseConfig";
 import { VueDraggable } from "vue-draggable-plus";
 import { useSiderStore } from "@/stores/global";
 import AppItemContentMenu from "./AppItemContentMenu.vue";
-
+import Flip from "@/utils/flip";
 const global = useSiderStore();
 const { cur, navConfig, isBatchEdit } = storeToRefs(global);
 const drag = ref(false);
@@ -65,6 +66,7 @@ const scrollDisYList = ref<number[]>([]);
 const appGridId = ref<HTMLUListElement>();
 const baseConfigStore = useBaseConfigStore();
 const { sidebar, layout } = storeToRefs(baseConfigStore);
+const Fliap = ref<any>();
 function onStart() {
     drag.value = true;
 }
@@ -74,6 +76,9 @@ function onEnd(e: any) {
     });
 }
 
+onMounted(() => {
+    // Fliap.value = new Flip({ el: "#app-grid_1 .app-grid" });
+});
 watch(
     () => cur.value.current,
     (value: string) => {
@@ -107,7 +112,6 @@ watch(
         updateTranslateY();
     },
 );
-const timess = ref(0);
 function handleWheel(e: WheelEvent) {
     if (!sidebar.value.mouseGroup) {
         return;
@@ -193,7 +197,9 @@ function throttle(func: any, wait: any) {
     };
 }
 function deleteIcon(i: number, index: number) {
+    // Fliap.value.start();
     navConfig.value[i].children.splice(index, 1);
+    // Fliap.value.play();
 }
 function clickIcon(item: any) {
     if (item.type === "icon") {
@@ -237,19 +243,6 @@ defineExpose({
     to {
         transform: rotate(0) scale(1);
     }
-}
-.list-complete-item {
-    transition: all 1s;
-    display: inline-block;
-    margin-right: 10px;
-}
-.list-complete-enter, .list-complete-leave-to
-/* .list-complete-leave-active for below version 2.1.8 */ {
-    opacity: 0;
-    transform: translateY(30px);
-}
-.list-complete-leave-active {
-    position: absolute;
 }
 
 .swing {
