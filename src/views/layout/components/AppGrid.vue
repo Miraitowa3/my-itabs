@@ -4,39 +4,46 @@
             <ul class="app-icon-wrap" ref="appIconWrap">
                 <li class="app-icon-item" v-for="(item, i) in navConfig" :name="item.id" :key="item.id" :style="{ opacity: cur.current === item.id ? 1 : 0 }">
                     <div class="d-scrollbar-hide h-full" :id="'app-grid_' + item.id" style="pointer-events: auto; transition: transform 0.26s cubic-bezier(0.165, 0.84, 0.44, 1)">
-                        <AppItemContentMenu :target="`#app-grid_${item.id} .app-grid`" :list="item.children" />
+                        <AppItemContentMenu
+                            ref="appItemContentMenu"
+                            :target="`#app-grid_${item.id} .app-grid`"
+                            :list="item.children"
+                            @delete="(i) => handleDelete(cur.currentTab, i)"
+                        />
                         <VueDraggable v-model="item.children" :animation="150" target=".app-grid" @start="onStart" @end="onEnd">
                             <!-- <ul class="app-grid"> -->
-                            <TransitionGroup type="transition" tag="ul" :name="!drag ? 'fade' : 'fade'" class="app-grid">
+                            <TransitionGroup type="transition" tag="ul" name="list" class="app-grid">
                                 <template v-for="(it, index) in item.children" :key="it.id">
                                     <li :class="['app-item', `icon-size-${it.size ? it.size : '1X1'}`]" v-if="it.type === 'icon' || it.type === 'text'">
-                                        <div
-                                            class="app-item-icon"
-                                            :class="{ swing: isBatchEdit }"
-                                            :style="{
-                                                'background-color': it['backgroundColor'] ? it['backgroundColor'] : '#FFFFFF',
-                                            }"
-                                            :cs="it.id + '_' + index"
-                                            @click.stop="clickIcon(it)"
-                                        >
-                                            <img
-                                                v-if="it.type === 'icon'"
-                                                class="app-item-img"
-                                                :src="it.src"
+                                        <div class="relative h-full w-full">
+                                            <div
+                                                class="app-item-icon"
+                                                :class="{ swing: isBatchEdit }"
                                                 :style="{
-                                                    'pointer-events': 'none',
-                                                    '--icon-bg-color': it['backgroundColor'] ? it['backgroundColor'] : '#FFFFFF',
-                                                    '--icon-fit': 'contain',
+                                                    'background-color': it['backgroundColor'] ? it['backgroundColor'] : '#FFFFFF',
                                                 }"
-                                            />
-                                            <span v-else class="text-[#fff]">{{ it.iconText }}</span>
+                                                :cs="it.id + '_' + index"
+                                                @click.stop="clickIcon(it)"
+                                            >
+                                                <img
+                                                    v-if="it.type === 'icon'"
+                                                    class="app-item-img"
+                                                    :src="it.src"
+                                                    :style="{
+                                                        'pointer-events': 'none',
+                                                        '--icon-bg-color': it['backgroundColor'] ? it['backgroundColor'] : '#FFFFFF',
+                                                        '--icon-fit': 'contain',
+                                                    }"
+                                                />
+                                                <span v-else class="text-[#fff]">{{ it.iconText }}</span>
+                                            </div>
+                                            <div class="icon-item-delete d-flex-center" v-if="isBatchEdit" @click="deleteIcon(i, index)">
+                                                <i class="text-[14px]">
+                                                    <svg-icon name="close"></svg-icon>
+                                                </i>
+                                            </div>
+                                            <p class="app-item-title d-elip">{{ it.name }}</p>
                                         </div>
-                                        <div class="icon-item-delete d-flex-center" v-if="isBatchEdit" @click="deleteIcon(i, index)">
-                                            <i class="text-[14px]">
-                                                <svg-icon name="close"></svg-icon>
-                                            </i>
-                                        </div>
-                                        <p class="app-item-title d-elip">{{ it.name }}</p>
                                     </li>
                                 </template>
                                 <!-- </ul> -->
@@ -51,11 +58,10 @@
 
 <script lang="ts" setup>
 import { useBaseConfigStore } from "@/stores/baseConfig";
-
 import { VueDraggable } from "vue-draggable-plus";
 import { useSiderStore } from "@/stores/global";
 import AppItemContentMenu from "./AppItemContentMenu.vue";
-import Flip from "@/utils/flip";
+
 const global = useSiderStore();
 const { cur, navConfig, isBatchEdit } = storeToRefs(global);
 const drag = ref(false);
@@ -66,7 +72,7 @@ const scrollDisYList = ref<number[]>([]);
 const appGridId = ref<HTMLUListElement>();
 const baseConfigStore = useBaseConfigStore();
 const { sidebar, layout } = storeToRefs(baseConfigStore);
-const Fliap = ref<any>();
+const appItemContentMenu = ref<any>();
 function onStart() {
     drag.value = true;
 }
@@ -76,42 +82,68 @@ function onEnd(e: any) {
     });
 }
 
-onMounted(() => {
-    // Fliap.value = new Flip({ el: "#app-grid_1 .app-grid" });
-});
 watch(
     () => cur.value.current,
     (value: string) => {
+        if (appItemContentMenu.value) {
+            appItemContentMenu.value.forEach((item: any) => {
+                item.closeMenu();
+            });
+        }
+
         nextTick(() => {
-            const clientY = appIconWrap.value!.getBoundingClientRect().height;
-            const scorllY = (document.querySelector("#" + "app-grid_" + cur.value.current + "> div") as HTMLUListElement).getBoundingClientRect().height;
-            const disY = scorllY - clientY;
-            let total = Math.floor(disY / BASE_TRANSLATE_Y.value);
-            if (total === 0) {
-                scrollDisYList.value = [0, disY % BASE_TRANSLATE_Y.value];
-            } else {
-                let arr = [0];
-                for (let index = 0; index <= total; index++) {
-                    if (index === total) {
-                        arr.push(disY % BASE_TRANSLATE_Y.value);
-                    } else {
-                        arr.push(BASE_TRANSLATE_Y.value);
-                    }
-                }
-                scrollDisYList.value = arr;
-            }
-            appGridId.value = document.querySelector("#" + "app-grid_" + cur.value.current) as HTMLUListElement;
+            updateXY();
         });
     },
     { immediate: true },
 );
+function updateXY() {
+    const clientY = appIconWrap.value!.getBoundingClientRect().height;
+
+    const scorllY = (document.querySelector("#" + "app-grid_" + cur.value.current + "> div") as HTMLUListElement).getBoundingClientRect().height;
+
+    const disY = scorllY - clientY;
+    let total = Math.floor(disY / BASE_TRANSLATE_Y.value);
+    if (total === 0) {
+        scrollDisYList.value = [0, disY % BASE_TRANSLATE_Y.value];
+    } else {
+        let arr = [0];
+        for (let index = 0; index <= total; index++) {
+            if (index === total) {
+                arr.push(disY % BASE_TRANSLATE_Y.value);
+            } else {
+                arr.push(BASE_TRANSLATE_Y.value);
+            }
+        }
+        scrollDisYList.value = arr;
+    }
+    appGridId.value = document.querySelector("#" + "app-grid_" + cur.value.current) as HTMLUListElement;
+}
 watch(
     () => cur.value.current,
     (value: string) => {
         //切换tab时，更新 tab-content 位置
-        updateTranslateY();
+        nextTick(() => {
+            updateTranslateY();
+        });
+    },
+    {
+        deep: true,
+        immediate: true,
     },
 );
+function handleDelete(i: number, cur: number) {
+    let list = navConfig.value;
+    if (list[i].children.length === 0) {
+        return;
+    } else if (list[i].children.length - 1 < cur) {
+        list[i].children.splice(list[i].children.length - 1, 1);
+    } else {
+        list[i].children.splice(cur, 1);
+    }
+
+    global.setNavConfig(list);
+}
 function handleWheel(e: WheelEvent) {
     if (!sidebar.value.mouseGroup) {
         return;
@@ -174,18 +206,7 @@ function updateTranslateY() {
     });
 }
 const debouncedHandleWheel = throttle(handleWheel, 600);
-function debounce<T extends (...args: any[]) => void>(func: T, delay: number) {
-    let timer: NodeJS.Timeout | null;
 
-    return function (...args: Parameters<T>) {
-        if (timer) {
-            clearTimeout(timer);
-        }
-        timer = setTimeout(() => {
-            func(...args);
-        }, delay);
-    };
-}
 function throttle(func: any, wait: any) {
     let lastTime = 0;
     return function (...args: any) {
@@ -206,13 +227,27 @@ function clickIcon(item: any) {
         window.open(item.url, "_blank");
     }
 }
-onMounted(() => {
+watch(
+    () => navConfig.value,
+    () => {
+        //删除分组更新 位置信息
+        nextTick(() => {
+            upDateComponent();
+            updateXY();
+            updateTranslateY();
+        });
+    },
+    { deep: true },
+);
+function upDateComponent() {
     let child = Array.from(appIconWrap.value!.children) as HTMLElement[];
     let h = appIconWrap.value!.offsetHeight;
     child.forEach((ele: HTMLElement, index: number) => {
         ele.style.transform = `translateY(${h * index}px)`;
     });
-    //
+}
+onMounted(() => {
+    upDateComponent();
     const clientY = appIconWrap.value!.getBoundingClientRect().height;
     if (BASE_TRANSLATE_Y.value > clientY) {
         BASE_TRANSLATE_Y.value = clientY / 2;
@@ -244,7 +279,23 @@ defineExpose({
         transform: rotate(0) scale(1);
     }
 }
+.list-move, /* 对移动中的元素应用的过渡 */
+.list-enter-active {
+    transition: all 0.3s ease;
+}
+.list-leave-active {
+    transition: none;
+}
+.list-enter-from,
+.list-leave-to {
+    opacity: 0;
+}
 
+/* 确保将离开的元素从布局流中删除
+  以便能够正确地计算移动的动画。 */
+.list-leave-active {
+    position: absolute;
+}
 .swing {
     animation: aswing ease 0.3s infinite;
     transform-origin: center 50px;
@@ -333,7 +384,6 @@ defineExpose({
 }
 .app-item {
     list-style-type: none;
-    position: relative;
     grid-column: span 1;
     grid-row: span 1;
     height: 100%;

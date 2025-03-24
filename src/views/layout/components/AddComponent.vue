@@ -39,35 +39,62 @@
     </Dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useSiderStore } from "@/stores/global";
 import { siderIcons } from "@/constant/config";
 const global = useSiderStore();
 const { navConfig } = storeToRefs(global);
 
+const props = defineProps<{
+    info?: any;
+    index?: number;
+}>();
 const show = defineModel();
 const curIndex = ref(1);
 const siderItemName = ref(siderIcons[curIndex.value].name);
+watch(
+    () => props.info,
+    () => {
+        if (props.info) {
+            siderItemName.value = props.info.name;
+            curIndex.value = siderIcons.findIndex((item) => item.icon === props.info.icon);
+        }
+    },
+    {
+        deep: true,
+        immediate: true,
+    },
+);
+
 function save() {
-    global.setNavConfig([
-        ...navConfig.value,
-        {
+    if (props.info) {
+        navConfig.value[props.index as number] = {
+            ...props.info,
             name: siderItemName.value,
             icon: siderIcons[curIndex.value].icon,
-            children: [
-                {
-                    id: "Vpdrvg_2bvxzGiyRKEpOA",
-                    url: "itab://add",
-                    type: "icon",
-                    name: "添加图标",
-                    src: "https://files.codelife.cc/icons/add.svg",
-                    backgroundColor: "#fff",
-                    iconText: "",
-                },
-            ],
-            id: Math.random().toString(36).substr(2, 9),
-        },
-    ]);
+        };
+    } else {
+        global.setNavConfig([
+            ...navConfig.value,
+            {
+                name: siderItemName.value,
+                icon: siderIcons[curIndex.value].icon,
+                children: [
+                    {
+                        id: "Vpdrvg_2bvxzGiyRKEpOA",
+                        url: "itab://add",
+                        type: "icon",
+                        name: "添加图标",
+                        src: "https://files.codelife.cc/icons/add.svg",
+                        backgroundColor: "#fff",
+                        iconText: "",
+                    },
+                ],
+                id: Math.random().toString(36).substr(2, 9),
+            },
+        ]);
+    }
+
     show.value = false;
 }
 </script>

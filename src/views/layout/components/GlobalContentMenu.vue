@@ -1,5 +1,5 @@
 <template>
-    <ContentMenu containerRef="#app-main" :hanlderCallback="hanlderCallback">
+    <ContentMenu containerRef="#app-main" :hanlderCallback="hanlderCallback" ref="contentMenu">
         <ul class="menu-list">
             <li class="menu-item hover flex justify-between" @click="showAdd = true">
                 <span class="menu-item-title text-[12px]">添加图标</span>
@@ -41,6 +41,7 @@
 
 <script lang="ts" setup>
 import AddIcon from "./components/AddIcon.vue";
+const contentMenu = ref<any>();
 
 const whiteClass = ["app-item-icon", "yiyan-text", "yiyan-from", "se-input", "search-icon"];
 const showAdd = ref(false);
@@ -54,8 +55,15 @@ function hanlderCallback(e: MouseEvent) {
     }
     return true;
 }
+function closeMenu() {
+    contentMenu.value.closeMenu();
+}
+defineExpose({ closeMenu });
 </script>
 <style scoped>
+.menu-item-title {
+    margin-left: 4px;
+}
 .menu-item {
     transition: background 0.2s;
     font-size: 12px;

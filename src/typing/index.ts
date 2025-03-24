@@ -2,8 +2,8 @@
  * @Description: ------------ fileDescription -----------
  * @Author: snows_l snows_l@163.com
  * @Date: 2025-03-19 18:54:24
- * @LastEditors: snows_l snows_l@163.com
- * @LastEditTime: 2025-03-19 19:42:11
+ * @LastEditors: lyq
+ * @LastEditTime: 2025-03-23 01:47:54
  * @FilePath: /mTab/my-itabs/src/typing/index.ts
  */
 export interface IconType {
@@ -46,3 +46,16 @@ export interface SearchType {
     translate: string;
     translateHide: boolean;
 }
+export interface TimeType {
+    color: string;
+    font: string;
+    fontWeight: string,
+    hour24: string,
+    lunar:string,
+    month: string,
+    sec: string,
+    show: boolean,
+    size: number,
+    week: string,
+    [key: string]: any;
+};

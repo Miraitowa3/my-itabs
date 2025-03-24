@@ -29,7 +29,7 @@ const props = defineProps({
         required: true,
     },
 });
-const { showMenu, x, y } = useContentMenu(props.containerRef, props.hanlderCallback);
+const { showMenu, x, y, closeMenu } = useContentMenu(props.containerRef, props.hanlderCallback);
 
 function handleBeforeEnter(e: Element) {
     // e.classList.add("animation");
@@ -50,6 +50,9 @@ function handleEnter(e: Element) {
         y.value = wH - h;
     }
 }
+defineExpose({
+    closeMenu,
+});
 </script>
 <style scoped>
 .content-menu {

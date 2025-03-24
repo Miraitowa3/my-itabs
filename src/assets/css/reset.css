@@ -166,3 +166,14 @@ input {
     font-size: 0;
     overflow: hidden;
 }
+body,
+html {
+    scroll-behavior: smooth;
+    font-family:
+        PingFang SC,
+        -apple-system,
+        BlinkMacSystemFont,
+        Helvetica Neue,
+        Helvetica,
+        sans-serif;
+}

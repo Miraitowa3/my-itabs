@@ -3,14 +3,14 @@
  * @Author: snows_l snows_l@163.com
  * @Date: 2025-03-19 20:18:37
  * @LastEditors: lyq
- * @LastEditTime: 2025-03-20 14:33:44
+ * @LastEditTime: 2025-03-23 00:40:44
  * @FilePath: /mTab/my-itabs/src/components/Select.vue
 -->
 <template>
     <div class="slider flex items-center justify-between">
         <span class="slider-title" v-if="title">{{ title }} </span>
         <el-select v-model="value" size="small" v-bind="attrs">
-            <el-option v-for="item in list" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-option v-for="item in list" :key="item.value" :label="item.label" :value="item.value"> div </el-option>
         </el-select>
     </div>
 </template>

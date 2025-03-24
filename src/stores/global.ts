@@ -8,15 +8,16 @@ export const useSiderStore = defineStore(
         const isBatchEdit = ref(false);
         const baseConfigStore = useBaseConfigStore();
         const { sidebar } = storeToRefs(baseConfigStore);
-
+        const navConfig = ref(cloneDeep(defaultNavConfig));
         const cur = ref({
-            current: defaultNavConfig[0].id,
+            current: navConfig.value[0].id,
             currentTab: 0,
         });
+
         if (localStorage.getItem("cur")) {
           cur.value = JSON.parse(localStorage.getItem("cur")!);
         }
-        const navConfig = ref(cloneDeep(defaultNavConfig));
+
         function setNavConfig(list: any) {
             navConfig.value = list;
         }
@@ -26,6 +27,7 @@ export const useSiderStore = defineStore(
         watch(
             cur,
             () => {
+                setBatchEdit(false)
                 if (sidebar.value.lastGroup) {
                     localStorage.setItem("cur", JSON.stringify(cur.value));
                 } else {
@@ -42,12 +44,6 @@ export const useSiderStore = defineStore(
         return { navConfig, cur, setNavConfig ,setBatchEdit, isBatchEdit };
     },
     {
-        persist: [
-            {
-                storage: localStorage,
-                pick: ["navConfig"],
-                key: "navConfig",
-            },
-        ],
+        persist:true
     },
 );

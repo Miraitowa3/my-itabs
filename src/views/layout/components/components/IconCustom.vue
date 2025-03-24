@@ -1,11 +1,3 @@
-<!--
- * @Description: ------------ fileDescription -----------
- * @Author: snows_l snows_l@163.com
- * @Date: 2025-03-12 18:45:54
- * @LastEditors: lyq
- * @LastEditTime: 2025-03-14 17:13:12
- * @FilePath: /mTab/src/views/layout/components/components/IconCustom.vue
--->
 <template>
     <div class="icon-container">
         <div class="app-icon-wrap">
@@ -18,14 +10,14 @@
                         </template>
                     </el-input>
                 </el-form-item>
-                <el-form-item prop="mc" label="名称">
-                    <el-input v-model="form.mc" type="text" placeholder="网站名称" clearable class="url-input">
+                <el-form-item prop="name" label="名称">
+                    <el-input v-model="form.name" type="text" placeholder="网站名称" clearable class="url-input">
                         <template #prefix>
                             <i class="text-[14px] text-[#fff]"> <svg-icon name="bi" /> </i>
                         </template>
                     </el-input>
                 </el-form-item>
-                <el-form-item prop="mc" label="图标颜色">
+                <el-form-item prop="name" label="图标颜色">
                     <div class="d-color flex w-full items-center justify-between">
                         <span
                             :class="['d-color-item', color === 'transparent' ? 'colorTransparent' : '']"
@@ -33,13 +25,13 @@
                             v-for="(color, index) in colorList"
                             @click.stop="changeColor(index, color)"
                         >
-                            <i class="animate__animated animate__bounceIn text-[18px] text-[#fff]" v-show="color === form.curColor"> <svg-icon name="dui" /> </i>
+                            <i class="animate__animated animate__bounceIn text-[18px] text-[#fff]" v-show="color === form.backgroundColor"> <svg-icon name="dui" /> </i>
                         </span>
-                        <el-color-picker size="small" v-model="form.curColor" />
+                        <el-color-picker size="small" v-model="form.backgroundColor" />
                     </div>
                 </el-form-item>
-                <el-form-item prop="tbMc" label="图标文字" v-if="picCur === '文字图标'">
-                    <el-input v-model="form.tbMc" type="text" placeholder="请输入图标文字" clearable class="url-input" maxlength="6" @input="changeText">
+                <el-form-item prop="iconText" label="图标文字" v-if="picCur === '文字图标'">
+                    <el-input v-model="form.iconText" type="text" placeholder="请输入图标文字" clearable class="url-input" maxlength="6" @input="changeText">
                         <template #prefix>
                             <i class="text-[14px] text-[#fff]"> <svg-icon name="bi" /> </i>
                         </template>
@@ -49,8 +41,8 @@
                 <div class="mb-[20px] ml-[66px]">
                     <div :class="['icon-preview', picCur === '文字图标' ? 'active' : '']" @click="picCur = '文字图标'">
                         <div class="icon-preview-body">
-                            <div class="d-text-icon relative flex h-full w-full items-center whitespace-nowrap text-white" :style="{ background: form.curColor }">
-                                <span class="d-text-txt" :style="{ transform: `scale(${textScale}) translateX(-50%) ` }">{{ form.tbMc }}</span>
+                            <div class="d-text-icon relative flex h-full w-full items-center whitespace-nowrap text-white" :style="{ background: form.backgroundColor }">
+                                <span class="d-text-txt" :style="{ transform: `scale(${textScale}) translateX(-50%) ` }">{{ form.iconText }}</span>
                             </div>
                         </div>
                         文字图标
@@ -72,7 +64,7 @@
                 <el-form-item>
                     <div class="mt-[2px]">
                         <el-button type="primary" style="height: 32px; font-size: 12px" @click.stop="save('保存')">保存</el-button>
-                        <el-button style="height: 32px; font-size: 12px" @click="save('保存并继续')">保存并继续</el-button>
+                        <el-button style="height: 32px; font-size: 12px" @click="save('保存并继续')" v-if="!info">保存并继续</el-button>
                     </div>
                 </el-form-item>
             </el-form>
@@ -86,31 +78,37 @@ import UseUploadImage from "@/hooks/UseUploadImage";
 import { useSiderStore } from "@/stores/global";
 const global = useSiderStore();
 const { navConfig, cur } = storeToRefs(global);
+const props = defineProps<{
+    info: any;
+    index: number;
+}>();
 import { extractDomainOrIP, generateCustomRandomString } from "@/utils";
 type PicType = "文字图标" | "上传";
 const colorList = ref(["#1681FF", "#FBBE23", "#FC4548", "#4B3C36", "#7DAC68", "#023373", "#C8AC70", "#372128", "#C82C34", "#054092", "#A3DDB9", "transparent"]);
 const emits = defineEmits(["close"]);
 const vailMap = {
     url: "地址能为空！",
-    mc: "名称不能为空！",
-    tbMc: "图标文字不能为空！",
-    curColor: "请选择图标颜色！",
+    name: "名称不能为空！",
+    iconText: "图标文字不能为空！",
+    backgroundColor: "请选择图标颜色！",
 };
-const { uploadImage } = UseUploadImage();
 const picCur = ref<PicType>("文字图标");
 const textScale = ref(0.94);
 const form = ref({
     url: "",
-    mc: "",
-    tbMc: "",
-    curColor: colorList.value[0],
+    name: "",
+    iconText: "",
+    backgroundColor: colorList.value[0],
 });
 
+if (props.info) {
+    form.value = props.info;
+}
 function changeColor(index: number, color: string) {
-    form.value.curColor = color;
+    form.value.backgroundColor = color;
 }
 function changeText() {
-    if (form.value.tbMc.length >= 5) {
+    if (form.value.iconText.length >= 5) {
         textScale.value = 0.58;
     } else {
         textScale.value = 0.94;
@@ -134,19 +132,23 @@ function save(type: "保存" | "保存并继续") {
     }
 
     let list = navConfig.value;
-    list[cur.value.currentTab].children.push({
-        backgroundColor: form.value.curColor,
-        iconText: form.value.tbMc,
-        id: generateCustomRandomString(11),
-        name: form.value.mc,
-        src: "",
-        type: "text",
-        url: form.value.url,
-    } as any);
+    if (props.info) {
+        list[cur.value.currentTab].children[props.index] = form.value as any;
+    } else {
+        list[cur.value.currentTab].children.push({
+            backgroundColor: form.value.backgroundColor,
+            iconText: form.value.iconText,
+            id: generateCustomRandomString(11),
+            name: form.value.name,
+            src: "",
+            type: "text",
+            url: form.value.url,
+        } as any);
+    }
 
     global.setNavConfig(list);
     ElMessage({
-        message: `${form.value.mc} `,
+        message: `${form.value.name} `,
         type: "success",
     });
     if (type === "保存") {
@@ -154,9 +156,9 @@ function save(type: "保存" | "保存并继续") {
     } else {
         form.value = {
             url: "",
-            mc: "",
-            tbMc: "",
-            curColor: colorList.value[0],
+            name: "",
+            iconText: "",
+            backgroundColor: colorList.value[0],
         };
     }
 }

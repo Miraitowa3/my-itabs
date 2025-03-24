@@ -2,25 +2,36 @@
     <div>
         <!-- 形状选择 -->
         <div class="setting-panel">
-            <Switch title="显示时间" v-model="sidebar.autoHide" />
-            <div class="box flex flex-wrap items-center justify-around rounded-md p-2">
+            <Switch title="显示时间" v-model="time.show" />
+            <div class="box relative flex flex-wrap items-center justify-around rounded-md p-2">
                 <div
                     class="d-toggle"
-                    :class="{ 'is-checked': item.checked }"
+                    :class="{ 'is-checked': time[item.key] === 'inline' || time[item.key] === 'true' || time[item.key] === '600' }"
                     v-for="(item, index) in toggleList"
                     :key="item.label"
-                    @click="toggleList[index].checked = !toggleList[index].checked"
                 >
+                    <el-checkbox v-model="time[item.key]" :true-value="item['true-value']" :false-value="item['false-value']" />
+
                     {{ item.label }}
                 </div>
             </div>
             <p class="bb mb-[10px] w-full"></p>
 
-            <Slider title="大小" unit="%" :attrs="{ min: 20, max: 130, step: 1 }" v-model="sidebar.width" />
-            <Select title="字体" :list="translateList" v-model="sidebar.opacity" />
+            <Slider title="大小" unit="%" :attrs="{ min: 20, max: 130, step: 1 }" v-model="time.size" />
+            <div class="slider flex items-center justify-between">
+                <span class="slider-title">字体</span>
+                <el-select v-model="time.font" size="small">
+                    <el-option v-for="item in fontList" :key="item.value" :label="item.label" :value="item.value">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[18px] font-bold" :style="{ 'font-family': item.value }">23:40</span>
+                            <span>{{ item.label }}</span>
+                        </div>
+                    </el-option>
+                </el-select>
+            </div>
 
             <h2>颜色</h2>
-            <ColorPicker title="主题色" :colorList="colorList" class="mb-[10px]" />
+            <ColorPicker title="主题色" :colorList="colorList" class="mb-[10px]" v-model="time.color" />
         </div>
     </div>
 </template>
@@ -29,39 +40,54 @@ import { useBaseConfigStore } from "@/stores/baseConfig";
 import Slider from "@/components/Slider.vue";
 import Switch from "@/components/Switch.vue";
 import ColorPicker from "../../../components/ColorPicker.vue";
+import { fontList } from "@/constant/config";
+
 const baseConfigStore = useBaseConfigStore();
 const url = ref(new URL("@/assets/img/mmexport1711203978296.jpg", import.meta.url).href);
-const { sidebar } = storeToRefs(baseConfigStore);
+const { time } = storeToRefs(baseConfigStore);
 const colorList = ["#fff", "#9DE5FE", "#B8CEFF", "#EFABC4", "#DAC4FD", " #DF98FE", "#fceab2", "#F4F7CA", "#d0eadf"];
 const translateList = ref([
     { label: "火山翻译", value: "https://translate.volcengine.com/translate?text=%s" },
     { label: "百度翻译", value: "en-US" },
     { label: "DeepL翻译", value: "ja-JP" },
 ]);
+
 const toggleList = ref([
     {
         label: "月日",
-        checked: true,
+        key: "month",
+        "true-value": "inline",
+        "false-value": "none",
     },
     {
         label: "周",
-        checked: true,
+        key: "week",
+        "true-value": "inline",
+        "false-value": "none",
     },
     {
         label: "农历",
-        checked: true,
+        key: "lunar",
+        "true-value": "inline",
+        "false-value": "none",
     },
     {
         label: "24",
-        checked: true,
+        key: "hour24",
+        "true-value": "true",
+        "false-value": "false",
     },
     {
         label: "秒",
-        checked: false,
+        key: "sec",
+        "true-value": "true",
+        "false-value": "false",
     },
     {
         label: "粗体",
-        checked: true,
+        key: "fontWeight",
+        "true-value": "600",
+        "false-value": "400",
     },
 ]);
 </script>
@@ -71,6 +97,27 @@ const toggleList = ref([
     background-color: var(--bg-body);
     height: 120px;
 }
+:deep(.el-checkbox) {
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    margin: 0;
+}
+.slider {
+    line-height: 36px;
+    font-size: 13px;
+    .slider-title {
+        min-width: 60px;
+    }
+    .slider-value {
+        text-align: right;
+    }
+}
+
 .d-toggle {
     --bg-card: #fff;
     position: relative;

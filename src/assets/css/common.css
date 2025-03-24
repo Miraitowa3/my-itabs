@@ -1,6 +1,72 @@
 :root {
     --el-border-radius-base: 8px;
 }
+@font-face {
+    font-family: "AbrilFatface";
+    src: url(../font/AbrilFatface-Regular.woff) format("woff");
+}
+
+@font-face {
+    font-family: "Aldrich";
+    src: url(../font/Aldrich-Regular.woff) format("woff");
+}
+@font-face {
+    font-family: "Arial";
+    src: url(../font/Arial-Rounded-Bold.woff) format("woff");
+}
+@font-face {
+    font-family: "Bebas";
+    src: url(../font/Bebas.woff) format("woff");
+}
+@font-face {
+    font-family: "BungeeHairlin";
+    src: url(../font/Bungee_Hairline.ttf) format("truetype");
+}
+@font-face {
+    font-family: "dsdigi";
+    src: url(../font/ds-digi.woff) format("woff");
+}
+@font-face {
+    font-family: "Expansiva";
+    src: url(../font/Expansiva.woff) format("woff");
+}
+@font-face {
+    font-family: "HarmonyOS";
+    src: url(../font/HarmonyOS_Sans.woff) format("woff");
+}
+@font-face {
+    font-family: "JetBrains";
+    src: url(../font/JetBrainsMono.woff) format("woff");
+}
+@font-face {
+    font-family: "Merriweather";
+    src: url(../font/Merriweather-Regular.woff) format("woff");
+}
+@font-face {
+    font-family: "MiSans";
+    src: url(../font/MiSans-Normal.woff) format("woff");
+}
+@font-face {
+    font-family: "Nabla";
+    src: url(../font/Nabla.woff) format("woff");
+}
+@font-face {
+    font-family: "Orbitron";
+    src: url(../font/Orbitron-VariableFont_wght.woff) format("woff");
+}
+
+@font-face {
+    font-family: "SFUI";
+    src: url(../font/SFUI.ttc) format("truetype-collection");
+}
+@font-face {
+    font-family: "Silkscreen";
+    src: url(../font/Silkscreen-Regular.woff) format("woff");
+}
+@font-face {
+    font-family: "TrainOne";
+    src: url(../font/TrainOne-Regular.woff) format("woff");
+}
 .el-select {
     .el-select__wrapper {
         border-radius: 8px;

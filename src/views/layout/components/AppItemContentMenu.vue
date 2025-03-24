@@ -1,5 +1,5 @@
 <template>
-    <ContentMenu :containerRef="target" :hanlderCallback="hanlderCallback">
+    <ContentMenu :containerRef="target" :hanlderCallback="hanlderCallback" ref="contentMenu">
         <ul class="menu-list">
             <li class="menu-item">
                 <i class="item-icon d-icon">
@@ -12,19 +12,19 @@
                 </p>
             </li>
 
-            <li class="menu-item hover">
+            <li class="menu-item hover" @click.stop="iconEdit">
                 <i class="item-icon d-icon">
                     <svg-icon name="menu-edit" />
                 </i>
                 <span class="menu-item-title text-[12px]">编辑</span>
             </li>
-            <li class="menu-item hover" @click="handleBatchEdit">
+            <li class="menu-item hover" @click.stop="handleBatchEdit">
                 <i class="item-icon d-icon">
                     <svg-icon name="menu-edit" />
                 </i>
                 <span class="menu-item-title text-[12px]">批量编辑</span>
             </li>
-            <li class="menu-item hover">
+            <li class="menu-item hover" @click.stop="emits('delete', index)">
                 <i class="item-icon d-icon">
                     <svg-icon name="menu-del" />
                 </i>
@@ -32,11 +32,20 @@
             </li>
         </ul>
     </ContentMenu>
+    <EditIcon v-model="showEdit" :info="info" :cur="index" />
 </template>
 
 <script lang="ts" setup>
 import { useSiderStore } from "@/stores/global";
+import EditIcon from "./components/EditIcon.vue";
+import { cloneDeep } from "lodash-es";
+const contentMenu = ref<any>();
 const siderStore = useSiderStore();
+const { navConfig, cur } = storeToRefs(siderStore);
+
+const emits = defineEmits(["delete"]);
+const showEdit = ref(false);
+const info = ref<any>();
 const props = defineProps<{
     target: string;
     list: Array<any>;
@@ -44,7 +53,8 @@ const props = defineProps<{
 
 const layoutList = ["1x1", "1x2", "2x1", "2x2", "2x4"];
 const whiteClass = ["app-item-icon"];
-let cur = 0;
+
+let index = ref(0);
 function hanlderCallback(e: MouseEvent) {
     siderStore.setBatchEdit(false);
     const target = e.target as HTMLElement;
@@ -52,18 +62,30 @@ function hanlderCallback(e: MouseEvent) {
     if (!classes.some((cls) => whiteClass.includes(cls))) {
         return false;
     }
-    cur = Number(target.getAttribute("cs")?.split("_")[1]);
+    let sarr = target.getAttribute("cs")?.split("_") as string[];
+    index.value = Number(sarr[sarr.length - 1]);
 
     return true;
 }
-function optLayout(item: string, index: number) {
-    props.list[cur].size = item;
+function optLayout(item: string, i: number) {
+    props.list[index.value].size = item;
 }
 function handleBatchEdit() {
     siderStore.setBatchEdit(true);
 }
+function iconEdit() {
+    info.value = cloneDeep(navConfig.value[cur.value.currentTab].children[index.value]);
+    showEdit.value = true;
+}
+function closeMenu() {
+    contentMenu.value.closeMenu();
+}
+defineExpose({ closeMenu });
 </script>
 <style scoped>
+.menu-item-title {
+    margin-left: 4px;
+}
 .menu-item {
     transition: background 0.2s;
     font-size: 12px;
@@ -91,7 +113,7 @@ function handleBatchEdit() {
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    fill: currentColor;
+    fill: indexrentColor;
     color: var(--color);
 }
 .contextmenu-layout em {
@@ -103,7 +125,7 @@ function handleBatchEdit() {
     border-radius: 12px;
     text-align: center;
     margin: 0 2px 4px;
-    cursor: pointer;
+    indexsor: pointer;
     float: left;
     transition: background-color 0.25s;
 }

@@ -6,7 +6,7 @@
                 <div class="radio-item">
                     <div :class="['radio', layout.view === 'widget' ? 'is-checked' : '']" @click.stop="opt('widget')">
                         <div class="layout-item">
-                            <i class="side-time">16:21</i><span></span>
+                            <i class="side-time" :style="{ 'font-family': time.font }">16:21</i><span></span>
 
                             <p><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></p>
                         </div>
@@ -15,7 +15,7 @@
                 </div>
                 <div class="radio-item">
                     <div :class="['radio', layout.view === 'simple' ? 'is-checked' : '']" @click.stop="opt('simple')">
-                        <div class="layout-item"><i class="side-time mt-[20px]">16:21</i><span></span></div>
+                        <div class="layout-item"><i class="side-time mt-[20px]" :style="{ 'font-family': time.font }">16:21</i><span></span></div>
                     </div>
                     <div :class="['radio-title', layout.view === 'simple' ? 'is-checked' : '']">极简</div>
                 </div>
@@ -31,7 +31,7 @@
 import { useBaseConfigStore } from "@/stores/baseConfig";
 import Switch from "@/components/Switch.vue";
 const baseConfigStore = useBaseConfigStore();
-const { layout } = storeToRefs(baseConfigStore);
+const { layout, time } = storeToRefs(baseConfigStore);
 const opt = (val: string) => {
     layout.value.view = val;
 };
@@ -98,7 +98,7 @@ const opt = (val: string) => {
     }
     .side-time {
         font-weight: 500;
-        font-family: var(--time-font);
+        font-style: normal;
     }
 }
 .radio-group {

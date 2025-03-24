@@ -1502,3 +1502,86 @@ export const DefaultSearch = {
     translate: "https://translate.volcengine.com/translate?text=%s",
     translateHide: true,
 };
+export const DefaultTime = {
+    color: "#fff",
+    font: "dsdigi",
+    fontWeight: "400",
+    hour24: 'false',
+    lunar: "none",
+    month: "none",
+    sec: 'true',
+    show: true,
+    size: 130,
+    week: "none",
+};
+
+export const fontList = [
+    {
+        label: "默认",
+        value: "auto",
+    },
+    {
+        label: "dsdigi",
+        value: "dsdigi",
+    },
+    {
+        label: "MiSans",
+        value: "MiSans",
+    },
+    {
+        label: "SFUI",
+        value: "SFUI",
+    },
+    {
+        label: "HarmonyOS",
+        value: "HarmonyOS",
+    },
+    {
+        label: "Arial",
+        value: "Arial",
+    },
+    {
+        label: "Bebas",
+        value: "Bebas",
+    },
+    {
+        label: "Silkscreen",
+        value: "Silkscreen",
+    },
+    {
+        label: "JetBrains",
+        value: "JetBrains",
+    },
+    {
+        label: "Aldrich",
+        value: "Aldrich",
+    },
+    {
+        label: "TrainOne",
+        value: "TrainOne",
+    },
+    {
+        label: "AbrilFatface",
+        value: "AbrilFatface",
+    },
+    {
+        label: "Expansiva",
+        value: "Expansiva",
+    },
+    {
+        label: "Nabla",
+        value: "Nabla",
+    },
+    {
+        label: "Orbitron",
+        value: "Orbitron",
+    },
+    {
+        label: "Merriweather",
+        value: "Merriweather",
+    },
+    {
+        label: "BungeeHairlin",
+        value: "BungeeHairlin",
+    },
+];

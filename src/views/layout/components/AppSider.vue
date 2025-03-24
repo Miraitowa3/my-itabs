@@ -14,20 +14,22 @@
             </div>
             <div class="app-sidebar-group d-scrollbar-hide">
                 <VueDraggable v-model="navConfig" :animation="150" target=".app-sidebar-ul" @start="onStart" @end="onEnd">
+                    <IconContentMenu target=".app-sidebar-ul" @delete="(i) => handleDelete(i)" />
                     <TransitionGroup type="transition" tag="ul" :name="!drag ? 'fade' : undefined" class="app-sidebar-ul">
                         <li
                             class="app-group-item flex cursor-pointer flex-col items-center justify-center"
                             :name="item.id"
                             :style="{ backgroundColor: cur.current === item.id ? '#ffffff26' : '' }"
-                            v-for="item in navConfig"
+                            v-for="(item, index) in navConfig"
                             :key="item.id"
                             @click="changeTab(item)"
+                            :cs="item.id + '_' + index"
                         >
-                            <i class="d-icon text-[22px]">
-                                <svg-icon :name="'sider-' + item.icon"></svg-icon>
+                            <i class="d-icon text-[22px]" :cs="item.id + '_' + index">
+                                <svg-icon :name="'sider-' + item.icon" :cs="item.id + '_' + index"></svg-icon>
                             </i>
 
-                            <p class="app-group-item-title">{{ item.name }}</p>
+                            <p class="app-group-item-title" :cs="item.id + '_' + index">{{ item.name }}</p>
                         </li>
                     </TransitionGroup>
                 </VueDraggable>
@@ -53,6 +55,8 @@
 
 <script setup lang="ts">
 import SvgIcon from "@/components/SvgIcon.vue";
+import userStore from "@/stores/user";
+import IconContentMenu from "./IconContentMenu.vue";
 import { VueDraggable } from "vue-draggable-plus";
 import { useSiderStore } from "@/stores/global";
 import Login from "@/views/login/Index.vue";
@@ -63,7 +67,6 @@ const { sidebar, layout } = storeToRefs(baseConfigStore);
 const drag = ref(false);
 const emits = defineEmits(["updateTranslateY"]);
 const siderStatus = useSiderStore();
-import userStore from "@/stores/user";
 const { cur, navConfig } = storeToRefs(siderStatus);
 const $user = userStore();
 const showAdd = ref(false);
@@ -78,7 +81,18 @@ function onStart() {
 function getInex(name: string) {
     return navConfig.value.findIndex((item) => item.id === name);
 }
-
+function handleDelete(index: number) {
+    if (navConfig.value.length === 1) {
+        alert("至少预留一个分组");
+        return;
+    }
+    navConfig.value.splice(index, 1);
+    let i = Math.min(cur.value.currentTab, navConfig.value.length - 1);
+    cur.value = {
+        current: navConfig.value[i].id,
+        currentTab: i,
+    };
+}
 function onEnd(e: any) {
     nextTick(() => {
         //等待dom更新后，再能获取最新index

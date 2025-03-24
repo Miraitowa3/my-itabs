@@ -2,7 +2,7 @@
     <div id="app-search-wrap" class="w-full">
         <div class="app-search-box relative">
             <form action="#" class="se-input-box relative flex items-center overflow-hidden">
-                <div class="se-select" @click="changeSelect">
+                <div class="se-select">
                     <img class="search-icon" src="https://files.codelife.cc/itab/search/google.svg" style="width: 20px; height: 20px" />
                     <i class="d-icon select-icon-arrow absolute right-[2px] top-1/2 mt-[-5px] text-[12px]" style="color: rgba(0, 0, 0, 0.2)">
                         <svg-icon name="opt"></svg-icon>
@@ -38,20 +38,22 @@
                         </span>
                         <p class="d-elip se-item-title">{{ item.name }}</p>
                     </li>
-                    <li class="se-item">
+                    <!-- <li class="se-item">
                         <span class="se-item-icon">
                             <i class="d-icon se-item-add">
                                 <svg-icon name="add"></svg-icon>
                             </i>
                         </span>
                         <p class="d-elip se-item-title">{{ "添加" }}</p>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>
     </div>
 </template>
 <script setup lang="ts">
+import { on } from "events";
+
 const isShow = ref(false);
 const list = ref([
     { name: "百度", src: "https://files.codelife.cc/itab/search/baidu.svg" },
@@ -62,6 +64,38 @@ const list = ref([
 function changeSelect() {
     isShow.value = !isShow.value;
 }
+function hasParentWithAttribute(element: HTMLElement | null, fn: (element: HTMLElement) => void) {
+    // 从当前元素开始向上遍历
+    while (element && element !== document.body) {
+        if (fn(element)) {
+            return true;
+        }
+        // 移动到父元素
+        element = element.parentElement;
+    }
+    // 如果遍历到body元素仍未找到，返回false
+    return false;
+}
+
+onMounted(() => {
+    window.addEventListener("click", (e) => {
+        hasParentWithAttribute(e.target as HTMLElement, (element: HTMLElement) => {
+            const classes = (element.getAttribute("class") || "").split(" ");
+            console.log(classes);
+
+            if (classes.includes("se-select")) {
+                console.log(1111);
+
+                changeSelect();
+                return true;
+            } else if (!classes.includes("se-input-box")) {
+                console.log(33333);
+
+                isShow.value = false;
+            }
+        });
+    });
+});
 </script>
 <style scoped>
 .app-search-box {
@@ -70,15 +104,14 @@ function changeSelect() {
     width: 100%;
 }
 .se-input-box {
-    -webkit-backdrop-filter: blur(18px);
     backdrop-filter: blur(18px);
-    box-shadow: 0 0 10px 3px #0000001a;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 10px 3px;
     z-index: 1;
-    border-radius: 23px;
-    height: 46px;
-    background-color: rgba(255, 255, 255, 0.5);
+    height: var(--search-height);
+    background-color: var(--search-bgColor);
+    color: var(--d-main);
+    border-radius: var(--search-radius);
     transition: background 0.2s;
-    color: #222;
 }
 .se-select {
     background-color: initial;
