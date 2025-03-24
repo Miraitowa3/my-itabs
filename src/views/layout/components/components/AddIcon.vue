@@ -16,9 +16,9 @@
                 <div class="sidebar-box">
                     <ul ref="ulRef">
                         <div class="d-tabs-active" :style="{ top: `${top}px` }"></div>
-                        <li v-for="(item, index) in list" :key="index" @click.stop="cur = index" :class="{ hover: index !== cur }">
-                            <span :style="{ color: 'rgba(var(--alpha-color), 0.6)' }">
-                                <i class="text-[20px]" :style="{ color: 'rgba(var(--alpha-color), 0.6)' }">
+                        <li v-for="(item, index) in list" :key="index" @click.stop="cur = index" class="d-tabs-item" :class="{ hover: index !== cur }">
+                            <span>
+                                <i class="text-[20px]">
                                     <svg-icon :name="item.icon"></svg-icon>
                                 </i>
                                 {{ item.name }}
@@ -72,10 +72,18 @@ watch(show, () => {
 });
 </script>
 <style lang="scss" scoped>
+:deep(.el-button) {
+    border: 1px solid var(--el-button-bg-color);
+}
 .container {
     width: 100%;
     height: 100%;
     display: flex;
+    background-image: var(--wall-thumb);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: rgba(var(--alpha-bg), 0.6);
     .sidebar {
         width: 160px;
         .sidebar-box {
@@ -115,15 +123,17 @@ watch(show, () => {
                     margin: 8px 0;
                     padding: 8px 18px;
                     cursor: pointer;
-                    &:hover span i {
+                    &.hover:hover span {
                         color: var(--el-color-primary) !important;
                     }
                     span {
                         display: flex;
+                        color: rgba(var(--alpha-color), 0.6);
                         align-items: center;
                         font-size: 14px;
                         i {
-                            color: rgba(0, 0, 0, 0.6);
+                            color: rgba(var(--alpha-color), 0.6);
+
                             margin-right: 5px;
                         }
                     }

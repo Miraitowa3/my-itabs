@@ -79,8 +79,8 @@ import { useGlobalStore } from "@/stores/global";
 const global = useGlobalStore();
 const { navConfig, cur } = storeToRefs(global);
 const props = defineProps<{
-    info: any;
-    index: number;
+    info?: any;
+    index?: number;
 }>();
 import { extractDomainOrIP, generateCustomRandomString } from "@/utils";
 type PicType = "文字图标" | "上传";

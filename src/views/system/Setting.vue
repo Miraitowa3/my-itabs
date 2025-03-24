@@ -25,7 +25,7 @@
                                     <span class="item-icon">
                                         <img :src="item.icon" alt="" class="h-full w-full" />
                                     </span>
-                                    <h1 class="item-title">{{ item.name }}</h1>
+                                    <h1 class="item-title" :style="{ color: index === cur ? 'var(--el-color-primary)' : 'var(--d-main)' }">{{ item.name }}</h1>
                                 </li>
                             </template>
                         </ul>
@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-const show = defineModel();
+const show = defineModel<boolean>();
 const cur = ref(3);
 const ulRef = ref<Element>();
 import { asideList } from "./data.ts";
@@ -159,7 +159,11 @@ watch(
             &:hover {
                 background-color: rgba(0, 0, 0, 0.04);
                 border-radius: 6px;
+                .item-title {
+                    color: var(--el-color-primary);
+                }
             }
+
             .item-title {
                 font-size: 13px;
                 color: var(--d-main);

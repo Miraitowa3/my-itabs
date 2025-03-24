@@ -17,7 +17,7 @@
             </div>
             <p class="bb mb-[10px] w-full"></p>
 
-            <Slider title="大小" unit="%" :attrs="{ min: 20, max: 130, step: 1 }" v-model="time.size" />
+            <Slider title="大小" unit="px" :attrs="{ min: 20, max: 130, step: 1 }" v-model="time.size" />
             <div class="slider flex items-center justify-between">
                 <span class="slider-title">字体</span>
                 <el-select v-model="time.font" size="small">

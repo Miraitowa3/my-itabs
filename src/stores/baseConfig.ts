@@ -1,4 +1,4 @@
-import { DefaultIcon, DefaultLayout, DefaultOpen, DefaultSearch, DefaultSidebar, DefaultTime, DefaultSearchEngine, DefaultTheme } from "@/constant/config";
+import { DefaultIcon, DefaultLayout, DefaultOpen, DefaultSearch, DefaultSidebar, DefaultTime, DefaultSearchEngine, DefaultTheme, DefaultWallpaper } from "@/constant/config";
 import { IconType, LayoutType, OpenType, SearchType, SidebarType, TimeType, SearchEngineItem, ThemeType } from "@/typing";
 import { cloneDeep } from "lodash-es";
 
@@ -14,6 +14,7 @@ export const useBaseConfigStore = defineStore(
         const searchEngine = ref<SearchEngineItem[]>(cloneDeep(DefaultSearchEngine));
         const useSearch = ref<SearchEngineItem>(cloneDeep(DefaultSearchEngine[0]));
         const theme = ref<ThemeType>(cloneDeep(DefaultTheme));
+        const wallpaper = ref<any>(cloneDeep(DefaultWallpaper));
 
         const updateSidebar = () => {
             document.documentElement.style.setProperty("--sidebar-width", sidebar.value.width + "px");
@@ -24,6 +25,12 @@ export const useBaseConfigStore = defineStore(
             document.documentElement.style.setProperty("--search-bgColor", `rgba(255,255,255,${search.value.bgColor})`);
             document.documentElement.style.setProperty("--search-radius", search.value.radius + "px");
         };
+
+        const updateWallpaper = () => {
+            document.documentElement.style.setProperty("--wall-mask", wallpaper.value.mask);
+            document.documentElement.style.setProperty("--wall-blur", wallpaper.value.blur + "px");
+        };
+
         const updateIcon = () => {
             document.documentElement.style.setProperty("--icon-nameSize", icon.value.nameSize + "px");
             document.documentElement.style.setProperty("--icon-radius", icon.value.iconRadius + "px");
@@ -62,6 +69,16 @@ export const useBaseConfigStore = defineStore(
             icon,
             () => {
                 updateIcon();
+            },
+            {
+                deep: true,
+                immediate: true,
+            },
+        );
+        watch(
+            wallpaper,
+            () => {
+                updateWallpaper();
             },
             {
                 deep: true,
@@ -115,7 +132,7 @@ export const useBaseConfigStore = defineStore(
                 immediate: true,
             },
         );
-        return { icon, sidebar, open, searchEngine, theme, layout, search, time, useSearch, setIcon, setSidebar, setUseSearch, setSearchEngine,resetLayout };
+        return { icon, sidebar, open, searchEngine, theme, layout, search, time, useSearch, setIcon, setSidebar, wallpaper, setUseSearch, setSearchEngine, resetLayout };
     },
     {
         persist: [

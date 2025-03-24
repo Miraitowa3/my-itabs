@@ -1618,3 +1618,14 @@ export const DefaultTheme = {
     system: true,
     color: "#1890ff",
 };
+
+export const DefaultWallpaper ={
+  "mask": 0,
+  "blur": 0,
+  "type": "1",
+  "src": "https://files.codelife.cc/wallhaven/full/5g/wallhaven-5ggol7.png?x-oss-process=image/resize,limit_0,m_fill,w_2560,h_1440/quality,Q_95/format,webp",
+  "thumb": "https://files.codelife.cc/wallhaven/full/5g/wallhaven-5ggol7.png?x-oss-process=image/resize,limit_0,m_fill,w_307,h_172/quality,Q_93/format,webp",
+  "source": "",
+  "time": 0,
+  "name": "5ggol7"
+}

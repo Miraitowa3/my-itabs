@@ -1,7 +1,8 @@
 <template>
   <div class="wxchat-login text-center">
     <img class="wechat-logo" src="@/assets/img/wechat.svg"></img>
-    <p class="wxchat-title">微信登录</p>
+    <p class="wxchat-title" :style="{color:'var(--el-text-color-regular)'
+    }">微信登录</p>
     <div class="wxchat-qrcode relative inline-block" v-loading="loading" element-loading-background="#000c">
       <div class="saomiao" ref="saomiao" v-if="codeUrl"></div>
       <i class="wechat-qrcode-refresh flex justify-center items-center " v-if="!codeStatus && !loading"
@@ -10,7 +11,8 @@
       </i>
       <img alt="加载二维码" :src="codeUrl" class="el-image__inner" v-if="codeUrl">
     </div>
-    <p class="ac mb-5"> 打开微信 <b calss="b">扫一扫</b>， <b calss="b">关注公众号</b>后即可登录/注册 </p>
+    <p class="ac mb-5" :style="{color:'var(--el-text-color-regular)'
+    }"> 打开微信 <b calss="b">扫一扫</b>， <b calss="b">关注公众号</b>后即可登录/注册 </p>
   </div>
 </template>
 

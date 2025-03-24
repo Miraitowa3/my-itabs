@@ -327,28 +327,12 @@ html[data-theme="light"] {
     color: var(--d-main);
     font-size: 13px;
 }
-.d-button {
-    --bg-input: #f0f1f4;
-    --d-main: #222;
-    --d-button-padding: 8px 15px;
-    --d-button-height: 32px;
-    --d-button-radius: 6px;
-    --d-button-bg: var(--bg-input);
-    --d-button-color: var(--d-main);
-    --d-button-text-size: 14px;
-    --d-button-custon-bg: var(--1182d8e4);
-}
 
 .bb {
     border-bottom: 1px solid var(--dividing-line);
 }
-.d-button-size-small {
-    --d-button-padding: 5px 11px;
-    --d-button-height: 24px;
-    --d-button-text-size: 12px;
-}
-.d-button-type-primary {
-    --primary-color: #1890ff;
-    --d-button-bg: var(--primary-color);
-    --d-button-color: #fff;
+
+.el-button.el-button--primary:hover {
+    background-color: var(--el-color-primary) !important;
+    border-color: var(--el-color-primary) !important;
 }

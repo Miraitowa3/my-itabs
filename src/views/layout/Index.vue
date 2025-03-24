@@ -1,6 +1,6 @@
 <template>
     <Teleport to="body">
-        <itab-wallpaper :url="url"> </itab-wallpaper>
+        <itab-wallpaper :url="wallpaper.src"> </itab-wallpaper>
     </Teleport>
     <AppSider></AppSider>
     <AppMain></AppMain>
@@ -9,8 +9,10 @@
 <script setup lang="ts">
 import AppMain from "./components/AppMain.vue";
 import AppSider from "./components/AppSider.vue";
+import { useBaseConfigStore } from "@/stores/baseConfig";
+const baseConfigStore = useBaseConfigStore();
+const { wallpaper } = storeToRefs(baseConfigStore);
 
-const url = ref("https://raw.gitcode.com/snows_l/blog_assets/raw/master/imgs/bg/1.png");
 const timer = ref<NodeJS.Timeout>();
 const Max_INDEX = 100;
 const Min_INDEX = 1;
@@ -20,12 +22,24 @@ function changeWallpaper() {
     if (cur > Max_INDEX) {
         cur = Min_INDEX;
     }
-    url.value = `https://raw.gitcode.com/snows_l/blog_assets/raw/master/imgs/bg/${cur}.png`;
+    wallpaper.value.src = `https://raw.gitcode.com/snows_l/blog_assets/raw/master/imgs/bg/${cur}.png`;
 }
 
-onMounted(() => {
-    timer.value = setInterval(changeWallpaper, 1000 * 60);
-});
+watch(
+    () => wallpaper.value.time,
+    () => {
+        if (wallpaper.value.time !== undefined) {
+            if (wallpaper.value.time === 0) {
+                clearInterval(timer.value);
+                timer.value = undefined;
+            } else {
+                clearInterval(timer.value);
+                timer.value = setInterval(changeWallpaper, wallpaper.value.time * 60 * 60 * 1000);
+            }
+        }
+    },
+    { deep: true, immediate: true },
+);
 
 onUnmounted(() => {
     clearInterval(timer.value);

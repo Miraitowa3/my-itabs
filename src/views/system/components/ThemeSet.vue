@@ -13,10 +13,10 @@
                 <el-image :src="url" style="width: 100%; height: 100%" fit="fill" />
                 <div class="wall-change flex items-center justify-center"><button>更换壁纸</button><button>下载壁纸</button></div>
             </div>
-            <Slider title="遮罩浓度" unit="%" :attrs="{ min: 0, max: 0.9, step: 0.01 }" v-model="theme.opacity" />
-            <Slider title="模糊度" unit="%" :attrs="{ min: 0, max: 40, step: 2 }" v-model="theme.width" />
-            <Select title="自动壁纸" :list="translateList" v-model="theme.opacity" :attrs="{ style: 'width: 160px' }" />
-            <Switch title="桌面显示壁纸切换按钮" v-model="theme.autoHide" />
+            <Slider title="遮罩浓度" unit="%" :attrs="{ min: 0, max: 0.9, step: 0.01 }" v-model="wallpaper.mask" />
+            <Slider title="模糊度" unit="%" :attrs="{ min: 0, max: 40, step: 2 }" v-model="wallpaper.blur" />
+            <Select title="自动壁纸" :list="changeList" v-model="wallpaper.time" :attrs="{ style: 'width: 160px' }" />
+            <Switch title="桌面显示壁纸切换按钮" v-model="wallpaper.autoHide" />
         </div>
     </div>
 </template>
@@ -29,12 +29,16 @@ import Switch from "@/components/Switch.vue";
 import ColorPicker from "../../../components/ColorPicker.vue";
 const baseConfigStore = useBaseConfigStore();
 const url = ref(new URL("@/assets/img/mmexport1711203978296.jpg", import.meta.url).href);
-const { theme } = storeToRefs(baseConfigStore);
+
+const { theme, wallpaper } = storeToRefs(baseConfigStore);
 const colorList = ["#1681ff", "#FBBE23", "#FC4548", "#2ecc71", "#33c5c5", "#9b59b6", "#F1C40F", "#e67e22", "#e74c3c"];
-const translateList = ref([
-    { label: "火山翻译", value: "https://translate.volcengine.com/translate?text=%s" },
-    { label: "百度翻译", value: "en-US" },
-    { label: "DeepL翻译", value: "ja-JP" },
+const changeList = ref<any[]>([
+    { label: "不自动更换", value: 0 },
+    { label: "间隔1小时更换", value: 1 },
+    { label: "间隔2小时更换", value: 2 },
+    { label: "间隔6小时更换", value: 6 },
+    { label: "间隔12小时更换", value: 12 },
+    { label: "间隔24小时更换", value: 24 },
 ]);
 watch(
     () => theme.value.system,
