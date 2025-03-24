@@ -1,13 +1,5 @@
-/*
- * @Description: ------------ fileDescription -----------
- * @Author: snows_l snows_l@163.com
- * @Date: 2025-03-19 18:54:24
- * @LastEditors: lyq
- * @LastEditTime: 2025-03-23 01:05:25
- * @FilePath: /mTab/my-itabs/src/stores/baseConfig.ts
- */
-import { DefaultIcon, DefaultLayout, DefaultOpen, DefaultSearch, DefaultSidebar,DefaultTime } from "@/constant/config";
-import { IconType, LayoutType, OpenType, SearchType, SidebarType ,TimeType} from "@/typing";
+import { DefaultIcon, DefaultLayout, DefaultOpen, DefaultSearch, DefaultSidebar, DefaultTime, DefaultSearchEngine, DefaultTheme } from "@/constant/config";
+import { IconType, LayoutType, OpenType, SearchType, SidebarType, TimeType, SearchEngineItem, ThemeType } from "@/typing";
 import { cloneDeep } from "lodash-es";
 
 export const useBaseConfigStore = defineStore(
@@ -19,18 +11,18 @@ export const useBaseConfigStore = defineStore(
         const open = ref<OpenType>(cloneDeep(DefaultOpen));
         const search = ref<SearchType>(cloneDeep(DefaultSearch));
         const time = ref<TimeType>(cloneDeep(DefaultTime));
-
+        const searchEngine = ref<SearchEngineItem[]>(cloneDeep(DefaultSearchEngine));
+        const useSearch = ref<SearchEngineItem>(cloneDeep(DefaultSearchEngine[0]));
+        const theme = ref<ThemeType>(cloneDeep(DefaultTheme));
 
         const updateSidebar = () => {
             document.documentElement.style.setProperty("--sidebar-width", sidebar.value.width + "px");
             document.documentElement.style.setProperty("--sidebar-opacity", sidebar.value.opacity + "");
         };
         const updateSearch = () => {
-
             document.documentElement.style.setProperty("--search-height", search.value.height + "px");
-            document.documentElement.style.setProperty("--search-bgColor",  `rgba(255,255,255,${search.value.bgColor})`);
+            document.documentElement.style.setProperty("--search-bgColor", `rgba(255,255,255,${search.value.bgColor})`);
             document.documentElement.style.setProperty("--search-radius", search.value.radius + "px");
-
         };
         const updateIcon = () => {
             document.documentElement.style.setProperty("--icon-nameSize", icon.value.nameSize + "px");
@@ -49,6 +41,23 @@ export const useBaseConfigStore = defineStore(
         const setSidebar = (newIcon: SidebarType) => {
             sidebar.value = newIcon;
         };
+        const setUseSearch = (EngineIte: SearchEngineItem) => {
+            useSearch.value = EngineIte;
+        };
+        const setSearchEngine = (EngineIte: SearchEngineItem[]) => {
+            searchEngine.value = EngineIte;
+        };
+        function resetLayout() {
+            icon.value = cloneDeep(DefaultIcon);
+            sidebar.value = cloneDeep(DefaultSidebar);
+            layout.value = cloneDeep(DefaultLayout);
+            open.value = cloneDeep(DefaultOpen);
+            search.value = cloneDeep(DefaultSearch);
+            time.value = cloneDeep(DefaultTime);
+            searchEngine.value = cloneDeep(DefaultSearchEngine);
+            useSearch.value = cloneDeep(DefaultSearchEngine[0]);
+            theme.value = cloneDeep(DefaultTheme);
+        }
         watch(
             icon,
             () => {
@@ -80,7 +89,33 @@ export const useBaseConfigStore = defineStore(
                 immediate: true,
             },
         );
-        return { icon, sidebar, open, setIcon, setSidebar, layout, search , time };
+        watch(
+            () => theme.value.mode,
+            () => {
+                if (theme.value.mode) {
+                    document.documentElement.dataset.theme = theme.value.mode;
+                }
+            },
+            {
+                deep: true,
+                immediate: true,
+            },
+        );
+        watch(
+            () => theme.value.color,
+            () => {
+                if (theme.value.color) {
+                    document.documentElement.style.setProperty("--search-bgColor", `rgba(var(--alpha-bg), ${search.value.bgColor})`);
+
+                    document.documentElement.style.setProperty("--el-color-primary", theme.value.color);
+                }
+            },
+            {
+                deep: true,
+                immediate: true,
+            },
+        );
+        return { icon, sidebar, open, searchEngine, theme, layout, search, time, useSearch, setIcon, setSidebar, setUseSearch, setSearchEngine,resetLayout };
     },
     {
         persist: [

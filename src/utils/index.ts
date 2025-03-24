@@ -15,3 +15,12 @@ export  function generateCustomRandomString(length = 10,chars='ABCDEFGHIJKLMNOPQ
   }
   return result;
 }
+
+//获取系统主题色
+export function getSystemTheme(): 'light' | 'dark' {
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    return 'dark';
+  } else {
+    return 'light';
+  }
+}

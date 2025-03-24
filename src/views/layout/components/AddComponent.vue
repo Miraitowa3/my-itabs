@@ -4,10 +4,11 @@
         width="260px"
         :customStyle="{
             backdropFilter: 'blur(18px)',
-            background: 'rgba(255,255,255, 0.1)',
+            background: ' rgba(var(--img-bg), .8) ',
             boxShadow: '0 12px 24px #0000002e',
             marginLeft: '60px',
             padding: '12px',
+            color: 'rgba(var(--img-text), .8)',
         }"
         :overlay="false"
         :closeIcon="false"
@@ -40,9 +41,9 @@
 </template>
 
 <script setup lang="ts">
-import { useSiderStore } from "@/stores/global";
+import { useGlobalStore } from "@/stores/global";
 import { siderIcons } from "@/constant/config";
-const global = useSiderStore();
+const global = useGlobalStore();
 const { navConfig } = storeToRefs(global);
 
 const props = defineProps<{
@@ -105,7 +106,7 @@ function save() {
 }
 .app-icon {
     display: grid;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(var(--img-text), 0.6) !important;
     grid-template-columns: repeat(7, 1fr);
     grid-auto-flow: dense;
     grid-gap: 5px;

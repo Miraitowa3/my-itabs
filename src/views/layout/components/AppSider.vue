@@ -42,14 +42,14 @@
             </div>
             <div class="sider-bottom">
                 <div class="setting">
-                    <i class="d-icon text-[20px]">
+                    <i class="d-icon text-[20px]" @click.stop="showSetting = true">
                         <svg-icon name="menu-setting"></svg-icon>
                     </i>
                 </div>
             </div>
         </div>
     </div>
-
+    <Setting v-model="showSetting"></Setting>
     <Login v-model:show="show"></Login><AddComponent v-model="showAdd" />
 </template>
 
@@ -58,15 +58,17 @@ import SvgIcon from "@/components/SvgIcon.vue";
 import userStore from "@/stores/user";
 import IconContentMenu from "./IconContentMenu.vue";
 import { VueDraggable } from "vue-draggable-plus";
-import { useSiderStore } from "@/stores/global";
+import { useGlobalStore } from "@/stores/global";
 import Login from "@/views/login/Index.vue";
 import AddComponent from "./AddComponent.vue";
 import { useBaseConfigStore } from "@/stores/baseConfig";
+import Setting from "@/views/system/Setting.vue";
 const baseConfigStore = useBaseConfigStore();
 const { sidebar, layout } = storeToRefs(baseConfigStore);
 const drag = ref(false);
+const showSetting = ref(false);
 const emits = defineEmits(["updateTranslateY"]);
-const siderStatus = useSiderStore();
+const siderStatus = useGlobalStore();
 const { cur, navConfig } = storeToRefs(siderStatus);
 const $user = userStore();
 const showAdd = ref(false);
@@ -83,7 +85,7 @@ function getInex(name: string) {
 }
 function handleDelete(index: number) {
     if (navConfig.value.length === 1) {
-        alert("至少预留一个分组");
+        ElMessage("至少预留一个分组");
         return;
     }
     navConfig.value.splice(index, 1);

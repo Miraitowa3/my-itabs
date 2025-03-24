@@ -16,7 +16,6 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 <style scoped>
 .overlay {
-    --el-overlay-color-lighter: rgba(0, 0, 0, 0.5);
     background-color: var(--el-overlay-color-lighter);
     bottom: 0;
     height: 100vh;

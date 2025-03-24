@@ -2,7 +2,7 @@
     <Teleport to="body">
         <Transition @before-enter="handleBeforeEnter" @enter="enter" @leave="leave" @before-leave="onBeforeLeave">
             <Overlay v-if="show" @click="modalClose" :customStyle="{ background: overlay ? 'rgba(0,0,0,0.5)' : 'transparent' }">
-                <div class="overlay-dialog">
+                <div class="overlay-dialog" @click="modalClose">
                     <div :class="['dialog', customClass]" :style="{ width: width, ...customStyle }">
                         <i class="absolute right-3 top-3 cursor-pointer text-[30px] text-[#909399] hover:text-[#1890ff]" v-if="closeIcon" @click="close">
                             <svg-icon name="close"></svg-icon>

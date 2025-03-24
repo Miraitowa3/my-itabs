@@ -59,3 +59,17 @@ export interface TimeType {
     week: string,
     [key: string]: any;
 };
+
+export interface SearchEngineItem {
+    key: string;
+    title: string;
+    href: string;
+
+};
+export interface ThemeType {
+    mode: string;
+    system: boolean;
+    color: string;
+
+};
+

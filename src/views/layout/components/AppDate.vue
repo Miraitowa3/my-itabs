@@ -1,18 +1,20 @@
 <template>
-    <div class="app-date-box ac" v-if="time.show">
-        <div>
-            <div class="app-time" @click="toggleTime" :style="{ 'font-family': time.font, color: time.color, fontWeight: time.fontWeight }">
-                <time class="hh">{{ time.hour24 !== "true" ? convert24to12(dateInfo?.hour) : dateInfo?.hour }}</time
-                ><span class="colon hh">:</span><time class="mm">{{ dateInfo?.minute }} </time><span class="colon" v-if="time.sec === 'true'">:</span
-                ><span class="sec" v-if="time.sec === 'true'">{{ dateInfo?.second }}</span>
+    <Transition leave-active-class="animate__animated animate__bounceOutUp" enter-active-class="animate__animated animate__bounceInDown ">
+        <div class="app-date-box ac" v-if="time.show">
+            <div>
+                <div class="app-time" @click="toggleTime" :style="{ 'font-family': time.font, color: time.color, fontWeight: time.fontWeight }">
+                    <time class="hh">{{ time.hour24 !== "true" ? convert24to12(dateInfo?.hour) : dateInfo?.hour }}</time
+                    ><span class="colon hh">:</span><time class="mm">{{ dateInfo?.minute }} </time><span class="colon" v-if="time.sec === 'true'">:</span
+                    ><span class="sec" v-if="time.sec === 'true'">{{ dateInfo?.second }}</span>
+                </div>
+            </div>
+            <div class="app-date">
+                <span class="time-month" v-if="time.month === 'inline'">{{ dateInfo?.month + "月" + dateInfo?.day + "日" }} </span
+                ><span class="time-week" v-if="time.week === 'inline'">{{ dateInfo?.weekday }}</span
+                ><span class="time-lunar" v-if="time.lunar === 'inline'">{{ dateInfo?.lunarDate?.lunarMonthName + dateInfo?.lunarDate?.lunarDayName }}</span>
             </div>
         </div>
-        <div class="app-date">
-            <span class="time-month" v-if="time.month === 'inline'">{{ dateInfo?.month + "月" + dateInfo?.day + "日" }} </span
-            ><span class="time-week" v-if="time.week === 'inline'">{{ dateInfo?.weekday }}</span
-            ><span class="time-lunar" v-if="time.lunar === 'inline'">{{ dateInfo?.lunarDate?.lunarMonthName + dateInfo?.lunarDate?.lunarDayName }}</span>
-        </div>
-    </div>
+    </Transition>
 </template>
 
 <script lang="ts" setup>

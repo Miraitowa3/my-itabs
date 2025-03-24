@@ -5,7 +5,7 @@
         :overlay="false"
         :customStyle="{
             backdropFilter: 'blur(18px)',
-            background: 'rgba(200, 200, 200, 0.5)',
+            background: 'rgba(var(--alpha-bg),.5)',
             padding: '0px',
             height: '600px',
         }"
@@ -16,9 +16,9 @@
                 <div class="sidebar-box">
                     <ul ref="ulRef">
                         <div class="d-tabs-active" :style="{ top: `${top}px` }"></div>
-                        <li v-for="(item, index) in list" :key="index" @click.stop="cur = index">
-                            <span>
-                                <i class="text-[20px]">
+                        <li v-for="(item, index) in list" :key="index" @click.stop="cur = index" :class="{ hover: index !== cur }">
+                            <span :style="{ color: 'rgba(var(--alpha-color), 0.6)' }">
+                                <i class="text-[20px]" :style="{ color: 'rgba(var(--alpha-color), 0.6)' }">
                                     <svg-icon :name="item.icon"></svg-icon>
                                 </i>
                                 {{ item.name }}
@@ -90,8 +90,9 @@ watch(show, () => {
                     height: 37px;
                     top: 0;
                     left: 0;
-                    background: rgba(255, 255, 255, 0.4);
-                    border-radius: 6px;
+
+                    background: var(--active-bg, rgba(var(--alpha-color), 0.08));
+                    border-radius: var(--bg-radius, 6px);
                     transition:
                         top 0.2s ease 0s,
                         height 0.2s ease 0s;
@@ -105,7 +106,7 @@ watch(show, () => {
                         margin: auto 0;
                         width: 3px;
                         border-radius: 4px;
-                        background-color: #1890ff;
+                        background-color: var(--el-color-primary);
                     }
                 }
                 li {
@@ -113,6 +114,10 @@ watch(show, () => {
                     z-index: 1;
                     margin: 8px 0;
                     padding: 8px 18px;
+                    cursor: pointer;
+                    &:hover span i {
+                        color: var(--el-color-primary) !important;
+                    }
                     span {
                         display: flex;
                         align-items: center;

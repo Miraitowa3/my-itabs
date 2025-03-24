@@ -2,20 +2,21 @@
     <div>
         <div class="setting-panel flex items-center justify-between">
             <p class="mr-[5px]" style="line-height: 16px">重置设置 <br /><span class="d-sub text-xs">重置成默认配置，如壁纸、布局，但不会重置图标</span></p>
-            <button class="d-button d-button-size-small d-button-type-primary">重置</button>
+            <el-button type="primary" @click.stop="baseConfigStore.resetLayout">重置</el-button>
         </div>
         <div class="setting-panel mt-[10px] flex items-center justify-between">
             <p class="mr-[5px]" style="line-height: 16px">重置图标 <br /><span class="d-sub text-xs">重置您的图标成默认</span></p>
-            <button class="d-button d-button-size-small d-button-type-primary">重置</button>
+            <el-button type="primary" @click.stop="global.resetNavConfig">重置</el-button>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import Switch from "@/components/Switch.vue";
 import { useBaseConfigStore } from "@/stores/baseConfig";
+import { useGlobalStore } from "@/stores/global";
+
 const baseConfigStore = useBaseConfigStore();
-const { open } = storeToRefs(baseConfigStore);
+const global = useGlobalStore();
 </script>
 <style scoped lang="scss">
 .d-button {
@@ -35,7 +36,37 @@ const { open } = storeToRefs(baseConfigStore);
     position: relative;
 }
 .d-sub {
-    --d-sub: #939393;
     color: var(--d-sub);
+}
+:deep(.el-button) {
+    height: 32px;
+    padding: 5px 11px;
+    border-radius: 6px;
+    font-size: 12px;
+}
+.d-button {
+    --bg-input: #f0f1f4;
+    --d-main: #222;
+    --d-button-padding: 8px 15px;
+    --d-button-height: 32px;
+    --d-button-radius: 6px;
+    --d-button-bg: var(--bg-input);
+    --d-button-color: var(--d-main);
+    --d-button-text-size: 14px;
+    --d-button-custon-bg: var(--1182d8e4);
+}
+
+.bb {
+    border-bottom: 1px solid var(--dividing-line);
+}
+.d-button-size-small {
+    --d-button-padding: 5px 11px;
+    --d-button-height: 24px;
+    --d-button-text-size: 12px;
+}
+.d-button-type-primary {
+    --primary-color: #1890ff;
+    --d-button-bg: var(--primary-color);
+    --d-button-color: #fff;
 }
 </style>

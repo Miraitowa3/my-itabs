@@ -152,7 +152,7 @@ watch(
     border-radius: 12px;
     text-align: center;
     &.is-checked {
-        background-color: #1681ff;
+        background-color: var(--el-color-primary);
     }
 }
 .icon-square {
@@ -175,8 +175,7 @@ watch(
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 6px;
     &.is-checked {
-        background-color: rgba(24, 144, 255, 0.063);
-        border: 1px solid #1681ff;
+        border: 1px solid var(--el-color-primary);
     }
 }
 </style>

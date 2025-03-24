@@ -20,11 +20,11 @@
 </template>
 
 <script lang="ts" setup>
-import { useSiderStore } from "@/stores/global";
+import { useGlobalStore } from "@/stores/global";
 import AddComponent from "./AddComponent.vue";
 import { cloneDeep } from "lodash-es";
 const contentMenu = ref<any>();
-const siderStore = useSiderStore();
+const siderStore = useGlobalStore();
 const { navConfig, cur } = storeToRefs(siderStore);
 
 const emits = defineEmits(["delete"]);

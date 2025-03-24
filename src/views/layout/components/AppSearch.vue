@@ -1,42 +1,36 @@
 <template>
     <div id="app-search-wrap" class="w-full">
         <div class="app-search-box relative">
-            <form action="#" class="se-input-box relative flex items-center overflow-hidden">
-                <div class="se-select">
-                    <img class="search-icon" src="https://files.codelife.cc/itab/search/google.svg" style="width: 20px; height: 20px" />
+            <div class="se-input-box relative flex items-center overflow-hidden">
+                <div class="se-select se-search">
+                    <img class="search-icon" :src="'https://files.codelife.cc/itab/search/' + useSearch.key + '.svg'" style="width: 20px; height: 20px" />
                     <i class="d-icon select-icon-arrow absolute right-[2px] top-1/2 mt-[-5px] text-[12px]" style="color: rgba(0, 0, 0, 0.2)">
                         <svg-icon name="opt"></svg-icon>
                     </i>
                 </div>
-                <input
-                    id="searchInput"
-                    autocomplete="off"
-                    class="se-input h-ful w-full bg-transparent text-[14px] leading-[22px]"
-                    maxlength="220"
-                    placeholder="输入搜索内容"
-                    type="text"
-                />
+                <el-input v-model="searchText" type="text" maxlength="220" placeholder="输入搜索内容" class="se-input" @keyup.enter="search" />
+
                 <div class="se-close flex cursor-pointer">
-                    <i class="d-icon text-[30px]" style="color: rgba(0, 0, 0, 0.52)">
+                    <i class="d-icon text-[30px]" style="color: rgba(0, 0, 0, 0.52)" v-if="searchText" @click.stop="searchText = ''">
                         <svg-icon name="close"></svg-icon>
                     </i>
                 </div>
                 <button type="button" class="se-select">
-                    <i class="d-icon text-[20px]" style="color: rgba(0, 0, 0, 0.52)">
+                    <i class="d-icon text-[20px]" style="color: rgba(0, 0, 0, 0.52)" @click.stop="search">
                         <svg-icon name="search"></svg-icon>
                     </i>
                 </button>
-            </form>
+            </div>
             <div class="se-down absolute inset-x-0 z-10">
                 <ul class="se-all z-0 flex h-0 w-full origin-top overflow-hidden" :class="{ action: isShow }">
-                    <li class="se-item" v-for="item in list" :key="item.name">
-                        <i class="d-icon se-item-del">
+                    <li class="se-item" v-for="(item, index) in searchEngine" :key="item.key" @click.stop="changeEngine(index)">
+                        <i class="d-icon se-item-del" @click.stop="deleteEngine(index)">
                             <svg-icon name="close"></svg-icon>
                         </i>
                         <span class="se-item-icon">
-                            <img :src="item.src" class="search-icon" />
+                            <img :src="'https://files.codelife.cc/itab/search/' + item.key + '.svg'" class="search-icon" />
                         </span>
-                        <p class="d-elip se-item-title">{{ item.name }}</p>
+                        <p class="d-elip se-item-title">{{ item.title }}</p>
                     </li>
                     <!-- <li class="se-item">
                         <span class="se-item-icon">
@@ -52,19 +46,39 @@
     </div>
 </template>
 <script setup lang="ts">
-import { on } from "events";
+import { useBaseConfigStore } from "@/stores/baseConfig";
+const BaseConfig = useBaseConfigStore();
+const { searchEngine, useSearch, open } = storeToRefs(BaseConfig);
+const searchText = ref("");
 
 const isShow = ref(false);
-const list = ref([
-    { name: "百度", src: "https://files.codelife.cc/itab/search/baidu.svg" },
-    { name: "Google", src: "https://files.codelife.cc/itab/search/google.svg" },
-    { name: "必应", src: "https://files.codelife.cc/itab/search/bing.svg" },
-    { name: "秘塔AI", src: "https://files.codelife.cc/itab/search/metaso.svg" },
-]);
+
 function changeSelect() {
     isShow.value = !isShow.value;
 }
-function hasParentWithAttribute(element: HTMLElement | null, fn: (element: HTMLElement) => void) {
+let selectEngine = document.querySelector("#selectEngine");
+selectEngine?.addEventListener("click", () => {
+    console.log("changeSelect");
+});
+function changeEngine(index: number) {
+    BaseConfig.setUseSearch(searchEngine.value[index]);
+}
+function search() {
+    window.open(useSearch.value.href + encodeURIComponent(searchText.value), open.value.searchBlank ? "_blank" : "_self");
+}
+function deleteEngine(index: number) {
+    if (searchEngine.value.length === 1) {
+        ElMessage("至少保留一个搜索引擎");
+        return;
+    }
+    if (searchEngine.value[index].title === useSearch.value.title) {
+        BaseConfig.setUseSearch(searchEngine.value[0]);
+    }
+    let list = searchEngine.value.filter((item, i) => i !== index);
+    BaseConfig.setSearchEngine(list);
+}
+
+function hasParentWithAttribute(element: HTMLElement | null, fn: (element: HTMLElement) => boolean | undefined) {
     // 从当前元素开始向上遍历
     while (element && element !== document.body) {
         if (fn(element)) {
@@ -79,29 +93,50 @@ function hasParentWithAttribute(element: HTMLElement | null, fn: (element: HTMLE
 
 onMounted(() => {
     window.addEventListener("click", (e) => {
-        hasParentWithAttribute(e.target as HTMLElement, (element: HTMLElement) => {
+        let isSeSelect = hasParentWithAttribute(e.target as HTMLElement, (element: HTMLElement) => {
             const classes = (element.getAttribute("class") || "").split(" ");
-            console.log(classes);
 
-            if (classes.includes("se-select")) {
-                console.log(1111);
-
-                changeSelect();
+            if (classes.includes("se-search")) {
                 return true;
-            } else if (!classes.includes("se-input-box")) {
-                console.log(33333);
-
-                isShow.value = false;
             }
         });
+        let seInputBox = hasParentWithAttribute(e.target as HTMLElement, (element: HTMLElement) => {
+            const classes = (element.getAttribute("class") || "").split(" ");
+
+            if (classes.includes("se-input-box")) {
+                return true;
+            }
+        });
+        if (isSeSelect) {
+            changeSelect();
+            return;
+        }
+
+        if (!seInputBox) {
+            isShow.value = false;
+        }
     });
 });
 </script>
-<style scoped>
+<style scoped lang="scss">
 .app-search-box {
     max-width: 600px;
     margin: 3vh auto 20px;
     width: 100%;
+}
+:deep(.el-input) {
+    .el-input__wrapper {
+        background: Transparent;
+        box-shadow: none;
+        line-height: 22px;
+        .el-input__inner {
+            &::placeholder {
+                color: var(--alpha-color);
+                /* 修改placeholder颜色 */
+                font-size: 14px; /* 修改placeholder字体大小 */
+            }
+        }
+    }
 }
 .se-input-box {
     backdrop-filter: blur(18px);
@@ -114,7 +149,6 @@ onMounted(() => {
     transition: background 0.2s;
 }
 .se-select {
-    background-color: initial;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -129,36 +163,27 @@ onMounted(() => {
     /* transform: scale(0); */
     transition: transform 0.2s;
 }
-.se-input {
-    line-height: 1.25rem;
-}
-.se-input::placeholder {
-    color: rgba(0, 0, 0, 0.56);
-    /* 修改placeholder颜色 */
-    font-size: 14px; /* 修改placeholder字体大小 */
-}
+
 .app-search-box .se-input-box:hover,
 .app-search-box .se-input-box.active {
-    --alpha-bg: 255, 255, 255;
-
     background-color: rgba(var(--alpha-bg), 0.7);
 }
 .app-search-box .se-input-box .se-select:hover {
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(var(--alpha-bg), 0.4);
 }
 .se-all {
-    --search-radius: 23px;
     transform: scaleY(0);
     transition: 0.2s;
     border-radius: var(--search-radius);
     padding: 0 10px;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(var(--alpha-bg), 0.8);
+
     box-shadow: 0 0 10px 3px #00000029;
 }
 .se-item-icon {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(var(--alpha-bg), 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -167,7 +192,7 @@ onMounted(() => {
     height: 36px;
     width: 36px;
     border-radius: 8px;
-    background-color: #fff;
+    background-color: var(--bg-card);
     box-shadow: 0 0 10px 3px #0000000d;
 }
 .search-icon {
@@ -183,7 +208,7 @@ onMounted(() => {
 }
 .se-item-title {
     font-size: 12px;
-    color: #222;
+    color: var(--d-main);
     line-height: 22px;
     text-align: center;
 }
@@ -198,10 +223,9 @@ onMounted(() => {
 }
 
 .se-all .se-item:hover {
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: var(--search-list-hover);
 }
 .se-item-del {
-    --bg-info: #f5f5f5;
     font-size: 12px;
     text-align: center;
     display: none;
@@ -213,8 +237,9 @@ onMounted(() => {
     background: var(--bg-info);
     box-shadow: 0 0 4px 3px #0000000a;
     border-radius: 50%;
-    color: rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(0, 0, 0, 0.04);
+
+    color: rgba(var(--alpha-color), 0.6);
+    border: 1px solid rgba(var(--alpha-color), 0.04);
     box-sizing: content-box;
 }
 .se-all .se-item:hover .se-item-del {
@@ -226,7 +251,7 @@ onMounted(() => {
 }
 .se-item-add {
     font-size: 18px;
-    color: #1890ff;
+    color: var(--el-color-primary);
 }
 .action {
     margin: 6px 0;

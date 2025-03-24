@@ -75,8 +75,8 @@
 <script lang="ts" setup>
 import axios from "axios";
 import UseUploadImage from "@/hooks/UseUploadImage";
-import { useSiderStore } from "@/stores/global";
-const global = useSiderStore();
+import { useGlobalStore } from "@/stores/global";
+const global = useGlobalStore();
 const { navConfig, cur } = storeToRefs(global);
 const props = defineProps<{
     info: any;
@@ -183,10 +183,11 @@ function save(type: "保存" | "保存并继续") {
     overflow: hidden;
     padding: 30px 20px;
     height: 100%;
+    background-color: var(--add-body);
 }
 .app-icon-wrap {
     padding: 10px;
-    background-color: rgba(255, 255, 255, 0.35);
+    background-color: var(--add-card, var(--bg-card));
     border-radius: 12px;
 }
 :deep(.el-input__wrapper) {
@@ -206,7 +207,6 @@ function save(type: "保存" | "保存并继续") {
     }
 }
 :deep(.el-form-item__label) {
-    color: #606266;
     font-size: 14px;
     padding: 0;
 }

@@ -7,8 +7,12 @@
         <AppDate />
 
         <!-- 搜索栏 -->
-        <AppSearch v-if="search.show" />
+        <Transition leave-active-class="animate__animated animate__slideOutRight" enter-active-class="animate__animated animate__bounceInLeft">
+            <AppSearch v-if="search.show"
+        /></Transition>
+
         <!-- 图标列表 -->
+
         <AppGrid ref="appGrid" />
         <!-- 文心一言 -->
         <AppYiyan v-if="layout.yiyan" />
@@ -19,9 +23,9 @@
 
 <script lang="ts" setup>
 import { useBaseConfigStore } from "@/stores/baseConfig";
-import { useSiderStore } from "@/stores/global";
+import { useGlobalStore } from "@/stores/global";
 
-const global = useSiderStore();
+const global = useGlobalStore();
 const { cur } = storeToRefs(global);
 import AppSearch from "./AppSearch.vue";
 import AppGrid from "./AppGrid.vue";

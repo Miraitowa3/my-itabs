@@ -3,7 +3,7 @@
         <ElDrawer direction="rtl" v-model="show" :size="450" :show-close="false">
             <template #header>
                 <div class="ml-[130px] h-[34px]">
-                    <h3 class="d-main text-[#222]">{{ title }}</h3>
+                    <h3 class="d-main">{{ title }}</h3>
                     <p class="mt-[5px] text-xs text-[#939393]">{{ tip }}</p>
                 </div>
             </template>
@@ -15,7 +15,7 @@
                         </p>
                     </template>
 
-                    <p class="d-divide"></p>
+                    <p class="bb"></p>
 
                     <div class="sidebar-box">
                         <ul ref="ulRef">
@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-const show = ref(true);
+const show = defineModel();
 const cur = ref(3);
 const ulRef = ref<Element>();
 import { asideList } from "./data.ts";
@@ -83,9 +83,6 @@ watch(
         padding: 0px;
     }
     .d-layout-aside {
-        .d-divide {
-            border-bottom: 1px solid #f2f2f2;
-        }
         .setting-user {
             position: relative;
             margin: 0 8px 10px;
@@ -115,7 +112,7 @@ watch(
         }
     }
     .d-layout-main {
-        background-color: #f1f0f5;
+        background-color: var(--bg-body);
         border-radius: 6px;
         padding: 10px 20px 10px 10px;
         height: 100%;
@@ -133,8 +130,8 @@ watch(
             height: 40px;
             top: 0;
             left: 0;
-            background: rgba(24, 144, 255, 0.1);
-            border-radius: 6px;
+            background: var(--active-bg, rgba(var(--alpha-color), 0.08));
+            border-radius: var(--bg-radius, 6px);
             transition:
                 top 0.2s ease 0s,
                 height 0.2s ease 0s;
@@ -148,7 +145,7 @@ watch(
                 margin: auto 0;
                 width: 3px;
                 border-radius: 4px;
-                background-color: #1890ff;
+                background-color: var(--el-color-primary);
             }
         }
         li {
@@ -165,7 +162,7 @@ watch(
             }
             .item-title {
                 font-size: 13px;
-                color: #222;
+                color: var(--d-main);
                 margin-left: 4px;
             }
             .item-icon {

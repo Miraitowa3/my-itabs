@@ -28,7 +28,7 @@
                     <svg-icon name="menu-beifen" />
                 </i>
             </li>
-            <li class="menu-item hover flex justify-between">
+            <li class="menu-item hover flex justify-between" @click.stop="showSetting = true">
                 <span class="menu-item-title text-[12px]">设置</span>
                 <i class="menu-item-icon text-[15px]">
                     <svg-icon name="menu-setting" />
@@ -36,16 +36,19 @@
             </li>
         </ul>
     </ContentMenu>
+    <Setting v-model="showSetting"></Setting>
+
     <AddIcon v-model="showAdd" />
 </template>
 
 <script lang="ts" setup>
 import AddIcon from "./components/AddIcon.vue";
+import Setting from "@/views/system/Setting.vue";
 const contentMenu = ref<any>();
 
-const whiteClass = ["app-item-icon", "yiyan-text", "yiyan-from", "se-input", "search-icon"];
+const whiteClass = ["app-item-icon", "yiyan-text", "yiyan-from", "se-input", "search-icon", "item-icon-text"];
 const showAdd = ref(false);
-
+const showSetting = ref(false);
 function hanlderCallback(e: MouseEvent) {
     const target = e.target as HTMLElement;
     const classes = (target.getAttribute("class") || "").split(" ");

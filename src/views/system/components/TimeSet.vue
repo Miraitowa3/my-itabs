@@ -93,7 +93,6 @@ const toggleList = ref([
 </script>
 <style scoped lang="scss">
 .box {
-    --bg-body: #f1f0f5;
     background-color: var(--bg-body);
     height: 120px;
 }
@@ -119,7 +118,6 @@ const toggleList = ref([
 }
 
 .d-toggle {
-    --bg-card: #fff;
     position: relative;
     height: 18px;
     width: var(--width, 60px);
@@ -131,10 +129,8 @@ const toggleList = ref([
     transition: border 0.2s;
     text-align: center;
     &.is-checked {
-        --primary-color: #1890ff;
-
-        border-color: var(--primary-color);
-        color: var(--primary-color);
+        border-color: var(--el-color-primary);
+        color: var(--el-color-primary);
     }
 }
 </style>

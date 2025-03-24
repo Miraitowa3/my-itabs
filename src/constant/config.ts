@@ -1435,33 +1435,7 @@ export const siderIcons = [
     },
 ];
 
-export const defaultTheme: ThemeStyles = {
-    "--primary-color": "#1890ff",
-    "--search-height": "46px",
-    "--search-radius": "23px",
-    "--search-bgColor": "rgba(var(--alpha-bg), 0.5)",
-    "--icon-radius": "15.54962962962963px",
-    "--icon-size": "60.254814814814814px",
-    "--icon-gap-x": "29.155555555555555px",
-    "--icon-gap-y": "29.155555555555555px",
-    "--icon-max-width": "1350px",
-    "--icon-opacity": "0.58",
-    "--icon-name": "block",
-    "--icon-nameSize": "12px",
-    "--icon-nameColor": "#2ecc71",
-    "--time-size": "70px",
-    "--time-font": "HarmonyOS_Sans",
-    "--time-color": "#fff",
-    "--time-fontWeight": "400",
-    "--time-month": "inline",
-    "--time-week": "inline",
-    "--time-lunar": "inline",
-    "--time-sec": "none",
-    "--sidebar-width": "50px",
-    "--sidebar-opacity": "0.4",
-    "--wall-mask": "0",
-    "--wall-blur": "0px",
-};
+
 export const DefaultIcon = {
     iconLayout: "custom",
     iconRadius: 16,
@@ -1506,10 +1480,10 @@ export const DefaultTime = {
     color: "#fff",
     font: "dsdigi",
     fontWeight: "400",
-    hour24: 'false',
+    hour24: "false",
     lunar: "none",
     month: "none",
-    sec: 'true',
+    sec: "true",
     show: true,
     size: 130,
     week: "none",
@@ -1585,3 +1559,62 @@ export const fontList = [
         value: "BungeeHairlin",
     },
 ];
+export const DefaultSearchEngine = [
+    {
+        key: "baidu",
+        title: "百度",
+        href: "https://www.baidu.com/s?wd=",
+    },
+    {
+        key: "google",
+        title: "Google",
+        href: "https://www.google.com/search?q=",
+    },
+    {
+        key: "bing",
+        title: "必应",
+        href: "https://www.bing.com/search?form=QBLH&q=",
+    },
+    {
+        key: "metaso",
+        title: "秘塔AI",
+        href: "https://metaso.cn/?s=itab1&referrer_s=itab1&q=",
+    },
+];
+export const DefaultSearchEngineList = [
+    {
+        key: "baidu",
+        title: "百度",
+        href: "https://www.baidu.com/s?wd=",
+    },
+    {
+        key: "google",
+        title: "Google",
+        href: "https://www.google.com/search?q=",
+    },
+    {
+        key: "bilibili",
+        title: "哔哩哔哩",
+        href: "https://search.bilibili.com/all?keyword=",
+    },
+    {
+        key: "kaifabaidu",
+        title: "开发者搜索",
+        href: "https://kaifa.baidu.com/searchPage?wd=",
+    },
+    {
+        key: "360",
+        title: "360搜索",
+        href: "https://www.so.com/s?q=",
+    },
+    {
+        key: "mdn",
+        title: "MDN",
+        href: "https://developer.mozilla.org/zh-CN/search?q=",
+    },
+];
+export const DefaultTheme = {
+    mode: "light",
+    system: true,
+    color: "#1890ff",
+};

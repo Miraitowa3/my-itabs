@@ -35,7 +35,7 @@
                                                         '--icon-fit': 'contain',
                                                     }"
                                                 />
-                                                <span v-else class="text-[#fff]">{{ it.iconText }}</span>
+                                                <span v-else class="item-icon-text text-[#fff]">{{ it.iconText }}</span>
                                             </div>
                                             <div class="icon-item-delete d-flex-center" v-if="isBatchEdit" @click="deleteIcon(i, index)">
                                                 <i class="text-[14px]">
@@ -59,10 +59,10 @@
 <script lang="ts" setup>
 import { useBaseConfigStore } from "@/stores/baseConfig";
 import { VueDraggable } from "vue-draggable-plus";
-import { useSiderStore } from "@/stores/global";
+import { useGlobalStore } from "@/stores/global";
 import AppItemContentMenu from "./AppItemContentMenu.vue";
 
-const global = useSiderStore();
+const global = useGlobalStore();
 const { cur, navConfig, isBatchEdit } = storeToRefs(global);
 const drag = ref(false);
 const appIconWrap = ref<HTMLUListElement>();
@@ -71,7 +71,7 @@ const BASE_TRANSLATE_Y = ref(500);
 const scrollDisYList = ref<number[]>([]);
 const appGridId = ref<HTMLUListElement>();
 const baseConfigStore = useBaseConfigStore();
-const { sidebar, layout } = storeToRefs(baseConfigStore);
+const { sidebar, layout, open } = storeToRefs(baseConfigStore);
 const appItemContentMenu = ref<any>();
 function onStart() {
     drag.value = true;
@@ -223,9 +223,7 @@ function deleteIcon(i: number, index: number) {
     // Fliap.value.play();
 }
 function clickIcon(item: any) {
-    if (item.type === "icon") {
-        window.open(item.url, "_blank");
-    }
+    window.open(item.url, open.value.iconBlank ? "_blank" : "_self");
 }
 watch(
     () => navConfig.value,
@@ -330,7 +328,7 @@ defineExpose({
     /* z-index: calc(var(--el-index-normal) - 1); */
     font-size: 40px;
     text-align: center;
-    line-height: 200px;
+    // line-height: 200px;
 }
 
 .app-item-icon {

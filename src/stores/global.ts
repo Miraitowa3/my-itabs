@@ -2,7 +2,7 @@ import { defaultNavConfig } from "@/constant/config";
 import { useBaseConfigStore } from "./baseConfig";
 import { cloneDeep } from "lodash-es";
 
-export const useSiderStore = defineStore(
+export const useGlobalStore = defineStore(
     "global",
     () => {
         const isBatchEdit = ref(false);
@@ -24,6 +24,9 @@ export const useSiderStore = defineStore(
         function setBatchEdit(val:boolean) {
             isBatchEdit.value = val;
         }
+        function resetNavConfig(){
+            navConfig.value = cloneDeep(defaultNavConfig);
+        }
         watch(
             cur,
             () => {
@@ -41,7 +44,7 @@ export const useSiderStore = defineStore(
                 deep: true,
             },
         );
-        return { navConfig, cur, setNavConfig ,setBatchEdit, isBatchEdit };
+        return { navConfig, cur, setNavConfig ,setBatchEdit, isBatchEdit ,resetNavConfig};
     },
     {
         persist:true

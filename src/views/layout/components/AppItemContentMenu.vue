@@ -36,11 +36,11 @@
 </template>
 
 <script lang="ts" setup>
-import { useSiderStore } from "@/stores/global";
+import { useGlobalStore } from "@/stores/global";
 import EditIcon from "./components/EditIcon.vue";
 import { cloneDeep } from "lodash-es";
 const contentMenu = ref<any>();
-const siderStore = useSiderStore();
+const siderStore = useGlobalStore();
 const { navConfig, cur } = storeToRefs(siderStore);
 
 const emits = defineEmits(["delete"]);
@@ -52,17 +52,39 @@ const props = defineProps<{
 }>();
 
 const layoutList = ["1x1", "1x2", "2x1", "2x2", "2x4"];
-const whiteClass = ["app-item-icon"];
+const whiteClass = ["app-item-icon", "item-icon-text"];
 
 let index = ref(0);
+function hasParentWithAttribute(element: HTMLElement | null, fn: (element: HTMLElement) => HTMLElement | undefined) {
+    // 从当前元素开始向上遍历
+    while (element && element !== document.body) {
+        if (fn(element)) {
+            return element;
+        }
+        // 移动到父元素
+        element = element.parentElement;
+    }
+    // 如果遍历到body元素仍未找到，返回false
+    return false;
+}
+
 function hanlderCallback(e: MouseEvent) {
     siderStore.setBatchEdit(false);
     const target = e.target as HTMLElement;
     const classes = (target.getAttribute("class") || "").split(" ");
+
     if (!classes.some((cls) => whiteClass.includes(cls))) {
         return false;
     }
-    let sarr = target.getAttribute("cs")?.split("_") as string[];
+
+    let ele = hasParentWithAttribute(e.target as HTMLElement, (element: HTMLElement) => {
+        const classes = (element.getAttribute("class") || "").split(" ");
+        if (classes.includes("app-item-icon")) {
+            return element;
+        }
+    });
+
+    let sarr = (ele as HTMLElement).getAttribute("cs")?.split("_") as string[];
     index.value = Number(sarr[sarr.length - 1]);
 
     return true;

@@ -49,13 +49,12 @@ const opt = (val: string) => {
     border-radius: 12px;
     text-align: center;
     &.is-checked {
-        background-color: #1681ff;
+        border: 1px solid var(--el-color-primary);
+        background-color: var(--el-color-primary);
     }
 }
 
 .layout-item {
-    --d-sub: #939393;
-    --alpha-color: 0, 0, 0;
     border-radius: 4px;
     width: 100%;
     height: 100%;
@@ -121,7 +120,7 @@ const opt = (val: string) => {
 
     &.is-checked {
         background-color: rgba(24, 144, 255, 0.063);
-        border: 1px solid #1681ff;
+        border: 1px solid var(--el-color-primary);
     }
 }
 </style>

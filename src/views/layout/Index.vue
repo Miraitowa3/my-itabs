@@ -4,14 +4,12 @@
     </Teleport>
     <AppSider></AppSider>
     <AppMain></AppMain>
-    <Setting v-model="show"></Setting>
 </template>
 
 <script setup lang="ts">
-const show = ref(true);
 import AppMain from "./components/AppMain.vue";
 import AppSider from "./components/AppSider.vue";
-import Setting from "../system/Setting.vue";
+
 const url = ref("https://raw.gitcode.com/snows_l/blog_assets/raw/master/imgs/bg/1.png");
 const timer = ref<NodeJS.Timeout>();
 const Max_INDEX = 100;
