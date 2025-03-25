@@ -1,5 +1,5 @@
 <template>
-    <div class="app-icon-grid-wrap flex-1" style="flex: 1 1 0%">
+    <div class="app-icon-grid-wrap relative flex-1" style="flex: 1 1 0%">
         <div class="app-icon-grid d-hidden h-full" :style="{ opacity: layout.view === 'widget' ? 1 : 0 }">
             <ul class="app-icon-wrap" ref="appIconWrap">
                 <li class="app-icon-item" v-for="(item, i) in navConfig" :name="item.id" :key="item.id" :style="{ opacity: cur.current === item.id ? 1 : 0 }">
@@ -53,6 +53,10 @@
                 </li>
             </ul>
         </div>
+        <div class="fixed bottom-0 right-6 z-10 flex flex-col items-center" v-if="wallpaper.switchBtn">
+            <i class="switch-wallpaper relative top-[-7px] z-10 cursor-pointer text-[22px]" @click.stop="switchWallpaper"> <svg-icon name="feng"></svg-icon> </i
+            ><span class="relative z-0 mt-[-21px] h-[40px] w-1 bg-slate-100"></span>
+        </div>
     </div>
 </template>
 
@@ -71,7 +75,7 @@ const BASE_TRANSLATE_Y = ref(500);
 const scrollDisYList = ref<number[]>([]);
 const appGridId = ref<HTMLUListElement>();
 const baseConfigStore = useBaseConfigStore();
-const { sidebar, layout, open } = storeToRefs(baseConfigStore);
+const { sidebar, layout, open, wallpaper } = storeToRefs(baseConfigStore);
 const appItemContentMenu = ref<any>();
 function onStart() {
     drag.value = true;
@@ -97,6 +101,7 @@ watch(
     },
     { immediate: true },
 );
+function switchWallpaper() {}
 function updateXY() {
     const clientY = appIconWrap.value!.getBoundingClientRect().height;
 
@@ -207,9 +212,9 @@ function updateTranslateY() {
 }
 const debouncedHandleWheel = throttle(handleWheel, 600);
 
-function throttle(func: any, wait: any) {
+function throttle<T extends (...args: any[]) => any>(func: T, wait: number) {
     let lastTime = 0;
-    return function (...args: any) {
+    return function (...args: any[]) {
         const now = Date.now();
         if (now - lastTime >= wait) {
             func.apply(this, args);
@@ -288,7 +293,12 @@ defineExpose({
 .list-leave-to {
     opacity: 0;
 }
-
+.switch-wallpaper {
+    transition: all 1s ease-in-out;
+    &:hover {
+        transform: rotate(720deg);
+    }
+}
 /* 确保将离开的元素从布局流中删除
   以便能够正确地计算移动的动画。 */
 .list-leave-active {
@@ -316,6 +326,7 @@ defineExpose({
     position: relative;
     overflow: hidden;
 }
+
 .app-icon-item {
     transition: transform ease-out 0.28s !important;
     position: absolute;
@@ -344,6 +355,9 @@ defineExpose({
     display: flex;
     align-items: center;
     justify-content: center;
+    &:hover {
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px;
+    }
 }
 .app-item-img {
     display: block;

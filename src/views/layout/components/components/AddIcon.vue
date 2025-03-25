@@ -5,13 +5,13 @@
         :overlay="false"
         :customStyle="{
             backdropFilter: 'blur(18px)',
-            background: 'rgba(var(--alpha-bg),.5)',
+            'background-color': 'rgba(var(--alpha-bg), 0.6)',
             padding: '0px',
             height: '600px',
         }"
         :closeIcon="false"
     >
-        <section class="container">
+        <section class="container" :style="{ '--wall-thumb': wallpaper.src }">
             <aside class="sidebar">
                 <div class="sidebar-box">
                     <ul ref="ulRef">
@@ -36,7 +36,9 @@
 
 <script setup lang="ts">
 import IconCustom from "./IconCustom.vue";
-
+import { useBaseConfigStore } from "@/stores/baseConfig";
+const BaseConfig = useBaseConfigStore();
+const { wallpaper } = storeToRefs(BaseConfig);
 const show = defineModel();
 const cur = ref(2);
 const ulRef = ref<Element>();
@@ -79,11 +81,7 @@ watch(show, () => {
     width: 100%;
     height: 100%;
     display: flex;
-    background-image: var(--wall-thumb);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-color: rgba(var(--alpha-bg), 0.6);
+
     .sidebar {
         width: 160px;
         .sidebar-box {

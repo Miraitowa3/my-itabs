@@ -16,7 +16,7 @@
             <Slider title="遮罩浓度" unit="%" :attrs="{ min: 0, max: 0.9, step: 0.01 }" v-model="wallpaper.mask" />
             <Slider title="模糊度" unit="%" :attrs="{ min: 0, max: 40, step: 2 }" v-model="wallpaper.blur" />
             <Select title="自动壁纸" :list="changeList" v-model="wallpaper.time" :attrs="{ style: 'width: 160px' }" />
-            <Switch title="桌面显示壁纸切换按钮" v-model="wallpaper.autoHide" />
+            <Switch title="桌面显示壁纸切换按钮" v-model="wallpaper.switchBtn" />
         </div>
     </div>
 </template>

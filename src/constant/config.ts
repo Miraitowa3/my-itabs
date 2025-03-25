@@ -1,4 +1,4 @@
-import { ThemeStyles } from "@/typing";
+
 export const defaultNavConfig = [
     {
         id: "1",
@@ -1570,16 +1570,7 @@ export const DefaultSearchEngine = [
         title: "Google",
         href: "https://www.google.com/search?q=",
     },
-    {
-        key: "bing",
-        title: "必应",
-        href: "https://www.bing.com/search?form=QBLH&q=",
-    },
-    {
-        key: "metaso",
-        title: "秘塔AI",
-        href: "https://metaso.cn/?s=itab1&referrer_s=itab1&q=",
-    },
+
 ];
 export const DefaultSearchEngineList = [
     {
@@ -1612,6 +1603,11 @@ export const DefaultSearchEngineList = [
         title: "MDN",
         href: "https://developer.mozilla.org/zh-CN/search?q=",
     },
+        {
+        key: "custom",
+        title: "自定义",
+        href: "",
+    }
 ];
 export const DefaultTheme = {
     mode: "light",
@@ -1627,5 +1623,6 @@ export const DefaultWallpaper ={
   "thumb": "https://files.codelife.cc/wallhaven/full/5g/wallhaven-5ggol7.png?x-oss-process=image/resize,limit_0,m_fill,w_307,h_172/quality,Q_93/format,webp",
   "source": "",
   "time": 0,
-  "name": "5ggol7"
+  "name": "5ggol7",
+  switchBtn: false,
 }

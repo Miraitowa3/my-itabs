@@ -7,6 +7,7 @@
     --icon-transition-duration: 0.3s;
     --active-bg: rgba(24, 144, 255, 0.1);
     --el-border-radius-base: 8px;
+    --spacing: 0.25rem;
 }
 
 html[data-theme="dark"] {
@@ -24,6 +25,7 @@ html[data-theme="dark"] {
     --d-sub: #999;
     --d-hover: rgba(var(--alpha-color), 0.6);
     --img-bg: var(--alpha-bg);
+    --search-list-hover: rgba(255, 255, 255, 0.03);
     --img-text: 255, 255, 255;
     --add-drawer-body: #dadadc;
     --add-card: rgba(255, 255, 255, 0.35);
@@ -98,6 +100,7 @@ html[data-theme="dark"] {
 }
 
 html[data-theme="light"] {
+    --search-list-hover: rgba(255, 255, 255, 0.7);
     --alpha-color: 0, 0, 0;
     --alpha-bg: 255, 255, 255;
     --bg-body: #f1f0f5;

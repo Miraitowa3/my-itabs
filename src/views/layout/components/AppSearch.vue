@@ -11,42 +11,48 @@
                 <el-input v-model="searchText" type="text" maxlength="220" placeholder="输入搜索内容" class="se-input" @keyup.enter="search" />
 
                 <div class="se-close flex cursor-pointer">
-                    <i class="d-icon text-[30px]" style="color: rgba(0, 0, 0, 0.52)" v-if="searchText" @click.stop="searchText = ''">
+                    <i class="d-icon text-[30px]" style="color: rgba(var(--alpha-color), 0.52)" v-if="searchText" @click.stop="searchText = ''">
                         <svg-icon name="close"></svg-icon>
                     </i>
                 </div>
                 <button type="button" class="se-select">
-                    <i class="d-icon text-[20px]" style="color: rgba(0, 0, 0, 0.52)" @click.stop="search">
+                    <i class="d-icon text-[20px]" style="color: rgba(var(--alpha-color), 0.52)" @click.stop="search">
                         <svg-icon name="search"></svg-icon>
                     </i>
                 </button>
             </div>
             <div class="se-down absolute inset-x-0 z-10">
                 <ul class="se-all z-0 flex h-0 w-full origin-top overflow-hidden" :class="{ action: isShow }">
-                    <li class="se-item" v-for="(item, index) in searchEngine" :key="item.key" @click.stop="changeEngine(index)">
-                        <i class="d-icon se-item-del" @click.stop="deleteEngine(index)">
-                            <svg-icon name="close"></svg-icon>
-                        </i>
-                        <span class="se-item-icon">
-                            <img :src="'https://files.codelife.cc/itab/search/' + item.key + '.svg'" class="search-icon" />
-                        </span>
-                        <p class="d-elip se-item-title">{{ item.title }}</p>
-                    </li>
-                    <!-- <li class="se-item">
+                    <template v-for="(item, index) in searchEngine" :key="item.key">
+                        <li class="se-item" @click.stop="changeEngine(index)">
+                            <i class="d-icon se-item-del" @click.stop="deleteEngine(index)">
+                                <svg-icon name="close"></svg-icon>
+                            </i>
+                            <span class="se-item-icon">
+                                <img :src="'https://files.codelife.cc/itab/search/' + item.key + '.svg'" class="search-icon" />
+                            </span>
+                            <p class="d-elip se-item-title">{{ item.title }}</p>
+                        </li>
+                    </template>
+
+                    <li class="se-item" @click.stop="addEngineVisible = true">
                         <span class="se-item-icon">
                             <i class="d-icon se-item-add">
                                 <svg-icon name="add"></svg-icon>
                             </i>
                         </span>
                         <p class="d-elip se-item-title">{{ "添加" }}</p>
-                    </li> -->
+                    </li>
                 </ul>
             </div>
         </div>
+        <AddSearchEngine v-model="addEngineVisible" />
     </div>
 </template>
 <script setup lang="ts">
 import { useBaseConfigStore } from "@/stores/baseConfig";
+import AddSearchEngine from "./components/AddSearchEngine.vue";
+const addEngineVisible = ref(false);
 const BaseConfig = useBaseConfigStore();
 const { searchEngine, useSearch, open } = storeToRefs(BaseConfig);
 const searchText = ref("");
@@ -171,6 +177,7 @@ onMounted(() => {
 .app-search-box .se-input-box .se-select:hover {
     background-color: rgba(var(--alpha-bg), 0.4);
 }
+
 .se-all {
     transform: scaleY(0);
     transition: 0.2s;
@@ -225,6 +232,7 @@ onMounted(() => {
 .se-all .se-item:hover {
     background-color: var(--search-list-hover);
 }
+
 .se-item-del {
     font-size: 12px;
     text-align: center;

@@ -29,6 +29,9 @@ export const useBaseConfigStore = defineStore(
         const updateWallpaper = () => {
             document.documentElement.style.setProperty("--wall-mask", wallpaper.value.mask);
             document.documentElement.style.setProperty("--wall-blur", wallpaper.value.blur + "px");
+
+
+
         };
 
         const updateIcon = () => {

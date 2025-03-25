@@ -188,10 +188,10 @@ onMounted(() => {
         const targetNodeIndex = children.indexOf(e.target as HTMLElement);
         Fliap.start();
         if (souceNodeIndex < targetNodeIndex) {
-            container.insertBefore(souceNode, (e.target as HTMLElement).nextElementSibling);
+            container?.insertBefore(souceNode, (e.target as HTMLElement).nextElementSibling);
             console.log("向下拖动");
         } else {
-            container.insertBefore(souceNode, e.target as HTMLElement);
+            container?.insertBefore(souceNode, e.target as HTMLElement);
 
             console.log("向上拖动");
         }
