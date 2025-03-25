@@ -15,8 +15,9 @@ html[data-theme="dark"] {
     --alpha-bg: 0, 0, 0;
     --bg-body: #0c0c0c;
     --bg-card: #222;
+
     --bg-info: #16161a;
-    --bg-input: #2c2c2c;
+    --bg-input: #25252c;
     --bg-hover: #25252c;
     --bg-btn: #303134;
     --dividing-line: #202025;

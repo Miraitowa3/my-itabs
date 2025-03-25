@@ -1,6 +1,6 @@
 <template>
     <el-dialog v-model="show" width="740px">
-        <template #title>
+        <template #header>
             <div class="title">
                 添加搜索引擎
                 <p>最少添加1种，最多添加4种</p>
