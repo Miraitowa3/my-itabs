@@ -1,6 +1,6 @@
 <template>
-    <el-dialog v-model="show" width="1000px" :show-close="false" class="add-pic-container">
-        <section class="p-body">
+    <el-dialog v-model="show" width="1000px" :show-close="false" class="add-pic-container" :fullscreen="fullscreen">
+        <section class="p-body" :style="{ height: fullscreen ? '100%' : '600px' }">
             <div class="flex h-full">
                 <aside class="aside">
                     <h2>壁纸库</h2>
@@ -16,6 +16,7 @@
                     </div>
                 </aside>
                 <main class="main">
+                    <DialogHeader @close="show = false" @full-screen="fullScreen" />
                     <p class="tabs" style="width: 80%; line-height: 16px"><span class="active mr10">最新</span><span class="">最热</span></p>
                     <ul class="pic-box">
                         <li class="pic-item">
@@ -23,6 +24,9 @@
                                 alt=""
                                 src="https://files.codelife.cc/itab/defaultWallpaper/videos/88.jpg?x-oss-process=image/resize,limit_0,m_fill,w_400,h_200/quality,q_93/format,webp&a=1.svg"
                             />
+                            <i title="下载壁纸到本地" class="paper-down"
+                                ><i class="el-icon" style="font-size: 14px"><svg-icon name="download"></svg-icon></i
+                            ></i>
                             <div class="image-select">
                                 <button class="image-select-btn flex items-center justify-center" type="button">
                                     <i class="flex items-center justify-center text-[20px]"><svg-icon name="dui"></svg-icon></i>
@@ -37,6 +41,8 @@
 </template>
 
 <script lang="ts" setup>
+import DialogHeader from "@/components/DialogHeader.vue";
+const fullscreen = ref(false);
 const show = ref(true);
 const cur = ref(0);
 const ulRef = ref<Element>();
@@ -48,7 +54,9 @@ const list = ref<any>([
     },
 ]);
 const top = computed(() => list.value[cur.value].top);
-
+function fullScreen(isFullScreen: boolean) {
+    fullscreen.value = isFullScreen;
+}
 watch(
     show,
     () => {
@@ -70,6 +78,7 @@ watch(
 <style lang="scss" scoped>
 .p-body {
     height: 600px;
+
     .aside {
         .sidebar-box {
             ul {
@@ -87,6 +96,7 @@ watch(
                     transition:
                         top 0.2s ease 0s,
                         height 0.2s ease 0s;
+
                     &:before {
                         content: "";
                         position: absolute;
@@ -155,8 +165,32 @@ watch(
                 position: relative;
                 border-radius: 5px;
                 overflow: hidden;
+                .paper-down {
+                    --size: 24px;
+                    position: absolute;
+                    right: 2px;
+                    top: 2px;
+                    cursor: pointer;
+                    border-radius: 50%;
+                    font-size: 14px;
+                    transition: 0.2s;
+                    text-align: center;
+                    line-height: var(--size);
+                    width: var(--size);
+                    height: var(--size);
+                    color: #fff;
+
+                    opacity: 0;
+                    i {
+                        color: #fff;
+                    }
+                }
                 &:hover img {
                     transform: scale(1.1);
+                }
+
+                &:hover .paper-down {
+                    opacity: 1;
                 }
                 .image-select {
                     position: absolute;
@@ -164,7 +198,19 @@ watch(
                     top: 50%;
                     transform: translate(-50%, -50%);
                     transition: 0.2s;
+                    .rotating {
+                        animation: rotating 2s linear infinite;
+                    }
+
+                    @keyframes rotating {
+                        to {
+                            transform: rotate(360deg);
+                        }
+                    }
                     .image-select-btn {
+                        &:hover {
+                            background-color: var(--el-color-primary);
+                        }
                         --btn-size: 40px;
 
                         width: var(--btn-size);
@@ -211,6 +257,9 @@ watch(
 .add-pic-container {
     .el-dialog__header {
         padding: 0;
+    }
+    .el-dialog__body {
+        height: 100%;
     }
     &.el-dialog {
         padding: 0;

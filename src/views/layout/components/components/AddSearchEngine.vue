@@ -61,7 +61,6 @@ const list = ref<any>(cloneDeep(DefaultSearchEngineList));
 const checkNum = computed(() => list.value.filter((i: any) => i.checked).length);
 function init() {
     let arr = cloneDeep(DefaultSearchEngineList);
-    console.log(arr, searchEngine.value);
 
     arr.forEach((item: any) => {
         if (searchEngine.value.filter((i) => i.title === item.title).length > 0) {
@@ -73,7 +72,6 @@ function init() {
     list.value = arr;
 }
 const show = defineModel<boolean>();
-const checked1 = ref(true);
 function changeItem(item: any) {
     let arr = list.value.filter((i: any) => i.checked);
     searchEngine.value = arr;

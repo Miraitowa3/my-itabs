@@ -11,6 +11,7 @@ declare module 'vue' {
     ColorPicker: typeof import('./src/components/ColorPicker.vue')['default']
     ContentMenu: typeof import('./src/components/ContentMenu.vue')['default']
     Dialog: typeof import('./src/components/Dialog.vue')['default']
+    DialogHeader: typeof import('./src/components/DialogHeader.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
     ElColorPicker: typeof import('element-plus/es')['ElColorPicker']
