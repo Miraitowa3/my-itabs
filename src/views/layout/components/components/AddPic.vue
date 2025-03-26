@@ -23,6 +23,11 @@
                                 alt=""
                                 src="https://files.codelife.cc/itab/defaultWallpaper/videos/88.jpg?x-oss-process=image/resize,limit_0,m_fill,w_400,h_200/quality,q_93/format,webp&a=1.svg"
                             />
+                            <div class="image-select">
+                                <button class="image-select-btn flex items-center justify-center" type="button">
+                                    <i class="flex items-center justify-center text-[20px]"><svg-icon name="dui"></svg-icon></i>
+                                </button>
+                            </div>
                         </li>
                     </ul>
                 </main>
@@ -147,10 +152,33 @@ watch(
             grid-auto-flow: dense;
             grid-gap: 15px;
             .pic-item {
+                position: relative;
                 border-radius: 5px;
                 overflow: hidden;
                 &:hover img {
                     transform: scale(1.1);
+                }
+                .image-select {
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                    transition: 0.2s;
+                    .image-select-btn {
+                        --btn-size: 40px;
+
+                        width: var(--btn-size);
+                        display: block;
+                        text-align: center;
+                        height: var(--btn-size);
+                        border-radius: 50%;
+                        font-size: 12px;
+                        background-color: #0006;
+                        border: none;
+                        color: #fff;
+                        // transition: background 0.2s;
+                        cursor: pointer;
+                    }
                 }
                 img {
                     width: 100%;
