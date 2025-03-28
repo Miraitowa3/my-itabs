@@ -33,9 +33,7 @@ const tabList = ref([
     },
 ]);
 const activeTab = ref("微信登录");
-const handleTabChange = (cur: any) => {
-    console.log(cur);
-};
+const handleTabChange = (cur: any) => {};
 </script>
 <style scoped>
 .app-login {

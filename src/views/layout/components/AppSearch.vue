@@ -63,9 +63,7 @@ function changeSelect() {
     isShow.value = !isShow.value;
 }
 let selectEngine = document.querySelector("#selectEngine");
-selectEngine?.addEventListener("click", () => {
-    console.log("changeSelect");
-});
+selectEngine?.addEventListener("click", () => {});
 function changeEngine(index: number) {
     BaseConfig.setUseSearch(searchEngine.value[index]);
 }
