@@ -7,7 +7,7 @@
                     <div class="sidebar-box">
                         <ul ref="ulRef">
                             <div class="d-tabs-active" :style="{ top: `${top}px` }"></div>
-                            <li v-for="(item, index) in list" :key="index" @click.stop="cur = index" class="d-tabs-item" :class="{ hover: index !== cur }">
+                            <li v-for="(item, index) in tabList" :key="index" @click.stop="cur = index" class="d-tabs-item" :class="{ hover: index !== cur }">
                                 <span :style="{ color: index === cur ? 'var(--el-color-primary)' : 'rgba(var(--alpha-color), 0.6)' }">
                                     {{ item.name }}
                                 </span>
@@ -18,13 +18,10 @@
                 <main class="main">
                     <DialogHeader @close="show = false" @full-screen="fullScreen" />
                     <p class="tabs" style="width: 80%; line-height: 16px"><span class="active mr10">最新</span><span class="">最热</span></p>
-                    <div class="d-scrollbar container">
-                        <ul class="pic-box">
-                            <li class="pic-item" v-for="(item, index) in 100" :key="index">
-                                <img
-                                    alt=""
-                                    src="https://files.codelife.cc/itab/defaultWallpaper/videos/88.jpg?x-oss-process=image/resize,limit_0,m_fill,w_400,h_200/quality,q_93/format,webp&a=1.svg"
-                                />
+                    <div class="d-scrollbar conbox" ref="rootRef">
+                        <ul class="pic-box" v-if="list.length > 0">
+                            <li class="pic-item" v-for="(item, index) in list" :key="item.id + index" :cc="index + 1">
+                                <img alt="" :src="item.img" />
                                 <i title="下载壁纸到本地" class="paper-down"
                                     ><i class="el-icon" style="font-size: 14px"><svg-icon name="download"></svg-icon></i
                                 ></i>
@@ -37,6 +34,9 @@
                                 </div>
                             </li>
                         </ul>
+                        <!-- <el-empty :image-size="200" /> -->
+
+                        <MoreCom></MoreCom>
                     </div>
                 </main>
             </div>
@@ -46,12 +46,14 @@
 
 <script lang="ts" setup>
 import DialogHeader from "@/components/DialogHeader.vue";
+import { useInfiniteScroll, getTestData } from "@/hooks/useInfiniteScroll";
 const fullscreen = ref(false);
 const show = ref(true);
 const cur = ref(0);
 const ulRef = ref<Element>();
 const isChange = ref(false);
-const list = ref<any>([
+
+const tabList = ref<any>([
     {
         name: "动态壁纸",
 
@@ -59,10 +61,15 @@ const list = ref<any>([
     },
 ]);
 const innerWidth = computed(() => window?.innerWidth);
-const top = computed(() => list.value[cur.value].top);
+const top = computed(() => tabList.value[cur.value].top);
 function fullScreen(isFullScreen: boolean) {
     fullscreen.value = isFullScreen;
 }
+
+const { MoreCom, rootRef, list, loadMore } = useInfiniteScroll((pageNum, pageSize) => {
+    return getTestData({ currentPage: pageNum, pageSize });
+}, {});
+// loadMore();
 watch(
     show,
     () => {
@@ -71,7 +78,7 @@ watch(
                 Array.from((ulRef.value as Element).children)
                     .filter((item: Element) => item.tagName === "LI")
                     .forEach((item: Element, index: number) => {
-                        list.value[index].top = (item as any).offsetTop;
+                        tabList.value[index].top = (item as any).offsetTop;
                     });
             });
         }
@@ -82,6 +89,35 @@ watch(
 );
 </script>
 <style lang="scss" scoped>
+.end {
+    margin: 10px 0;
+
+    :deep(.el-divider--horizontal) {
+        border-top: 1px solid rgba(var(--alpha-color), 0.1);
+        margin: 0;
+        position: relative;
+        .el-divider__text {
+            color: var(--d-sub);
+        }
+    }
+}
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+    :deep(.el-button) {
+        background: var(--bg-input);
+        color: var(--d-main);
+        font-size: 14px;
+        border-radius: 6px;
+        border: none;
+        height: 32px;
+        padding: 8px 15px;
+        white-space: nowrap;
+    }
+}
+
 .p-body {
     height: 600px;
 
@@ -146,12 +182,11 @@ watch(
         position: relative;
 
         width: 14%;
-        min-width: 160px;
         background: var(--bg-input);
         height: 100%;
         padding: 30px 10px 0;
-        min-width: 166px;
-        max-width: 220px;
+        width: 160px;
+        // max-width: 220px;
     }
     .main {
         flex: 1;
@@ -160,7 +195,7 @@ watch(
         display: flex;
         flex-direction: column;
 
-        .container {
+        .conbox {
             flex: 1;
             overflow-y: auto;
             .pic-box {

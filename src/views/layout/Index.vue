@@ -3,7 +3,8 @@
         <itab-wallpaper :url="wallpaper.src"> </itab-wallpaper>
     </Teleport>
     <AppSider></AppSider>
-    <AppMain></AppMain><AddPic />
+    <AppMain></AppMain>
+    <AddPic />
 </template>
 
 <script setup lang="ts">
