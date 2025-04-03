@@ -28,7 +28,7 @@ jobs:
         password: 'Snow100107@'
         port: '22'
         source: './dist/*'
-        target: '/www/wwwroot/miraitowa.snows-l.site/dist'
+        target: '/www/wwwroot/miraitowa.snows-l.site/dist/'
         rm: true
        
     
