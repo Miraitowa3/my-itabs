@@ -29,6 +29,8 @@ jobs:
          port: ${{secrets.REMOTE_PORT}}
          source: ${{ secrets.REMOTE_SOURCE }}
          target: ${{ secrets.REMOTE_TARGET }}
+         rm: true
+         strip_components: 1
     
   
        
