@@ -10,11 +10,12 @@ type listReturnType = Omit<ResponseData<any>, "data"> & {
     total: number;
 };
 let data = [] as any;
-for (let i = 1; i <= 101; i++) {
+for (let i = 1; i <= 145; i++) {
     data.push({
         id: i,
         title: "titles",
-        img: "https://picsum.photos/200/300?random=" + i,
+        thumb: "https://raw.gitcode.com/miraitowa_001/image/raw/master/dist/" + i + ".webp",
+        src: "https://raw.gitcode.com/miraitowa_001/image/raw/master/yuan/" + i + ".webp",
     });
 }
 export const getTestData = (params: { pageSize: number; currentPage: number }): Promise<listReturnType> => {
@@ -67,6 +68,7 @@ export function useInfiniteScroll(fetch: (pageNum: number, pageSize: number) => 
     });
     // 初始化 IntersectionObserver
     const initObserver = () => {
+
         if (!sentinelRef.value) return;
         observer = new IntersectionObserver(
             (entries: IntersectionObserverEntry[]) => {
@@ -156,9 +158,9 @@ export function useInfiniteScroll(fetch: (pageNum: number, pageSize: number) => 
     }
     // 组件挂载时初始化
     onMounted(() => {
-        nextTick(() => {
+      setTimeout(() => {
             initObserver();
-        });
+        }, 0);
     });
     // 组件卸载时清理
     onUnmounted(() => {
@@ -167,6 +169,9 @@ export function useInfiniteScroll(fetch: (pageNum: number, pageSize: number) => 
             observer.disconnect();
         }
     });
+    watch(()=>sentinelRef.value,()=>{
+        sentinelRef.value && initObserver();
+    })
     return {
         sentinelRef,
         loadMore,

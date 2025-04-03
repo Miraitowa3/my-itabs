@@ -29,7 +29,7 @@ export function getOS(): string {
     const userAgent = navigator.userAgent.toLowerCase();
     return userAgent;
 }
- export function isMac() {
+export function isMac() {
     const userAgent = getOS();
 
     if (userAgent.includes("mac")) {
@@ -37,4 +37,29 @@ export function getOS(): string {
     } else {
         return false;
     }
+}
+export function getFilenameFromUrl(url:any) {
+  try {
+    const urlObj = new URL(url);
+    const pathname = urlObj.pathname;
+    return pathname.split('/').pop();
+  } catch (e) {
+    // 如果URL不合法，回退到字符串方法
+    return url.split('/').pop().split('#')[0].split('?')[0];
+  }
+}
+
+export function downloadFile(url: string) {
+
+    // 创建一个隐藏的<a>元素
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = getFilenameFromUrl(url) || "download"; // 设置下载的文件名
+
+    // 触发点击事件
+    document.body.appendChild(a);
+    a.click();
+
+    // 清理
+    document.body.removeChild(a);
 }

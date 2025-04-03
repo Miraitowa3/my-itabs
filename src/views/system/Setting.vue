@@ -2,7 +2,10 @@
     <div class="setting">
         <ElDrawer direction="rtl" v-model="show" :size="450" :show-close="false">
             <template #header>
-                <div class="ml-[130px] h-[34px]">
+                <div class="setting-logo absolute overflow-hidden">
+                    <img alt="" src="/logo.jpeg" />
+                </div>
+                <div class="relative ml-[130px] h-[34px]">
                     <h3 class="d-main">{{ title }}</h3>
                     <p class="mt-[5px] text-xs text-[#939393]">{{ tip }}</p>
                 </div>
@@ -79,6 +82,13 @@ watch(
         overflow: hidden;
         padding: 26px;
     }
+    .setting-logo {
+        left: -13px;
+        top: -20px;
+        height: 66px;
+        width: 66px;
+        border-radius: 60%;
+    }
     :deep(.el-drawer__body) {
         padding: 0px;
     }
@@ -107,7 +117,7 @@ watch(
                 margin: auto 0;
                 width: 3px;
                 border-radius: 4px;
-                background-color: #1890ff;
+                background-color: var(--el-color-primary);
             }
         }
     }

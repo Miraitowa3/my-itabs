@@ -10,14 +10,15 @@
             <h2>壁纸</h2>
 
             <div class="paper-img">
-                <el-image :src="url" style="width: 100%; height: 100%" fit="fill" />
-                <div class="wall-change flex items-center justify-center"><button>更换壁纸</button><button>下载壁纸</button></div>
+                <el-image :src="wallpaper.thumb" style="width: 100%; height: 100%" fit="fill" />
+                <div class="wall-change flex items-center justify-center"><button @click="show = true">更换壁纸</button><button @click.stop="downLoad">下载壁纸</button></div>
             </div>
             <Slider title="遮罩浓度" unit="%" :attrs="{ min: 0, max: 0.9, step: 0.01 }" v-model="wallpaper.mask" />
             <Slider title="模糊度" unit="%" :attrs="{ min: 0, max: 40, step: 2 }" v-model="wallpaper.blur" />
             <Select title="自动壁纸" :list="changeList" v-model="wallpaper.time" :attrs="{ style: 'width: 160px' }" />
             <Switch title="桌面显示壁纸切换按钮" v-model="wallpaper.switchBtn" />
         </div>
+        <AddPic v-model="show" />
     </div>
 </template>
 
@@ -27,9 +28,10 @@ import { getSystemTheme } from "@/utils/index";
 import Slider from "@/components/Slider.vue";
 import Switch from "@/components/Switch.vue";
 import ColorPicker from "../../../components/ColorPicker.vue";
+import AddPic from "@/views/layout/components/components/AddPic.vue";
 const baseConfigStore = useBaseConfigStore();
-const url = ref(new URL("@/assets/img/mmexport1711203978296.jpg", import.meta.url).href);
-
+// const url = ref(new URL("@/assets/img/mmexport1711203978296.jpg", import.meta.url).href);
+const show = ref(false);
 const { theme, wallpaper } = storeToRefs(baseConfigStore);
 const colorList = ["#1681ff", "#FBBE23", "#FC4548", "#2ecc71", "#33c5c5", "#9b59b6", "#F1C40F", "#e67e22", "#e74c3c"];
 const changeList = ref<any[]>([
@@ -40,6 +42,10 @@ const changeList = ref<any[]>([
     { label: "间隔12小时更换", value: 12 },
     { label: "间隔24小时更换", value: 24 },
 ]);
+function downLoad() {
+    window.open(wallpaper.value.src), "_blank";
+}
+
 watch(
     () => theme.value.system,
     () => {

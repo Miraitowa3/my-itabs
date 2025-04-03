@@ -28,6 +28,7 @@ declare module 'vue' {
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSlider: typeof import('element-plus/es')['ElSlider']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
+    ElUpload: typeof import('element-plus/es')['ElUpload']
     MacDocker: typeof import('./src/components/MacDocker.vue')['default']
     Overlay: typeof import('./src/components/Overlay.vue')['default']
     Popup: typeof import('./src/components/Popup.vue')['default']

@@ -20,22 +20,20 @@
                     <p class="tabs" style="width: 80%; line-height: 16px"><span class="active mr10">最新</span><span class="">最热</span></p>
                     <div class="d-scrollbar conbox" ref="rootRef">
                         <ul class="pic-box" v-if="list.length > 0">
-                            <li class="pic-item" v-for="(item, index) in list" :key="item.id + index" :cc="index + 1">
-                                <img alt="" :src="item.img" />
-                                <i title="下载壁纸到本地" class="paper-down"
+                            <li class="pic-item" v-for="(item, i) in list" :key="item.id + i">
+                                <img alt="" :src="item.thumb" />
+                                <i title="下载壁纸到本地" class="paper-down" @click.stop="downLoad(item.src)"
                                     ><i class="el-icon" style="font-size: 14px"><svg-icon name="download"></svg-icon></i
                                 ></i>
                                 <div class="image-select">
-                                    <button class="image-select-btn flex items-center justify-center" type="button">
-                                        <i class="rotating flex items-center justify-center text-[20px]" v-if="isChange"><svg-icon name="loading"></svg-icon></i>
+                                    <button class="image-select-btn flex items-center justify-center" type="button" @click.stop="changClick(item, i)">
+                                        <i class="rotating flex items-center justify-center text-[20px]" v-if="isChange && i === curImg"><svg-icon name="loading"></svg-icon></i>
 
                                         <i class="flex items-center justify-center text-[20px]" v-else><svg-icon name="dui"></svg-icon></i>
                                     </button>
                                 </div>
                             </li>
                         </ul>
-                        <!-- <el-empty :image-size="200" /> -->
-
                         <MoreCom></MoreCom>
                     </div>
                 </main>
@@ -47,12 +45,16 @@
 <script lang="ts" setup>
 import DialogHeader from "@/components/DialogHeader.vue";
 import { useInfiniteScroll, getTestData } from "@/hooks/useInfiniteScroll";
+import { useBaseConfigStore } from "@/stores/baseConfig";
+const baseConfigStore = useBaseConfigStore();
+const { wallpaper } = storeToRefs(baseConfigStore);
 const fullscreen = ref(false);
-const show = ref(true);
+const show = defineModel<boolean>();
 const cur = ref(0);
 const ulRef = ref<Element>();
 const isChange = ref(false);
-
+const timer = ref<NodeJS.Timeout | null>();
+const curImg = ref<number>(0);
 const tabList = ref<any>([
     {
         name: "动态壁纸",
@@ -60,6 +62,7 @@ const tabList = ref<any>([
         component: null,
     },
 ]);
+
 const innerWidth = computed(() => window?.innerWidth);
 const top = computed(() => tabList.value[cur.value].top);
 function fullScreen(isFullScreen: boolean) {
@@ -69,7 +72,20 @@ function fullScreen(isFullScreen: boolean) {
 const { MoreCom, rootRef, list, loadMore } = useInfiniteScroll((pageNum, pageSize) => {
     return getTestData({ currentPage: pageNum, pageSize });
 }, {});
-// loadMore();
+function downLoad(src: string) {
+    window.open(src), "_blank";
+}
+function changClick(item: any, index: number) {
+    isChange.value = true;
+    curImg.value = index;
+    timer.value = setTimeout(() => {
+        wallpaper.value.src = item.src;
+        wallpaper.value.thumb = item.thumb;
+
+        isChange.value = false;
+        timer.value = null;
+    }, 200);
+}
 watch(
     show,
     () => {
@@ -209,7 +225,11 @@ watch(
                     border-radius: 12px;
                     overflow: hidden;
                     height: 120px;
+
                     .paper-down {
+                        &:hover {
+                            background-color: #000c;
+                        }
                         --size: 24px;
                         position: absolute;
                         right: 2px;
@@ -289,7 +309,7 @@ watch(
             margin-bottom: 5px;
             font-size: 13px;
             span.active {
-                color: #1890ff;
+                color: var(--el-color-primary);
             }
 
             .mr10 {
