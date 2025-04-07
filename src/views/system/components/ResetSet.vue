@@ -39,10 +39,11 @@ const global = useGlobalStore();
     color: var(--d-sub);
 }
 :deep(.el-button) {
-    height: 32px;
+    height: 24px;
     padding: 5px 11px;
     border-radius: 6px;
     font-size: 12px;
+    font-weight: 400;
 }
 .d-button {
     --bg-input: #f0f1f4;

@@ -1,10 +1,10 @@
 <template>
     <div>
         <div class="setting-panel mb-5">
-            <a class="link">同步到本地</a>
+            <a class="link" @click="tongbu" style="line-height: 24px">同步到本地</a>
         </div>
         <div class="setting-panel mb-5">
-            <a class="link">立即备份</a>
+            <a class="link" @click="unableBackUp" v-loading.fullscreen.lock="loading" element-loading-text="数据同步中">立即备份</a>
             <a class="link">恢复历史数据</a>
         </div>
         <div class="setting-panel">
@@ -18,13 +18,14 @@
 
 <script lang="ts" setup>
 import { useBaseConfigStore } from "@/stores/baseConfig";
+import { updateConfig, getConfig } from "@/api/user";
 import { useGlobalStore } from "@/stores/global";
 import type { UploadProps, UploadUserFile } from "element-plus";
 const baseConfigStore = useBaseConfigStore();
 const globalStore = useGlobalStore();
 const { wallpaper, icon, sidebar, layout, open, search, time, searchEngine, useSearch, theme } = storeToRefs(baseConfigStore);
 const { navConfig } = storeToRefs(globalStore);
-
+const loading = ref(false);
 let timer: null | NodeJS.Timeout = null;
 function saveFile(content: any, filename: string, contentType = "text/plain") {
     const blob = new Blob([JSON.stringify(content, null)], { type: contentType });
@@ -55,6 +56,52 @@ function backUp() {
         navConfig: navConfig.value,
     };
     saveFile(data, "backup.mTabdata");
+}
+function tongbu() {
+    getConfig()
+        .then((res: any) => {
+            if (res.code === 200) {
+                ElMessage.success("同步成功");
+            } else {
+                ElMessage.error("同步失败");
+            }
+        })
+        .catch(() => {
+            ElMessage.error("同步失败");
+        })
+        .finally(() => {});
+}
+function unableBackUp() {
+    loading.value = true;
+    let data = {
+        baseConfig: {
+            icon: icon.value,
+            sidebar: sidebar.value,
+            layout: layout.value,
+            open: open.value,
+            search: search.value,
+            time: time.value,
+            searchEngine: searchEngine.value,
+            useSearch: useSearch.value,
+            theme: theme.value,
+            wallpaper: wallpaper.value,
+        },
+        navConfig: navConfig.value,
+    };
+    updateConfig(data)
+        .then((res: any) => {
+            if (res.code === 200) {
+                ElMessage.success("备份成功");
+            } else {
+                ElMessage.error("备份失败");
+            }
+        })
+        .catch(() => {
+            ElMessage.error("备份失败");
+        })
+        .finally(() => {
+            loading.value = false;
+        });
 }
 const handleChange: UploadProps["onChange"] = (uploadFile) => {
     if (!uploadFile.raw) {

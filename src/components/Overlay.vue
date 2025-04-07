@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
     position: fixed;
     right: 0;
     top: 0;
-    z-index: 2000;
+    z-index: 2007;
     overflow: hidden;
 }
 </style>

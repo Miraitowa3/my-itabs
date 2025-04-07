@@ -7,6 +7,8 @@ import ThemeSet from "@/views/system/components/ThemeSet.vue";
 import TimeSet from "@/views/system/components/TimeSet.vue";
 import ResetSet from "@/views/system/components/ResetSet.vue";
 import BackUpSet from "@/views/system/components/BackUpSet.vue";
+import LoginInfo from "@/views/system/components/LoginInfo.vue";
+
 
 import type { DefineComponent } from "vue";
 
@@ -22,7 +24,7 @@ export const asideList: AsideItem[] = [
         name: "登录/注册",
         icon: "",
         tip: "个人信息",
-        component: null,
+        component: markRaw(LoginInfo),
         top: 0,
     },
     {

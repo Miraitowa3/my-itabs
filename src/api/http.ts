@@ -1,5 +1,6 @@
 // src/utils/http.ts
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
+import userStore from "@/stores/user";
 
 // 定义接口返回的数据结构
 interface ApiResponse<T = any> {
@@ -17,8 +18,9 @@ const service: AxiosInstance = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
+        const user = userStore();
         // 在发送请求之前做些什么，例如添加 token
-        const token = localStorage.getItem("token");
+        const token = user.token;
         if (token) {
             config.headers = config.headers || {};
             config.headers["Authorization"] = `Bearer ${token}`;
@@ -34,13 +36,18 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
     (response: AxiosResponse<any>) => {
+
         // 对响应数据做点什么
         const res = response.data;
-
 
         return res;
     },
     (error: AxiosError) => {
+
+        if (error.status === 401 ) {
+            userStore().setToken(null);
+            ElMessage.error("登录失效，请重新登录");
+        }
         // 对响应错误做点什么
         console.error(error.message || "Error");
         return Promise.reject(error);

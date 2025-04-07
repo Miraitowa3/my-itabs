@@ -66,13 +66,12 @@ const submitForm = (formEl: FormInstance | undefined) => {
             login(data).then((res: any) => {
                 if (res.code === 200) {
                     $user.setToken(res.data.token);
+                    $user.setUserInfo(res.data.userInfo);
                     ElMessage({
                         type: "success",
                         message: "登录成功",
-                        onClose: () => {
-                            emits("change");
-                        },
                     });
+                    emits("change");
                 } else {
                     ElMessage.error(res.message);
                 }

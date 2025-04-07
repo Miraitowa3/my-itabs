@@ -80,13 +80,9 @@ watch(() => ticket.value, (newVal, oldVal) => {
              ElMessage({
             type: 'success',
             message: '登录成功',
-            onClose: () => {
-            emits('close')
 
-            }
           })
-
-
+   emits('close')
           }
 
 

@@ -7,10 +7,11 @@
         <div class="app-sidebar-body flex h-full w-full flex-col text-center">
             <div class="app-sidebar-avatar flex flex-col items-center justify-center">
                 <img
+                    @click="showSetting = true"
                     class="h-[30px] w-[30px] rounded-full object-cover"
                     src="https://files.codelife.cc/blog/avatar/default-avatar.png?x-oss-process=image/resize,limit_0,m_fill,w_40,h_40/quality,q_92/format,webp"
                 />
-                <p class="d-elip mt-1" @click="show = !show" v-if="!$user.userInfo">登录</p>
+                <p class="d-elip mt-1" @click="show = !show" v-if="!$user.token">登录</p>
             </div>
             <div class="app-sidebar-group d-scrollbar-hide">
                 <VueDraggable v-model="navConfig" :animation="150" target=".app-sidebar-ul" @start="onStart" @end="onEnd">

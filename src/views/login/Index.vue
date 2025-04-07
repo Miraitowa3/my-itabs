@@ -4,6 +4,7 @@
         width="420px"
         :customStyle="{
             background: 'var(--el-bg-color)',
+            zIndex: '3000',
         }"
     >
         <div class="app-login">

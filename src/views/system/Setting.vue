@@ -13,11 +13,24 @@
             <div class="d-layout flex h-full">
                 <aside class="d-layout-aside h-full w-[140px]">
                     <template v-for="(item, index) in list" :key="index">
-                        <p :class="['setting-user', index === cur ? 'active' : '']" v-if="index == 0">
-                            <el-button type="primary" size="small" style="height: 24px; border-radius: 6px" @click.stop="changeIndex(index)">{{ item.name }}</el-button>
+                        <p :class="['setting-user', index === cur ? 'active' : '']" v-if="index == 0 && !$user.token" @click.stop="changeIndex(index)">
+                            <el-button type="primary" size="small" style="height: 24px; border-radius: 6px" @click="showLogin = true" v-if="!$user.token">{{
+                                item.name
+                            }}</el-button>
+                        </p>
+                        <p
+                            :class="['setting-user flex items-center justify-center', index === cur ? 'active' : '']"
+                            v-if="index == 0 && $user.token"
+                            @click.stop="changeIndex(index)"
+                            style="height: auto"
+                        >
+                            <img
+                                class="h-[30px] w-[30px] object-cover"
+                                src="https://files.codelife.cc/blog/avatar/default-avatar.png?x-oss-process=image/resize,limit_0,m_fill,w_40,h_40/quality,q_92/format,webp"
+                            />
+                            <span class="user-name" style="width: 73px">miraitowa</span>
                         </p>
                     </template>
-
                     <p class="bb"></p>
 
                     <div class="sidebar-box">
@@ -40,13 +53,19 @@
             </div>
         </ElDrawer>
     </div>
+    <Login v-model:show="showLogin"></Login>
 </template>
 
 <script lang="ts" setup>
-const show = defineModel<boolean>();
-const cur = ref(3);
-const ulRef = ref<Element>();
+import Login from "@/views/login/Index.vue";
+import userStore from "@/stores/user";
 import { asideList } from "./data.ts";
+const showLogin = ref(false);
+const show = defineModel<boolean>();
+const $user = userStore();
+
+const cur = ref(0);
+const ulRef = ref<Element>();
 const list = ref(asideList);
 const top = computed(() => list.value[cur.value].top);
 function changeIndex(index: number) {
@@ -98,8 +117,19 @@ watch(
             margin: 0 8px 10px;
             padding: 8px;
             border-radius: 6px;
-            height: 24px;
+            height: 25px;
             box-sizing: content-box;
+            img {
+                border-radius: 6px;
+            }
+            .user-name {
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                margin-left: 5px;
+                font-size: 14px;
+                color: var(--d-main);
+            }
         }
         .active {
             background: rgba(24, 144, 255, 0.1);

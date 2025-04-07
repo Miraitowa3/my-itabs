@@ -101,7 +101,7 @@ function modalClose(e: MouseEvent) {
 
     right: 0;
     top: 0;
-    z-index: 99999;
+    z-index: 2007;
 }
 @keyframes dialog-fade-in {
     0% {
