@@ -8,6 +8,7 @@
     --active-bg: rgba(24, 144, 255, 0.1);
     --el-border-radius-base: 8px;
     --spacing: 0.25rem;
+    --title-height: 60px;
 }
 
 html[data-theme="dark"] {
@@ -366,4 +367,9 @@ html[data-theme="light"] {
 
 .d-scrollbar::-webkit-scrollbar-thumb {
     background: var(--bg-hover);
+}
+.d-elip {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
