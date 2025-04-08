@@ -5,7 +5,10 @@
                 <aside class="aside">
                     <h2 class="bb text-[18px]">
                         备忘录
-                        <span class="notes-sort"><i class="asc sort-caret"></i><i class="active desc sort-caret"></i></span>
+                        <span class="notes-sort"
+                            ><i class="desc sort-caret" @click="isAes = true" :class="{ active: isAes }"></i
+                            ><i class="asc sort-caret" :class="{ active: !isAes }" @click="isAes = false"></i
+                        ></span>
                     </h2>
 
                     <ul class="notes-tabs-body" v-if="tabList.length > 0">
@@ -48,6 +51,7 @@ import DialogHeader from "@/components/DialogHeader.vue";
 const fullscreen = ref(false);
 const show = defineModel<boolean>();
 const cur = ref(0);
+const isAes = ref(true);
 const tabList = ref<any>([
     {
         name: "iTab操作小技巧",
@@ -56,6 +60,24 @@ const tabList = ref<any>([
         value: "",
     },
 ]);
+
+watch(
+    () => isAes.value,
+    (val) => {
+        if (isAes.value) {
+            tabList.value.sort((a: any, b: any) => {
+                return new Date(a.time).getTime() - new Date(b.time).getTime();
+            });
+        } else {
+            tabList.value.sort((a: any, b: any) => {
+                return new Date(b.time).getTime() - new Date(a.time).getTime();
+            });
+        }
+    },
+    {
+        immediate: true,
+    },
+);
 const innerWidth = computed(() => window?.innerWidth);
 function fullScreen(isFullScreen: boolean) {
     fullscreen.value = isFullScreen;
