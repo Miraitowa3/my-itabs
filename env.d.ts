@@ -6,3 +6,10 @@ declare module '*.vue' {
   export default component
 }
 declare module 'lunar-calendar';
+
+declare global{
+    interface Window {
+        define: any;
+    }
+}
+export {};

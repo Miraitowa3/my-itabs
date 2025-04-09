@@ -7,13 +7,14 @@ import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import * as path from "path";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
-
+import { analyzer } from "vite-bundle-analyzer";
 import vueDevTools from "vite-plugin-vue-devtools";
 import dayjs from "dayjs";
 
 // https://vite.dev/config/
 export default defineConfig({
     plugins: [
+        analyzer(),
         vue({
             template: {
                 compilerOptions: {
@@ -65,3 +66,4 @@ export default defineConfig({
         },
     },
 });
+    // "lunar-calendar": "^0.1.4",

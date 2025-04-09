@@ -4,7 +4,7 @@
         <!-- 头部栏 -->
         <AppHeader />
         <!-- 时间栏 -->
-        <AppDate />
+        <!-- <AppDate /> -->
 
         <!-- 搜索栏 -->
         <Transition leave-active-class="animate__animated animate__slideOutRight" enter-active-class="animate__animated animate__bounceInLeft">
