@@ -4,7 +4,7 @@
             <el-form ref="ruleFormRef" :model="form" label-position="left" label-width="66px">
                 <el-form-item prop="code" label="地址">
                     <el-input v-model="form.url" type="text" placeholder="https://" clearable class="url-input">
-                        <!-- <template #append> <el-button class="get-icon-btn" @click="getLogo"> 获取图标</el-button> </template> -->
+                        <template #append> <el-button class="get-icon-btn" @click="getLogo"> 获取图标</el-button> </template>
                         <template #prefix>
                             <i class="text-[14px] text-[#fff]"> <svg-icon name="lianjie" /> </i>
                         </template>
