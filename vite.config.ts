@@ -14,7 +14,7 @@ import dayjs from "dayjs";
 // https://vite.dev/config/
 export default defineConfig({
     plugins: [
-        analyzer(),
+        // analyzer(),
         vue({
             template: {
                 compilerOptions: {
@@ -67,5 +67,25 @@ export default defineConfig({
             },
         },
     },
+    build: {
+        rollupOptions: {
+            output: {
+                // 手动指定分割策略
+                manualChunks:{
+                    pinia: ['pinia'],
+                    axios: ['axios'],
+                    'lodash-es': ['lodash-es'],
+                    'vue': ['vue'],
+                    'vue-draggable-plus': ['vue-draggable-plus'],
+                    'element-plus': ['element-plus'],
+
+
+
+
+
+                },
+            },
+        },
+    },
 });
-    // "lunar-calendar": "^0.1.4",
+// "lunar-calendar": "^0.1.4",

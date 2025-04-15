@@ -31,3 +31,4 @@ npm run dev
 ```sh
 npm run build
 ```
+   # "vue3-sfc-loader": "^0.9.5"
