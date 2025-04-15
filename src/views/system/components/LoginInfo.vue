@@ -17,8 +17,8 @@
                     src="https://files.codelife.cc/blog/avatar/default-avatar.png?x-oss-process=image/resize,limit_0,m_fill,w_40,h_40/quality,q_92/format,webp"
                 />
                 <div class="user-info">
-                    <p class="user-name">miraitowa</p>
-                    <p class="user-email">miraitowa</p>
+                    <p class="user-name">{{ $user.userInfo.username }}</p>
+                    <p class="user-email">{{ $user.userInfo.email }}</p>
                 </div>
             </div>
         </div>

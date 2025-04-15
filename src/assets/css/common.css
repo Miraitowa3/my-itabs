@@ -343,7 +343,7 @@ html[data-theme="light"] {
 }
 ::-webkit-scrollbar {
     transition: 0.2s;
-    width: 10px;
+    width: 6px;
     height: 10px;
 }
 

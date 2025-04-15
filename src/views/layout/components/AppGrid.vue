@@ -65,6 +65,7 @@ import { useBaseConfigStore } from "@/stores/baseConfig";
 import { VueDraggable } from "vue-draggable-plus";
 import { useGlobalStore } from "@/stores/global";
 import AppItemContentMenu from "./AppItemContentMenu.vue";
+import { getRandomInRange } from "@/utils";
 
 const global = useGlobalStore();
 const { cur, navConfig, isBatchEdit } = storeToRefs(global);
@@ -101,7 +102,11 @@ watch(
     },
     { immediate: true },
 );
-function switchWallpaper() {}
+function switchWallpaper() {
+    const index = getRandomInRange(1, 145);
+    wallpaper.value.src = `https://raw.gitcode.com/miraitowa_001/image/raw/master/yuan/${index}.webp`;
+    wallpaper.value.thumb = `https://raw.gitcode.com/miraitowa_001/image/raw/master/dist/${index}.webp`;
+}
 function updateXY() {
     const clientY = appIconWrap.value!.getBoundingClientRect().height;
 

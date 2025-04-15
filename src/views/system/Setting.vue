@@ -28,7 +28,7 @@
                                 class="h-[30px] w-[30px] object-cover"
                                 src="https://files.codelife.cc/blog/avatar/default-avatar.png?x-oss-process=image/resize,limit_0,m_fill,w_40,h_40/quality,q_92/format,webp"
                             />
-                            <span class="user-name" style="width: 73px">miraitowa</span>
+                            <span class="user-name" style="width: 73px">{{ $user.userInfo.username }}</span>
                         </p>
                     </template>
                     <p class="bb"></p>

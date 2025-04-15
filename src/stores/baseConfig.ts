@@ -22,7 +22,7 @@ export const useBaseConfigStore = defineStore(
         };
         const updateSearch = () => {
             document.documentElement.style.setProperty("--search-height", search.value.height + "px");
-            document.documentElement.style.setProperty("--search-bgColor", `rgba(255,255,255,${search.value.bgColor})`);
+            document.documentElement.style.setProperty("--search-bgColor", ` rgba(var(--alpha-bg),${search.value.bgColor})`);
             document.documentElement.style.setProperty("--search-radius", search.value.radius + "px");
         };
 

@@ -5,7 +5,7 @@
         </div>
         <div class="setting-panel mb-5">
             <a class="link" @click="unableBackUp" v-loading.fullscreen.lock="loading" element-loading-text="数据同步中">立即备份</a>
-            <a class="link">恢复历史数据</a>
+            <a class="link" @click="show = true">恢复历史数据</a>
         </div>
         <div class="setting-panel">
             <a class="link" @click.top="backUp()">导出本地数据</a>
@@ -14,14 +14,19 @@
             </el-upload>
         </div>
     </div>
+    <RecoveryData v-model="show" v-if="show" />
 </template>
 
 <script lang="ts" setup>
+import RecoveryData from "./RecoveryData.vue";
 import { useBaseConfigStore } from "@/stores/baseConfig";
 import { updateConfig, getConfig } from "@/api/user";
 import { useGlobalStore } from "@/stores/global";
 import type { UploadProps, UploadUserFile } from "element-plus";
+import userStore from "@/stores/user";
+const $user = userStore();
 const baseConfigStore = useBaseConfigStore();
+const show = ref(false);
 const globalStore = useGlobalStore();
 const { wallpaper, icon, sidebar, layout, open, search, time, searchEngine, useSearch, theme } = storeToRefs(baseConfigStore);
 const { navConfig } = storeToRefs(globalStore);
@@ -58,9 +63,25 @@ function backUp() {
     saveFile(data, "backup.mTabdata");
 }
 function tongbu() {
-    getConfig()
+    if (!$user.token) {
+        ElMessage.warning("请登陆后使用同步功能！");
+        return;
+    }
+    getConfig({})
         .then((res: any) => {
             if (res.code === 200) {
+                const data = res.data.config;
+                icon.value = data.baseConfig.icon;
+                sidebar.value = data.baseConfig.sidebar;
+                layout.value = data.baseConfig.layout;
+                open.value = data.baseConfig.open;
+                search.value = data.baseConfig.search;
+                time.value = data.baseConfig.time;
+                searchEngine.value = data.baseConfig.searchEngine;
+                useSearch.value = data.baseConfig.useSearch;
+                theme.value = data.baseConfig.theme;
+                wallpaper.value = data.baseConfig.wallpaper;
+                navConfig.value = data.navConfig;
                 ElMessage.success("同步成功");
             } else {
                 ElMessage.error("同步失败");
@@ -72,6 +93,10 @@ function tongbu() {
         .finally(() => {});
 }
 function unableBackUp() {
+    if (!$user.token) {
+        ElMessage.warning("请登陆后使用同步功能！");
+        return;
+    }
     loading.value = true;
     let data = {
         baseConfig: {

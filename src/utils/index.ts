@@ -63,3 +63,9 @@ export function downloadFile(url: string) {
     // 清理
     document.body.removeChild(a);
 }
+export function getRandomInRange(min: number, max: number): number {
+    if (min > max) {
+        throw new Error('最小值不能大于最大值');
+    }
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}

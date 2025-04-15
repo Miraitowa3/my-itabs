@@ -1,5 +1,5 @@
 // src/utils/http.ts
-import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import userStore from "@/stores/user";
 
 // 定义接口返回的数据结构
@@ -55,22 +55,22 @@ service.interceptors.response.use(
 );
 
 // 封装 GET 请求
-export function get<T>(url: string, config?: InternalAxiosRequestConfig): Promise<T> {
+export function get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return service.get<T, T>(url, config);
 }
 
 // 封装 POST 请求
-export function post<T>(url: string, data?: any, config?: InternalAxiosRequestConfig): Promise<T> {
+export function post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
     return service.post<T, T>(url, data, config);
 }
 
 // 封装 PUT 请求
-export function put<T>(url: string, data?: any, config?: InternalAxiosRequestConfig): Promise<T> {
+export function put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
     return service.put<T, T>(url, data, config);
 }
 
 // 封装 DELETE 请求
-export function del<T>(url: string, config?: InternalAxiosRequestConfig): Promise<T> {
+export function del<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return service.delete<T, T>(url, config);
 }
 

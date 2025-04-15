@@ -56,10 +56,12 @@ export default defineConfig({
         },
     },
     server: {
-        allowedHosts: ["j39kq1ocub.by.takin.cc"], // 允许的主机名
+        // allowedHosts: ["j39kq1ocub.by.takin.cc"], // 允许的主机名
         proxy: {
             "^/api": {
-                target: "http://j39kq1ocub.by.takin.cc", // hadron
+                // target: "http://j39kq1ocub.by.takin.cc", // hadron
+                target: "http://localhost:3000", // hadron
+
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/api/, ""),
             },

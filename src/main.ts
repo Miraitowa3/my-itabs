@@ -15,12 +15,13 @@ import pinia from './stores';
 import { useBaseConfigStore } from "./stores/baseConfig"
 import { useGlobalStore} from "./stores/global"
 
-window.define('vue',function () {
-    return Vue;
-})
-window.define('element-plus',function () {
-    return ElementPlus;
-})
+// window.define('vue',function () {
+//     return Vue;
+// })
+// window.define('element-plus',function () {
+//     return ElementPlus;
+// })
+// window.sharedPinia = pinia
 const app = createApp(App)
 app.component('DialogHeader',DialogHeader)
 app.component('SvgIcon',SvgIcon)

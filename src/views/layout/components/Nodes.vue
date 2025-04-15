@@ -35,8 +35,9 @@
                     <div class="note-title">
                         <el-input v-model="tabList[cur].name" placeholder="请输入" />
                     </div>
-
-                    <el-input v-model="tabList[cur].value" placeholder="" class="note-content" type="textarea" />
+                    <div class="note-content">
+                        <el-input v-model="tabList[cur].value" placeholder="请输入笔记内容" type="textarea" style="height: 100%" />
+                    </div>
                     <div class="bottom-tips mt-[5px] flex items-center justify-start text-xs">
                         <span> 最后编辑：2025-4-7 18:09:58, 创建：{{ tabList[cur].time }}</span>
                     </div>
@@ -258,6 +259,7 @@ function deleteNote(index: number) {
         }
         .note-content {
             height: calc(100% - 52px);
+            overflow: auto;
         }
         .bottom-tips {
             color: var(--d-sub);
@@ -297,7 +299,7 @@ main {
         }
     }
     .note-content {
-        &.el-textarea {
+        & > .el-textarea {
             &.is-focus {
                 box-shadow: none;
             }
@@ -307,7 +309,7 @@ main {
                 display: block;
                 height: 100%;
                 line-height: calc(var(--height) + 1px);
-                background: linear-gradient(180deg, transparent, transparent var(--height), var(--dividing-line) var(--height), var(--dividing-line) var(--height));
+                background: linear-gradient(180deg, transparent var(--height), var(--dividing-line) var(--height), var(--dividing-line) var(--height));
                 background-size: 100% calc(var(--height) + 1px);
                 box-shadow: inset 0 1px 0 0 var(--dividing-line);
             }

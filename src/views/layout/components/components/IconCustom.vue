@@ -47,7 +47,7 @@
                         </div>
                         文字图标
                     </div>
-                    <!-- <div :class="['icon-preview', picCur === '上传' ? 'active' : '']" @click="picCur = '上传'">
+                    <div :class="['icon-preview', picCur === '上传' ? 'active' : '']" @click="picCur = '上传'">
                         <div class="icon-preview-body">
                             <div class="d-text-icon relative flex h-full w-full items-center whitespace-nowrap text-white">
                                 <uploadImage class="avatar-uploader" action="###">
@@ -58,7 +58,7 @@
                             </div>
                         </div>
                         上传
-                    </div> -->
+                    </div>
                 </div>
 
                 <el-form-item>
@@ -82,6 +82,7 @@ const props = defineProps<{
     info?: any;
     index?: number;
 }>();
+const { uploadImage } = UseUploadImage();
 import { extractDomainOrIP, generateCustomRandomString } from "@/utils";
 type PicType = "文字图标" | "上传";
 const colorList = ref(["#1681FF", "#FBBE23", "#FC4548", "#4B3C36", "#7DAC68", "#023373", "#C8AC70", "#372128", "#C82C34", "#054092", "#A3DDB9", "transparent"]);

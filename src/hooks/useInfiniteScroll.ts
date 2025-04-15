@@ -21,9 +21,7 @@ for (let i = 1; i <= 145; i++) {
 export const getTestData = (params: { pageSize: number; currentPage: number }): Promise<listReturnType> => {
     const { pageSize, currentPage } = params;
 
-    console.log("🚀 --------------------------------------------🚀");
-    console.log("🚀 ~ getTestData ~ currentPage:", currentPage);
-    console.log("🚀 --------------------------------------------🚀");
+
 
     const total = Math.ceil(data.length / pageSize);
     return new Promise((resolve, reject) => {

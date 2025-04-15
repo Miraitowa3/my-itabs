@@ -45,9 +45,12 @@
 import { useBaseConfigStore } from "@/stores/baseConfig";
 import { useGlobalStore } from "@/stores/global";
 import { updateConfig } from "@/api/user";
+import { getRandomInRange } from "@/utils";
 
 import AddIcon from "./components/AddIcon.vue";
 import Setting from "@/views/system/Setting.vue";
+import userStore from "@/stores/user";
+const $user = userStore();
 const baseConfigStore = useBaseConfigStore();
 const globalStore = useGlobalStore();
 const { wallpaper, icon, sidebar, layout, open, search, time, searchEngine, useSearch, theme } = storeToRefs(baseConfigStore);
@@ -69,8 +72,16 @@ function hanlderCallback(e: MouseEvent) {
 function closeMenu() {
     contentMenu.value.closeMenu();
 }
-function changeWallpaper() {}
+function changeWallpaper() {
+    const index = getRandomInRange(1, 145);
+    wallpaper.value.src = `https://raw.gitcode.com/miraitowa_001/image/raw/master/yuan/${index}.webp`;
+    wallpaper.value.thumb = `https://raw.gitcode.com/miraitowa_001/image/raw/master/dist/${index}.webp`;
+}
 function unableBackUp() {
+    if (!$user.token) {
+        ElMessage.warning("请登陆后使用同步功能！");
+        return;
+    }
     loading.value = true;
     let data = {
         baseConfig: {

@@ -11,7 +11,9 @@
         }"
         :closeIcon="false"
     >
-        <section class="container" :style="{ '--wall-thumb': wallpaper.src }">
+        <section class="glass container" :style="{ '--wall-thumb': wallpaper.src }">
+            <DialogHeader @close="show = false" @full-screen="fullScreen" />
+
             <aside class="sidebar">
                 <div class="sidebar-box">
                     <ul ref="ulRef">
@@ -36,12 +38,16 @@
 
 <script setup lang="ts">
 import IconCustom from "./IconCustom.vue";
+import DialogHeader from "@/components/DialogHeader.vue";
+
 import { useBaseConfigStore } from "@/stores/baseConfig";
 const BaseConfig = useBaseConfigStore();
 const { wallpaper } = storeToRefs(BaseConfig);
 const show = defineModel();
 const cur = ref(2);
 const ulRef = ref<Element>();
+const fullscreen = ref(false);
+
 const list = ref<any>([
     {
         name: "小组件",
@@ -60,7 +66,9 @@ const list = ref<any>([
     },
 ]);
 const top = computed(() => list.value[cur.value].top);
-
+function fullScreen(isFullScreen: boolean) {
+    fullscreen.value = isFullScreen;
+}
 watch(show, () => {
     if (show.value) {
         nextTick(() => {
@@ -76,6 +84,20 @@ watch(show, () => {
 <style lang="scss" scoped>
 :deep(.el-button) {
     border: 1px solid var(--el-button-bg-color);
+}
+html[data-theme="dark"] .container.glass {
+    --add-drawer-body: #171819;
+    --add-card: rgba(255, 255, 255, 0.08);
+}
+html[data-theme="light"] .container.glass {
+    --add-drawer-body: #dadadc;
+    --add-card: rgba(255, 255, 255, 0.35);
+}
+.container .glass {
+    --border-card: none;
+    --add-body: none;
+    --add-input: var(--add-card);
+    --add-drawer-body: #fff;
 }
 .container {
     width: 100%;
