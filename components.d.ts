@@ -12,20 +12,6 @@ declare module 'vue' {
     ContentMenu: typeof import('./src/components/ContentMenu.vue')['default']
     Dialog: typeof import('./src/components/Dialog.vue')['default']
     DialogHeader: typeof import('./src/components/DialogHeader.vue')['default']
-    ElButton: typeof import('element-plus/es')['ElButton']
-    ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
-    ElColorPicker: typeof import('element-plus/es')['ElColorPicker']
-    ElDialog: typeof import('element-plus/es')['ElDialog']
-    ElDrawer: typeof import('element-plus/es')['ElDrawer']
-    ElForm: typeof import('element-plus/es')['ElForm']
-    ElFormItem: typeof import('element-plus/es')['ElFormItem']
-    ElImage: typeof import('element-plus/es')['ElImage']
-    ElInput: typeof import('element-plus/es')['ElInput']
-    ElOption: typeof import('element-plus/es')['ElOption']
-    ElSelect: typeof import('element-plus/es')['ElSelect']
-    ElSlider: typeof import('element-plus/es')['ElSlider']
-    ElSwitch: typeof import('element-plus/es')['ElSwitch']
-    ElUpload: typeof import('element-plus/es')['ElUpload']
     MacDocker: typeof import('./src/components/MacDocker.vue')['default']
     Overlay: typeof import('./src/components/Overlay.vue')['default']
     Popup: typeof import('./src/components/Popup.vue')['default']
@@ -37,8 +23,5 @@ declare module 'vue' {
     SvgIcon: typeof import('./src/components/SvgIcon.vue')['default']
     Switch: typeof import('./src/components/Switch.vue')['default']
     Tab: typeof import('./src/components/Tab.tsx')['default']
-  }
-  export interface ComponentCustomProperties {
-    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }
